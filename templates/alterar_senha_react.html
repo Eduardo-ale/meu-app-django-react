@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Alterar Senha{% endblock %}
+
+{% block content %}
+<!-- Container React LIMPO - SEM HTML ESTÁTICO -->
+<div id="senha-react-root"></div>
+
+<!-- Sistema de inicialização React -->
+{% include 'react_scripts_base.html' %}
+
+<!-- CSRF Token e Props para JavaScript -->
+<script>
+    window.csrfToken = '{{ csrf_token }}';
+    
+    // Definir props para o componente React
+    window.senhaProps = {
+        usuario: {
+            id: {{ user.id|default:'null' }},
+            username: '{{ user.username|default:"" }}',
+            full_name: '{{ user.get_full_name|default:user.username }}',
+            email: '{{ user.email|default:"" }}',
+            first_name: '{{ user.first_name|default:"" }}',
+            last_name: '{{ user.last_name|default:"" }}'
+        },
+        data_atual: '{{ data_atual|date:"c" }}'
+    };
+</script>
+
+<!-- Componente React -->
+<script src="{% static 'js/dist/senha.bundle.js' %}"></script>
+{% endblock %} 

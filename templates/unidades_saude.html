@@ -1,0 +1,1708 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/z-index-fixes.css' %}">
+<style>
+    /* ===== ESTILOS ESPECÍFICOS DA PÁGINA ===== */
+    .page-header-modern {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .title-section h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .title-section p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        border-radius: 16px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* ===== BARRA DE AÇÕES ===== */
+    .actions-bar {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .search-section {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .filter-select {
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+        background: #f9fafb;
+        transition: all 0.3s ease;
+        min-width: 150px;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .action-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .action-btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .action-btn-secondary {
+        background: white;
+        color: #374151;
+        border: 2px solid #e5e7eb;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .action-btn-secondary:hover {
+        background: #f9fafb;
+        border-color: #d1d5db;
+        transform: translateY(-1px);
+        color: #374151;
+        text-decoration: none;
+    }
+
+    /* ===== GRID DE UNIDADES ===== */
+    .unidades-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .unidade-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 1px solid #f1f5f9;
+        /* Z-index baixo para não sobrepor dropdowns */
+        z-index: 1;
+        position: relative;
+    }
+
+    .unidade-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .unidade-type-badge {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .badge-executante {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .badge-solicitante {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+    }
+
+    .badge-mista {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+    }
+
+    .card-menu {
+        position: relative;
+    }
+
+    .menu-trigger {
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .menu-trigger:hover {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+        z-index: 1000;
+        display: none;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1rem;
+        color: #374151;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .dropdown-item:hover {
+        background: #f9fafb;
+        color: #111827;
+        text-decoration: none;
+    }
+
+    .dropdown-item.text-danger:hover {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .dropdown-divider {
+        margin: 0.5rem 0;
+        border: none;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .unidade-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 1.5rem;
+        line-height: 1.3;
+    }
+
+    .info-grid {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 1px solid #f1f5f9;
+    }
+
+    .info-icon {
+        width: 20px;
+        color: #667eea;
+        flex-shrink: 0;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 0.8rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        display: block;
+        font-size: 0.9rem;
+        color: #111827;
+        font-weight: 500;
+    }
+
+    .address-section {
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 1px solid #f1f5f9;
+        margin-bottom: 1.5rem;
+    }
+
+    .address-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .address-value {
+        font-size: 0.9rem;
+        color: #111827;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    .card-footer {
+        padding: 1.5rem;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    .card-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .card-btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(102, 126, 234, 0.2);
+    }
+
+    .card-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    .card-btn-secondary {
+        background: white;
+        color: #374151;
+        border: 2px solid #e5e7eb;
+    }
+
+    .card-btn-secondary:hover {
+        background: #f9fafb;
+        border-color: #d1d5db;
+        color: #374151;
+        text-decoration: none;
+    }
+
+    .card-btn-danger {
+        background: white;
+        color: #dc2626;
+        border: 2px solid #fecaca;
+    }
+
+    .card-btn-danger:hover {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        color: #dc2626;
+        text-decoration: none;
+    }
+
+    /* ===== ESTADO VAZIO ===== */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        display: none;
+    }
+
+    .empty-state.show {
+        display: block;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-description {
+        color: #9ca3af;
+        margin-bottom: 2rem;
+    }
+
+    /* ===== RESPONSIVIDADE ===== */
+    @media (max-width: 768px) {
+        .page-header-modern {
+            padding: 1.5rem;
+        }
+
+        .title-section h1 {
+            font-size: 2rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+            min-width: auto;
+        }
+
+        .actions-bar {
+            padding: 1rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .unidade-card {
+            margin: 0 -0.5rem;
+        }
+
+        /* Responsividade do dropdown de exportação */
+        .dropdown-export-modern {
+            min-width: 260px;
+            padding: 0.5rem;
+            /* Mantém z-index alto em todas as resoluções */
+            z-index: 99999 !important;
+            position: relative;
+        }
+
+        .dropdown-export-modern .dropdown-item {
+            padding: 0.75rem;
+            gap: 0.75rem;
+        }
+
+        .export-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+
+        .export-title {
+            font-size: 0.9rem;
+        }
+
+        .export-description {
+            font-size: 0.75rem;
+        }
+
+        .export-arrow {
+            width: 28px;
+            height: 28px;
+            font-size: 0.8rem;
+        }
+
+        /* Ajusta z-index dos cards em resoluções menores */
+        .unidade-card {
+            z-index: 1;
+            position: relative;
+        }
+    }
+
+    /* ===== CORREÇÃO DE Z-INDEX PARA DIFERENTES ZOOMS ===== */
+    /* Garante que o dropdown sempre fique por cima */
+    .dropdown {
+        position: relative;
+        z-index: 99999;
+    }
+
+    .dropdown.show {
+        z-index: 99999 !important;
+    }
+
+    /* Força z-index alto para o dropdown de exportação */
+    .dropdown-export-modern {
+        z-index: 99999 !important;
+    }
+
+    /* ===== SOLUÇÃO FINAL - MODAL QUE COBRE TODA A TELA ===== */
+    .export-modal-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 999999999 !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        display: none !important;
+        backdrop-filter: blur(5px) !important;
+        /* Garantir que sempre fique por cima */
+        isolation: isolate !important;
+        will-change: transform !important;
+        backface-visibility: hidden !important;
+        contain: layout style paint !important;
+        /* Força renderização em camada separada */
+        transform: translateZ(999999999px) !important;
+    }
+
+    .export-modal-overlay.show {
+        display: block !important;
+        /* Força z-index máximo quando visível */
+        z-index: 999999999 !important;
+    }
+
+    .export-modal-content {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) translateZ(999999999px) !important;
+        z-index: 999999999 !important;
+        background: white !important;
+        border-radius: 20px !important;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+        padding: 2rem !important;
+        min-width: 350px !important;
+        max-width: 90vw !important;
+        max-height: 90vh !important;
+        overflow: auto !important;
+        border: none !important;
+        /* Força renderização em camada separada */
+        isolation: isolate !important;
+        will-change: transform !important;
+        backface-visibility: hidden !important;
+        contain: layout style paint !important;
+        /* Remove qualquer interferência */
+        pointer-events: auto !important;
+        /* Garantir que sempre fique por cima */
+        transform: translate(-50%, -50%) translateZ(999999999px) !important;
+    }
+
+    /* ===== CORREÇÃO CRÍTICA PARA Z-INDEX ===== */
+    /* Garantir que os cards das unidades tenham z-index baixo */
+    .unidade-card {
+        z-index: 1 !important;
+        position: relative !important;
+        /* Evitar que interfira com o modal */
+        isolation: auto !important;
+        will-change: auto !important;
+        backface-visibility: visible !important;
+        contain: none !important;
+    }
+
+    /* Garantir que o grid de unidades não interfira */
+    .unidades-grid {
+        z-index: 1 !important;
+        position: relative !important;
+    }
+
+    /* Garantir que todos os elementos da página tenham z-index baixo */
+    .page-header-modern,
+    .actions-bar,
+    .stats-grid,
+    .main-content,
+    .content-wrapper,
+    .page-wrapper,
+    .container,
+    .row,
+    .col {
+        z-index: 1 !important;
+        position: relative !important;
+    }
+
+    /* Força z-index máximo para o modal e seus elementos */
+    .export-modal-overlay,
+    .export-modal-overlay *,
+    .export-modal-content,
+    .export-modal-header,
+    .export-modal-items,
+    .export-modal-item {
+        z-index: 999999999 !important;
+        position: relative !important;
+    }
+
+    /* Garantir que o modal seja sempre o elemento de maior prioridade */
+    .export-modal-overlay.show {
+        z-index: 999999999 !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+    
+    /* ===== SOLUÇÃO EXTREMA PARA Z-INDEX ===== */
+    /* Força z-index máximo em todos os cenários possíveis */
+    .export-modal-overlay,
+    .export-modal-overlay *,
+    .export-modal-content,
+    .export-modal-header,
+    .export-modal-items,
+    .export-modal-item,
+    .export-modal-title,
+    .export-modal-close {
+        z-index: 999999999 !important;
+        position: relative !important;
+    }
+    
+    /* Garantir que o modal seja sempre renderizado por cima */
+    .export-modal-overlay.show,
+    .export-modal-overlay.show * {
+        z-index: 999999999 !important;
+        position: fixed !important;
+    }
+    
+    /* Força renderização em camada separada para todos os elementos do modal */
+    .export-modal-overlay * {
+        isolation: isolate !important;
+        will-change: transform !important;
+        backface-visibility: hidden !important;
+        contain: layout style paint !important;
+        transform: translateZ(999999999px) !important;
+    }
+    
+    /* Garantir que nenhum elemento da página interfira com o modal */
+    body:has(.export-modal-overlay.show) *:not(.export-modal-overlay *):not(.export-modal-overlay) {
+        z-index: 1 !important;
+        position: relative !important;
+    }
+    
+    /* Fallback para navegadores que não suportam :has() */
+    .export-modal-overlay.show ~ *,
+    .export-modal-overlay.show + * {
+        z-index: 1 !important;
+        position: relative !important;
+    }
+    
+    /* ===== ESTILOS DO MODAL DE EXPORTAÇÃO ===== */
+    .export-modal-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 1.5rem !important;
+        padding-bottom: 1rem !important;
+        border-bottom: 2px solid #f3f4f6 !important;
+    }
+
+    .export-modal-title {
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        color: #111827 !important;
+        margin: 0 !important;
+    }
+
+    .export-modal-close {
+        background: none !important;
+        border: none !important;
+        font-size: 1.5rem !important;
+        color: #6b7280 !important;
+        cursor: pointer !important;
+        padding: 0.5rem !important;
+        border-radius: 50% !important;
+        transition: all 0.3s ease !important;
+        width: 40px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .export-modal-close:hover {
+        background: #f3f4f6 !important;
+        color: #374151 !important;
+    }
+
+    .export-modal-items {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+
+    .export-modal-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 1rem !important;
+        padding: 1.25rem !important;
+        border-radius: 16px !important;
+        text-decoration: none !important;
+        border: 2px solid transparent !important;
+        transition: all 0.3s ease !important;
+        color: #1f2937 !important;
+        background: #f9fafb !important;
+    }
+
+    .export-modal-item:hover {
+        background: white !important;
+        border-color: #3b82f6 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15) !important;
+    }
+
+    .export-modal-item-icon {
+        width: 56px !important;
+        height: 56px !important;
+        border-radius: 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 1.75rem !important;
+        color: white !important;
+        flex-shrink: 0 !important;
+    }
+
+    .export-modal-item-content {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.25rem !important;
+    }
+
+    .export-modal-item-title {
+        font-weight: 600 !important;
+        font-size: 1.1rem !important;
+        color: #111827 !important;
+        margin: 0 !important;
+    }
+
+    .export-modal-item-description {
+        font-size: 0.9rem !important;
+        color: #6b7280 !important;
+        margin: 0 !important;
+    }
+
+    .export-modal-item-arrow {
+        width: 40px !important;
+        height: 40px !important;
+        background: #f3f4f6 !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: #6b7280 !important;
+        font-size: 1rem !important;
+        transition: all 0.3s ease !important;
+        flex-shrink: 0 !important;
+    }
+
+    .export-modal-item:hover .export-modal-item-arrow {
+        background: #3b82f6 !important;
+        color: white !important;
+        transform: scale(1.1) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb Moderno -->
+    <nav aria-label="breadcrumb" class="breadcrumb-container">
+        <ol class="breadcrumb-modern">
+            <li class="breadcrumb-item-modern">
+                <a href="{% url 'home' %}" class="breadcrumb-link" title="Ir para página inicial">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+            </li>
+            <li class="breadcrumb-item-modern breadcrumb-current">
+                <span class="breadcrumb-current-text">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Unidades de Saúde</span>
+                </span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Header Principal com Estatísticas -->
+    <div class="page-header-modern">
+        <div class="header-content">
+            <div class="title-section">
+                <h1>🏥 Unidades de Saúde</h1>
+                <p>Gerencie todas as unidades do sistema de saúde</p>
+            </div>
+                         <div class="stats-grid">
+                 <div class="stat-card">
+                     <div class="stat-number">{{ estatisticas.total }}</div>
+                     <div class="stat-label">Total de Unidades</div>
+                 </div>
+                 <div class="stat-card">
+                     <div class="stat-number">{{ estatisticas.executantes }}</div>
+                     <div class="stat-label">Executantes</div>
+                 </div>
+                 <div class="stat-card">
+                     <div class="stat-number">{{ estatisticas.solicitantes }}</div>
+                     <div class="stat-label">Solicitantes</div>
+                 </div>
+                 <div class="stat-card">
+                     <div class="stat-number">{{ estatisticas.executante_solicitante }}</div>
+                     <div class="stat-label">Executante/Solicitante</div>
+                 </div>
+             </div>
+        </div>
+    </div>
+
+    <!-- Barra de Ações e Filtros -->
+    <div class="actions-bar">
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Buscar por nome, município, telefone, responsável, CNES..." class="search-input">
+            <select id="tipoFilter" class="filter-select">
+                <option value="">Todos os tipos</option>
+                <option value="UNIDADE_EXECUTANTE">🏥 Executante</option>
+                <option value="UNIDADE_SOLICITANTE">📞 Solicitante</option>
+                <option value="EXECUTANTE_SOLICITANTE">🏥📞 Executante/Solicitante</option>
+            </select>
+            <button class="action-btn action-btn-secondary" onclick="limparFiltros()" title="Limpar filtros">
+                <i class="fas fa-times"></i>
+                <span>Limpar</span>
+            </button>
+        </div>
+        <div class="action-buttons">
+            <div class="custom-dropdown" id="exportDropdown">
+                <button class="action-btn action-btn-secondary" onclick="toggleExportDropdown()">
+                    <i class="fas fa-download"></i>
+                    <span>Exportar</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <button class="action-btn action-btn-secondary" onclick="testarModal()" style="margin-left: 10px; background: #dc2626;">
+                    <i class="fas fa-bug"></i>
+                    <span>Testar Modal</span>
+                </button>
+                <button class="action-btn action-btn-secondary" onclick="forcarModal()" style="margin-left: 10px; background: #059669;">
+                    <i class="fas fa-magic"></i>
+                    <span>Forçar Modal</span>
+                </button>
+            </div>
+            <a href="{% url 'criar_unidade' %}" class="action-btn action-btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Nova Unidade</span>
+            </a>
+        </div>
+    </div>
+
+
+
+    <!-- Grid de Unidades -->
+    <div class="unidades-grid" id="unidadesGrid">
+        {% for unidade in unidades %}
+        <div class="unidade-card" data-tipo="{{ unidade.tipo }}" data-nome="{{ unidade.nome|lower }}">
+            <div class="card-header">
+                <div class="unidade-type-badge">
+                    {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}
+                        <span class="badge badge-executante">
+                            <i class="fas fa-hospital"></i>
+                            Executante
+                        </span>
+                    {% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}
+                        <span class="badge badge-solicitante">
+                            <i class="fas fa-phone-alt"></i>
+                            Solicitante
+                        </span>
+                    {% else %}
+                        <span class="badge badge-mista">
+                            <i class="fas fa-hospital-user"></i>
+                            Executante/Solicitante
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="card-menu">
+                    <button class="menu-trigger" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'visualizar_unidade' unidade.id %}">
+                            <i class="fas fa-eye"></i>Visualizar
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'editar_unidade' unidade.id %}">
+                            <i class="fas fa-edit"></i>Editar
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="confirmarExclusao({{ unidade.id }})">
+                            <i class="fas fa-trash"></i>Excluir
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card-content">
+                <h3 class="unidade-name">{{ unidade.nome }}</h3>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-certificate info-icon"></i>
+                        <div class="info-content">
+                            <span class="info-label">CNES</span>
+                            <span class="info-value">{{ unidade.cnes|default:"Não informado" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-map-marked-alt info-icon"></i>
+                        <div class="info-content">
+                            <span class="info-label">Município</span>
+                            <span class="info-value">{{ unidade.municipio|default:"Não informado" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-phone info-icon"></i>
+                        <div class="info-content">
+                            <span class="info-label">Telefone</span>
+                            <span class="info-value">{{ unidade.telefone }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-user-tie info-icon"></i>
+                        <div class="info-content">
+                            <span class="info-label">Responsável</span>
+                            <span class="info-value">{{ unidade.responsavel|default:"Não informado" }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="address-section">
+                    <span class="address-label">Endereço</span>
+                    <span class="address-value">{{ unidade.endereco }}</span>
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <a href="{% url 'visualizar_unidade' unidade.id %}" class="card-btn card-btn-primary">
+                    <i class="fas fa-eye"></i>
+                    <span>Visualizar</span>
+                </a>
+                <a href="{% url 'editar_unidade' unidade.id %}" class="card-btn card-btn-secondary">
+                    <i class="fas fa-edit"></i>
+                    <span>Editar</span>
+                </a>
+                <button class="card-btn card-btn-danger" onclick="confirmarExclusao({{ unidade.id }})">
+                    <i class="fas fa-trash"></i>
+                    <span>Excluir</span>
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-hospital-alt"></i>
+            </div>
+            <h3>Nenhuma unidade cadastrada</h3>
+            <p>Comece criando sua primeira unidade de saúde para gerenciar o sistema.</p>
+            <a href="{% url 'criar_unidade' %}" class="action-btn action-btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Criar Primeira Unidade</span>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Estado Vazio para Filtros -->
+    <div class="empty-state" id="emptyFilterState" style="display: none;">
+        <div class="empty-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        <h3>Nenhuma unidade encontrada</h3>
+        <p>Tente ajustar os filtros ou termos de busca.</p>
+        <button class="action-btn action-btn-secondary" onclick="limparFiltros()">
+            <i class="fas fa-times"></i>
+            <span>Limpar Filtros</span>
+        </button>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="modalConfirmacao" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content modal-modern">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="modal-title-section">
+                    <h5>Confirmar Exclusão</h5>
+                    <p>Esta ação não pode ser desfeita</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir esta unidade de saúde? Todos os dados associados serão permanentemente removidos.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="formExclusao" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensagens de Feedback -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-floating" role="alert">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar tooltips
+        const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltips.forEach(tooltip => new bootstrap.Tooltip(tooltip));
+
+        // Função para controlar o dropdown customizado - VERSÃO SIMPLIFICADA
+        function toggleExportDropdown() {
+            console.log('🔍 Função toggleExportDropdown chamada');
+            
+            // REMOVER QUALQUER DROPDOWN ANTIGO QUE POSSA ESTAR INTERFERINDO
+            const dropdownsAntigos = document.querySelectorAll('.dropdown-menu, .dropdown-content, [class*="dropdown"]');
+            dropdownsAntigos.forEach(dropdown => {
+                if (dropdown && !dropdown.closest('.export-modal-overlay')) {
+                    dropdown.style.display = 'none';
+                    dropdown.classList.remove('show');
+                    dropdown.style.zIndex = '1';
+                }
+            });
+            
+            const modal = document.getElementById('exportModalOverlay');
+            console.log('🔍 Modal encontrado:', modal);
+            
+            if (!modal) {
+                console.error('❌ Modal não encontrado! Criando novamente...');
+                criarModalDropdown();
+                setTimeout(toggleExportDropdown, 100);
+                return;
+            }
+            
+            const isOpen = modal.classList.contains('show');
+            console.log('🔍 Modal está aberto?', isOpen);
+            
+            if (isOpen) {
+                // FECHAR MODAL
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+                console.log('✅ Modal fechado');
+                
+                // REMOVER DESFOQUE DOS CARDS
+                const cards = document.querySelectorAll('.unidade-card');
+                cards.forEach(card => {
+                    card.style.filter = 'none';
+                    card.style.transform = 'none';
+                });
+                
+            } else {
+                // ABRIR MODAL
+                modal.classList.add('show');
+                modal.style.display = 'block';
+                modal.style.zIndex = '999999999';
+                console.log('✅ Modal aberto');
+                
+                // APLICAR DESFOQUE NOS CARDS
+                const cards = document.querySelectorAll('.unidade-card');
+                cards.forEach(card => {
+                    card.style.filter = 'blur(3px)';
+                    card.style.transform = 'scale(0.98)';
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.zIndex = '1';
+                });
+                
+                // FORÇA Z-INDEX MÁXIMO IMEDIATAMENTE
+                console.log('🔧 Aplicando z-index máximo...');
+                ajustarZIndexPorZoom();
+                
+                // Força novamente após intervalos
+                setTimeout(() => {
+                    console.log('🔧 Aplicando z-index novamente (50ms)...');
+                    ajustarZIndexPorZoom();
+                }, 50);
+                
+                setTimeout(() => {
+                    console.log('🔧 Aplicando z-index novamente (100ms)...');
+                    ajustarZIndexPorZoom();
+                }, 100);
+                
+                setTimeout(() => {
+                    console.log('🔧 Aplicando z-index novamente (200ms)...');
+                    ajustarZIndexPorZoom();
+                }, 200);
+                
+                setTimeout(() => {
+                    console.log('🔧 Aplicando z-index novamente (500ms)...');
+                    ajustarZIndexPorZoom();
+                }, 500);
+                
+                // Verifica se o modal está visível
+                setTimeout(() => {
+                    const modalVisivel = document.getElementById('exportModalOverlay');
+                    if (modalVisivel && modalVisivel.classList.contains('show')) {
+                        console.log('✅ Modal está visível e com classe show');
+                        console.log('🔍 Z-index do modal:', window.getComputedStyle(modalVisivel).zIndex);
+                        console.log('🔍 Display do modal:', window.getComputedStyle(modalVisivel).display);
+                    } else {
+                        console.error('❌ Modal não está visível!');
+                    }
+                }, 100);
+            }
+        }
+
+        // Fechar dropdown quando clicar fora
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('exportDropdown');
+            const modal = document.getElementById('exportModalOverlay');
+            
+            if (!dropdown.contains(e.target)) {
+                modal.classList.remove('show');
+            }
+        });
+
+        // Fechar dropdown com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('exportModalOverlay');
+                modal.classList.remove('show');
+            }
+        });
+
+        // Função para ajustar z-index baseado no zoom - SOLUÇÃO FINAL COM MODAL
+        function ajustarZIndexPorZoom() {
+            console.log('🔧 Função ajustarZIndexPorZoom executada');
+            const modal = document.getElementById('exportModalOverlay');
+            const modalContent = modal ? modal.querySelector('.export-modal-content') : null;
+            const modalItems = modal ? modal.querySelectorAll('.export-modal-item') : null;
+            
+            if (!modal) {
+                console.error('❌ Modal não encontrado em ajustarZIndexPorZoom');
+                return;
+            }
+            
+            console.log('🔍 Modal encontrado, aplicando z-index máximo...');
+            
+            // FORÇA Z-INDEX MÁXIMO PARA O MODAL
+            modal.style.setProperty('z-index', '999999999', 'important');
+            modal.style.setProperty('position', 'fixed', 'important');
+            modal.style.setProperty('top', '0', 'important');
+            modal.style.setProperty('left', '0', 'important');
+            modal.style.setProperty('right', '0', 'important');
+            modal.style.setProperty('bottom', '0', 'important');
+            modal.style.setProperty('transform', 'translateZ(999999999px)', 'important');
+            modal.style.setProperty('isolation', 'isolate', 'important');
+            modal.style.setProperty('will-change', 'transform', 'important');
+            modal.style.setProperty('backface-visibility', 'hidden', 'important');
+            modal.style.setProperty('contain', 'layout style paint', 'important');
+            modal.style.setProperty('display', 'block', 'important');
+            modal.style.setProperty('visibility', 'visible', 'important');
+            modal.style.setProperty('opacity', '1', 'important');
+            modal.style.setProperty('pointer-events', 'auto', 'important');
+            
+            console.log('✅ Z-index aplicado ao modal');
+            
+            // FORÇA Z-INDEX MÁXIMO PARA O CONTEÚDO DO MODAL
+            if (modalContent) {
+                modalContent.style.setProperty('z-index', '999999999', 'important');
+                modalContent.style.setProperty('position', 'fixed', 'important');
+                modalContent.style.setProperty('top', '50%', 'important');
+                modalContent.style.setProperty('left', '50%', 'important');
+                modalContent.style.setProperty('transform', 'translate(-50%, -50%) translateZ(999999999px)', 'important');
+                modalContent.style.setProperty('isolation', 'isolate', 'important');
+                modalContent.style.setProperty('will-change', 'transform', 'important');
+                modalContent.style.setProperty('backface-visibility', 'hidden', 'important');
+                modalContent.style.setProperty('contain', 'layout style paint', 'important');
+                console.log('✅ Z-index aplicado ao conteúdo do modal');
+            }
+            
+            // FORÇA Z-INDEX MÁXIMO PARA OS ITENS DO MODAL
+            if (modalItems) {
+                modalItems.forEach((item, index) => {
+                    item.style.setProperty('z-index', '999999999', 'important');
+                    item.style.setProperty('transform', 'translateZ(999999999px)', 'important');
+                    item.style.setProperty('isolation', 'isolate', 'important');
+                    item.style.setProperty('will-change', 'transform', 'important');
+                    item.style.setProperty('backface-visibility', 'hidden', 'important');
+                    item.style.setProperty('contain', 'layout style paint', 'important');
+                });
+                console.log(`✅ Z-index aplicado a ${modalItems.length} itens do modal`);
+            }
+            
+            // FORÇA Z-INDEX MÍNIMO PARA TODOS OS OUTROS ELEMENTOS
+            const elementosParaReduzirZIndex = [
+                'body', 'html', '.container', '.row', '.col', 
+                '.page-header-modern', '.actions-bar', '.unidades-grid', 
+                '.unidade-card', '.card-header', '.card-content', 
+                '.card-footer', '.breadcrumb-container', '.stats-grid', 
+                '.main-content', '.content-wrapper', '.page-wrapper', 
+                '.dropdown', '.dropdown-menu', '.btn', '.card', 
+                '.navbar', '.nav', '.nav-item', '.nav-link'
+            ];
+            
+            let elementosModificados = 0;
+            elementosParaReduzirZIndex.forEach(seletor => {
+                const elementos = document.querySelectorAll(seletor);
+                elementos.forEach(elemento => {
+                    if (elemento && !elemento.closest('.export-modal-overlay')) {
+                        elemento.style.setProperty('z-index', '1', 'important');
+                        elemento.style.setProperty('position', 'relative', 'important');
+                        elemento.style.setProperty('isolation', 'auto', 'important');
+                        elemento.style.setProperty('transform', 'none', 'important');
+                        elemento.style.setProperty('will-change', 'auto', 'important');
+                        elemento.style.setProperty('backface-visibility', 'visible', 'important');
+                        elemento.style.setProperty('contain', 'none', 'important');
+                        elementosModificados++;
+                    }
+                });
+            });
+            
+            console.log(`✅ Z-index reduzido para ${elementosModificados} elementos da página`);
+            
+            // GARANTIR QUE OS CARDS FIQUE DESFOCADOS QUANDO O MODAL ESTIVER ABERTO
+            if (modal.classList.contains('show')) {
+                const cards = document.querySelectorAll('.unidade-card');
+                cards.forEach(card => {
+                    card.style.setProperty('filter', 'blur(3px)', 'important');
+                    card.style.setProperty('transform', 'scale(0.98)', 'important');
+                    card.style.setProperty('transition', 'all 0.3s ease', 'important');
+                    card.style.setProperty('z-index', '1', 'important');
+                });
+                console.log('✅ Cards desfocados e com z-index baixo');
+            }
+            
+            // Garantir que o modal seja sempre o elemento de maior prioridade
+            setTimeout(() => {
+                modal.style.setProperty('z-index', '999999999', 'important');
+                if (modalContent) {
+                    modalContent.style.setProperty('z-index', '999999999', 'important');
+                }
+                console.log('✅ Z-index final aplicado ao modal');
+            }, 10);
+        }
+
+        // Aplicar ajustes de z-index
+        ajustarZIndexPorZoom();
+        
+        // Aplicar ajustes a cada 25ms para garantir - SOLUÇÃO RADICAL
+        setInterval(ajustarZIndexPorZoom, 25);
+        
+        // Detectar mudanças de zoom
+        let lastZoom = window.devicePixelRatio || 1;
+        window.addEventListener('resize', function() {
+            const currentZoom = window.devicePixelRatio || 1;
+            if (Math.abs(currentZoom - lastZoom) > 0.1) {
+                lastZoom = currentZoom;
+                ajustarZIndexPorZoom();
+            }
+        });
+
+        // Detectar quando o dropdown é aberto/fechado
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('[data-bs-toggle="dropdown"]')) {
+                // Aguarda um pouco para o Bootstrap processar
+                setTimeout(ajustarZIndexPorZoom, 50);
+            }
+        });
+
+        // Observar mudanças no DOM
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' || mutation.type === 'childList') {
+                    setTimeout(ajustarZIndexPorZoom, 50);
+                }
+            });
+        });
+
+        // Observar todo o documento
+        observer.observe(document.body, {
+            attributes: true,
+            childList: true,
+            subtree: true
+        });
+
+        // Aplicar filtros em tempo real
+        const searchInput = document.getElementById('searchInput');
+        const tipoFilter = document.getElementById('tipoFilter');
+
+        function aplicarFiltros() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const tipoValue = tipoFilter.value;
+            
+            const cards = document.querySelectorAll('.unidade-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const nome = card.dataset.nome;
+                const tipo = card.dataset.tipo;
+                
+                let showCard = true;
+
+                if (searchTerm && !nome.includes(searchTerm)) {
+                    showCard = false;
+                }
+
+                if (tipoValue && tipo !== tipoValue) {
+                    showCard = false;
+                }
+
+                if (showCard) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const emptyState = document.getElementById('emptyFilterState');
+            if (visibleCount === 0 && cards.length > 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+
+        searchInput.addEventListener('input', aplicarFiltros);
+        tipoFilter.addEventListener('change', aplicarFiltros);
+
+        // Fechar alertas automaticamente
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert-floating');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+
+        // ===== MODAL DO DROPDOWN - SOLUÇÃO FINAL =====
+        // Criar modal dinamicamente - VERSÃO SIMPLIFICADA E CORRIGIDA
+        function criarModalDropdown() {
+            console.log('🔧 Criando modal...');
+            
+            // Remove modal existente se houver
+            const modalExistente = document.getElementById('exportModalOverlay');
+            if (modalExistente) {
+                modalExistente.remove();
+            }
+
+            // Cria o modal com estrutura mais simples
+            const modal = document.createElement('div');
+            modal.id = 'exportModalOverlay';
+            modal.className = 'export-modal-overlay';
+            modal.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                z-index: 999999999 !important;
+                background: rgba(0, 0, 0, 0.5) !important;
+                display: none !important;
+                backdrop-filter: blur(5px) !important;
+            `;
+            
+            modal.innerHTML = `
+                <div class="export-modal-content" style="
+                    position: fixed !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    z-index: 999999999 !important;
+                    background: white !important;
+                    border-radius: 20px !important;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+                    padding: 2rem !important;
+                    min-width: 350px !important;
+                    max-width: 90vw !important;
+                    max-height: 90vh !important;
+                    overflow: auto !important;
+                    border: none !important;
+                ">
+                    <div class="export-modal-header" style="
+                        display: flex !important;
+                        justify-content: space-between !important;
+                        align-items: center !important;
+                        margin-bottom: 1.5rem !important;
+                        padding-bottom: 1rem !important;
+                        border-bottom: 2px solid #f3f4f6 !important;
+                    ">
+                        <h3 class="export-modal-title" style="
+                            font-size: 1.5rem !important;
+                            font-weight: 700 !important;
+                            color: #111827 !important;
+                            margin: 0 !important;
+                        ">Exportar Dados</h3>
+                        <button class="export-modal-close" onclick="toggleExportDropdown()" style="
+                            background: none !important;
+                            border: none !important;
+                            font-size: 1.5rem !important;
+                            color: #6b7280 !important;
+                            cursor: pointer !important;
+                            padding: 0.5rem !important;
+                            border-radius: 50% !important;
+                            transition: all 0.3s ease !important;
+                            width: 40px !important;
+                            height: 40px !important;
+                            display: flex !important;
+                            align-items: center !important;
+                            justify-content: center !important;
+                        ">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="export-modal-items" style="
+                        display: flex !important;
+                        flex-direction: column !important;
+                        gap: 1rem !important;
+                    ">
+                        <a class="export-modal-item" href="{% url 'export_unidades_pdf' %}" style="
+                            display: flex !important;
+                            align-items: center !important;
+                            gap: 1rem !important;
+                            padding: 1.25rem !important;
+                            border-radius: 16px !important;
+                            text-decoration: none !important;
+                            border: 2px solid transparent !important;
+                            transition: all 0.3s ease !important;
+                            color: #1f2937 !important;
+                            background: #f9fafb !important;
+                        ">
+                            <span>📄 Exportar PDF</span>
+                        </a>
+                        <a class="export-modal-item" href="{% url 'export_unidades_excel' %}" style="
+                            display: flex !important;
+                            align-items: center !important;
+                            gap: 1rem !important;
+                            padding: 1.25rem !important;
+                            border-radius: 16px !important;
+                            text-decoration: none !important;
+                            border: 2px solid transparent !important;
+                            transition: all 0.3s ease !important;
+                            color: #1f2937 !important;
+                            background: #f9fafb !important;
+                        ">
+                            <span>📊 Exportar Excel</span>
+                        </a>
+                        <a class="export-modal-item" href="{% url 'export_unidades_csv' %}" style="
+                            display: flex !important;
+                            align-items: center !important;
+                            gap: 1rem !important;
+                            padding: 1.25rem !important;
+                            border-radius: 16px !important;
+                            text-decoration: none !important;
+                            border: 2px solid transparent !important;
+                            transition: all 0.3s ease !important;
+                            color: #1f2937 !important;
+                            background: #f9fafb !important;
+                        ">
+                            <span>📋 Exportar CSV</span>
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            // Adiciona o modal ao body
+            document.body.appendChild(modal);
+            console.log('✅ Modal criado e adicionado ao body');
+
+            // Adiciona listeners para fechar
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    toggleExportDropdown();
+                }
+            });
+
+            // Fecha com ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    toggleExportDropdown();
+                }
+            });
+            
+            return modal;
+        }
+
+        // Criar modal ao carregar
+        criarModalDropdown();
+        
+        // Verificar se o modal foi criado corretamente
+        setTimeout(() => {
+            const modal = document.getElementById('exportModalOverlay');
+            if (modal) {
+                console.log('✅ Modal criado com sucesso:', modal);
+                console.log('🔍 Classe do modal:', modal.className);
+                console.log('🔍 Z-index inicial:', window.getComputedStyle(modal).zIndex);
+            } else {
+                console.error('❌ Modal não foi criado!');
+            }
+        }, 100);
+        
+        // Função de teste para o modal
+        window.testarModal = function() {
+            console.log('🧪 Testando modal...');
+            
+            // REMOVER QUALQUER DROPDOWN ANTIGO
+            const dropdownsAntigos = document.querySelectorAll('.dropdown-menu, .dropdown-content, [class*="dropdown"]:not(.export-modal-overlay)');
+            dropdownsAntigos.forEach(dropdown => {
+                dropdown.style.display = 'none';
+                dropdown.classList.remove('show');
+                dropdown.style.zIndex = '1';
+            });
+            
+            const modal = document.getElementById('exportModalOverlay');
+            if (modal) {
+                console.log('✅ Modal encontrado');
+                console.log('🔍 Classe:', modal.className);
+                console.log('🔍 Z-index:', window.getComputedStyle(modal).zIndex);
+                console.log('🔍 Display:', window.getComputedStyle(modal).display);
+                console.log('🔍 Position:', window.getComputedStyle(modal).position);
+                
+                // Força abertura do modal
+                modal.classList.add('show');
+                ajustarZIndexPorZoom();
+                
+                console.log('✅ Modal aberto para teste');
+            } else {
+                console.error('❌ Modal não encontrado!');
+                criarModalDropdown();
+            }
+        };
+
+        // Função para forçar a criação do modal
+        window.forcarModal = function() {
+            console.log('🔧 Forçando criação do modal...');
+            
+            // Remove qualquer modal existente
+            const modalExistente = document.getElementById('exportModalOverlay');
+            if (modalExistente) {
+                modalExistente.remove();
+            }
+            
+            // Cria o modal novamente
+            const modal = criarModalDropdown();
+            
+            // Força a abertura
+            setTimeout(() => {
+                modal.classList.add('show');
+                modal.style.display = 'block';
+                modal.style.zIndex = '999999999';
+                
+                // Aplica desfoque nos cards
+                const cards = document.querySelectorAll('.unidade-card');
+                cards.forEach(card => {
+                    card.style.filter = 'blur(3px)';
+                    card.style.transform = 'scale(0.98)';
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.zIndex = '1';
+                });
+                
+                console.log('✅ Modal forçado criado e aberto.');
+            }, 100);
+        };
+        
+        // Função para forçar remoção de dropdowns antigos
+        function removerDropdownsAntigos() {
+            console.log('🧹 Removendo dropdowns antigos...');
+            const dropdownsAntigos = document.querySelectorAll('.dropdown-menu, .dropdown-content, [class*="dropdown"]:not(.export-modal-overlay)');
+            let removidos = 0;
+            
+            dropdownsAntigos.forEach(dropdown => {
+                if (dropdown && !dropdown.closest('.export-modal-overlay')) {
+                    dropdown.style.display = 'none';
+                    dropdown.classList.remove('show');
+                    dropdown.style.zIndex = '1';
+                    dropdown.style.position = 'relative';
+                    removidos++;
+                }
+            });
+            
+            console.log(`🧹 ${removidos} dropdowns antigos removidos`);
+        }
+        
+        // Executar limpeza ao carregar a página
+        setTimeout(removerDropdownsAntigos, 100);
+        setTimeout(removerDropdownsAntigos, 500);
+        setTimeout(removerDropdownsAntigos, 1000);
+        
+        // ===== MONITORAMENTO CONTÍNUO DE Z-INDEX =====
+        // Função para garantir z-index correto em diferentes cenários
+        function garantirZIndexCorreto() {
+            const modal = document.getElementById('exportModalOverlay');
+            if (modal && modal.classList.contains('show')) {
+                ajustarZIndexPorZoom();
+            }
+        }
+        
+        // Monitorar mudanças de zoom e redimensionamento
+        window.addEventListener('resize', garantirZIndexCorreto);
+        window.addEventListener('scroll', garantirZIndexCorreto);
+        
+        // Monitorar mudanças de zoom (para diferentes navegadores)
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', garantirZIndexCorreto);
+        }
+        
+        // Monitorar mudanças de orientação (mobile)
+        window.addEventListener('orientationchange', () => {
+            setTimeout(garantirZIndexCorreto, 100);
+        });
+        
+        // Verificar z-index periodicamente quando o modal estiver aberto
+        setInterval(() => {
+            const modal = document.getElementById('exportModalOverlay');
+            if (modal && modal.classList.contains('show')) {
+                garantirZIndexCorreto();
+            }
+        }, 1000);
+    });
+
+    function limparFiltros() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('tipoFilter').value = '';
+        
+        const cards = document.querySelectorAll('.unidade-card');
+        cards.forEach(card => card.style.display = '');
+        
+        document.getElementById('emptyFilterState').style.display = 'none';
+    }
+
+    function confirmarExclusao(id) {
+        const modal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+        const form = document.getElementById('formExclusao');
+        form.action = `/accounts/unidades-saude/${id}/excluir/`;
+        modal.show();
+    }
+</script>
+
+{% endblock %} 

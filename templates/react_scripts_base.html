@@ -1,0 +1,214 @@
+{% load static %}
+<!-- Scripts React e Dependências -->
+<script src="{% static 'js/vendor/react.development.js' %}"></script>
+<script src="{% static 'js/vendor/react-dom.development.js' %}"></script>
+
+<!-- Tornar React disponível globalmente -->
+<script>
+    // Tornar React disponível globalmente
+    window.React = React;
+    window.ReactDOM = ReactDOM;
+    
+    console.log('✅ React disponível globalmente:', window.React);
+    console.log('✅ ReactDOM disponível globalmente:', window.ReactDOM);
+</script>
+
+<!-- Sistema de Tratamento de Erros e Inicialização -->
+<script src="{% static 'js/services/ReactDebugger.js' %}"></script>
+<script src="{% static 'js/components/ReactErrorBoundary.js' %}"></script>
+<script src="{% static 'js/services/ReactDependencyChecker.js' %}"></script>
+<script src="{% static 'js/services/ReactComponentInitializer.js' %}"></script>
+<script src="{% static 'js/services/SafeComponentLoader.js' %}"></script>
+<script src="{% static 'js/services/ReactErrorHandling.js' %}"></script>
+<script src="{% static 'js/services/ReactInitializer.js' %}"></script>
+<script src="{% static 'js/services/ComponentDetectionSystem.js' %}"></script>
+
+<script>
+// Configuração global padrão para todos os componentes React
+window.REACT_CONFIG = {
+    user: {
+        id: {{ user.id|default:'null' }},
+        username: '{{ user.username|default:'' }}',
+        full_name: '{{ user.get_full_name|default:user.username }}',
+        is_staff: {{ user.is_staff|yesno:"true,false" }},
+        is_superuser: {{ user.is_superuser|yesno:"true,false" }}
+    },
+    urls: {
+        home: '{% url "home" %}',
+        unidades_saude: '{% url "unidades_saude" %}',
+        registro_chamada: '{% url "registro_chamada" %}',
+        criar_unidade: '{% url "criar_unidade" %}'
+    },
+    csrf_token: '{{ csrf_token }}',
+    debug: {% if debug %}true{% else %}false{% endif %}
+};
+
+// Função utilitária aprimorada para inicializar componentes React
+function initializeReactComponent(componentName, containerId, customProps = {}, options = {}) {
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Configurar dados do Django globalmente
+        window.djangoData = window.REACT_CONFIG;
+
+        // Configuração padrão aprimorada
+        const defaultOptions = {
+            fallbackMessage: 'Componente React não disponível. Usando versão HTML abaixo.',
+            enableErrorBoundary: true,
+            showLoadingIndicator: true,
+            onSuccess: function(componentName, container) {
+                console.log(`✅ Componente ${componentName} carregado com sucesso`);
+                
+                // Ocultar fallback HTML quando React carrega
+                const fallbackContainer = container.querySelector('.fallback-container');
+                if (fallbackContainer) {
+                    fallbackContainer.style.display = 'none';
+                }
+                
+                // Mostrar notificação de sucesso
+                showReactNotification('🎉 Interface React Ativa', 'Componente interativo carregado com sucesso', 'success');
+            },
+            onFallback: function(componentName, container) {
+                console.log(`⚠️ Usando fallback HTML para ${componentName}`);
+                
+                // Garantir que fallback HTML está visível
+                const fallbackContainer = container.querySelector('.fallback-container');
+                if (fallbackContainer) {
+                    fallbackContainer.style.display = 'block';
+                }
+                
+                // Inicializar funcionalidades do fallback se existir
+                if (typeof initializeFallbackFeatures === 'function') {
+                    initializeFallbackFeatures();
+                }
+                
+                // Mostrar notificação de fallback
+                showReactNotification('📝 Modo Compatibilidade', 'Usando formulário HTML tradicional', 'warning');
+            },
+            onError: function(error, componentName, container) {
+                console.error(`❌ Erro ao carregar ${componentName}:`, error);
+                
+                // Mostrar notificação de erro
+                showReactNotification('⚠️ Problema de Carregamento', `Erro ao carregar ${componentName}: ${error.message}`, 'error');
+            }
+        };
+
+        // Combinar opções
+        const finalOptions = { ...defaultOptions, ...options };
+
+        try {
+            // Usar o novo sistema de inicialização robusto
+            const success = await window.ReactComponentInitializer.initComponent(
+                componentName,
+                containerId,
+                customProps,
+                finalOptions
+            );
+
+            if (!success) {
+                console.log(`⚠️ Fallback ativado automaticamente para ${componentName}`);
+            }
+        } catch (error) {
+            console.error(`❌ Falha crítica ao inicializar ${componentName}:`, error);
+            
+            // Ativar fallback manualmente em caso de erro crítico
+            if (finalOptions.onFallback) {
+                const container = document.getElementById(containerId);
+                if (container) {
+                    finalOptions.onFallback(componentName, container);
+                }
+            }
+        }
+    });
+}
+
+// Função para mostrar notificações React
+function showReactNotification(title, message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        max-width: 350px;
+        animation: slideInRight 0.3s ease-out;
+    `;
+
+    const colors = {
+        success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+        error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+        info: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+    };
+
+    notification.style.background = colors[type] || colors.info;
+    notification.style.color = 'white';
+    
+    notification.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <div style="flex: 1;">
+                <div style="font-weight: 600; margin-bottom: 4px;">${title}</div>
+                <div style="opacity: 0.9;">${message}</div>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" style="
+                background: none; border: none; color: white; cursor: pointer;
+                padding: 4px; border-radius: 4px; opacity: 0.7;
+            " onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">×</button>
+        </div>
+        <style>
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        </style>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Remover automaticamente após 5 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
+
+// Utilitários comuns para fallback HTML
+function setupPhoneMask(selector) {
+    const inputs = document.querySelectorAll(selector);
+    inputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                if (value.length < 14) {
+                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                }
+            }
+            e.target.value = value;
+        });
+    });
+}
+
+function setupCurrentDateTime(selector) {
+    const element = document.querySelector(selector);
+    if (element) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('pt-BR');
+        const timeStr = now.toLocaleTimeString('pt-BR');
+        element.textContent = `${dateStr} - ${timeStr}`;
+    }
+}
+
+function setupCurrentDate(selector) {
+    const element = document.querySelector(selector);
+    if (element) {
+        element.value = new Date().toLocaleDateString('pt-BR');
+    }
+}
+</script>

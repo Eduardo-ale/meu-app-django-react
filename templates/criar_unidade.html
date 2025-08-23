@@ -1,0 +1,2100 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+/* Reset e Configurações Gerais */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #f8fafc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Hero */
+.hero-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0 4rem 0;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.hero-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 20s ease-in-out infinite;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-breadcrumb {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 0.5rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.hero-breadcrumb a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.3s ease;
+}
+
+.hero-breadcrumb a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.hero-breadcrumb .separator {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0.3rem;
+}
+
+.hero-breadcrumb .current {
+    color: white;
+    font-weight: 600;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.stat-card i {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* Container Principal */
+.main-container {
+    margin-top: -2rem;
+    position: relative;
+    z-index: 10;
+    padding-bottom: 2rem;
+}
+
+/* Alerta de Informação */
+.info-alert {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 1px solid #2196f3;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #1565c0;
+    font-size: 0.95rem;
+}
+
+.info-alert i {
+    font-size: 1.2rem;
+    color: #2196f3;
+}
+
+/* Formulário Principal */
+.form-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Barra de Progresso */
+.progress-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progress-info h6 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.progress-bar-container {
+    flex: 1;
+    margin: 0 1rem;
+}
+
+.progress {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+.progress-stats {
+    text-align: right;
+    min-width: 80px;
+}
+
+.progress-percentage {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #28a745;
+}
+
+.progress-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Seções do Formulário */
+.form-section {
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.section-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.section-icon.info { background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); }
+.section-icon.location { background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); }
+.section-icon.contact { background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%); }
+.section-icon.admin { background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%); }
+
+.section-title h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2d3436;
+}
+
+.section-title p {
+    margin: 0;
+    color: #636e72;
+    font-size: 0.9rem;
+}
+
+.section-content {
+    padding: 1.5rem;
+}
+
+/* Grid de Campos */
+.fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.fields-grid.single {
+    grid-template-columns: 1fr;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #2d3436;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.field-label i {
+    width: 16px;
+    text-align: center;
+    color: #6c5ce7;
+}
+
+.required {
+    color: #e74c3c;
+    margin-left: 0.25rem;
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+    font-family: inherit;
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+    outline: none;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+    transform: translateY(-1px);
+}
+
+.field-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.field-hint {
+    font-size: 0.8rem;
+    color: #636e72;
+    margin-top: 0.25rem;
+}
+
+.field-feedback {
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-height: 1.2rem;
+    margin-top: 0.25rem;
+}
+
+/* Validação */
+.field-input.is-valid,
+.field-select.is-valid,
+.field-textarea.is-valid {
+    border-color: #00b894;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%);
+}
+
+.field-input.is-invalid,
+.field-select.is-invalid,
+.field-textarea.is-invalid {
+    border-color: #e74c3c;
+    background: linear-gradient(135deg, #ffffff 0%, #fff8f8 100%);
+}
+
+.field-feedback.text-success { color: #00b894; }
+.field-feedback.text-danger { color: #e74c3c; }
+
+/* Estilos do Autocomplete para Municípios */
+.autocomplete-container {
+    position: relative;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #00b894;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+    animation: slideDown 0.3s ease-out;
+}
+
+.autocomplete-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f3f4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.highlighted {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    color: #15803d;
+    transform: translateX(4px);
+}
+
+.autocomplete-item::before {
+    content: '📍';
+    margin-right: 4px;
+}
+
+.autocomplete-no-results {
+    padding: 16px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    border-bottom: none;
+}
+
+.autocomplete-loading {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    color: #00b894;
+    display: none;
+}
+
+.autocomplete-loading.show {
+    display: block;
+}
+
+.autocomplete-loading i {
+    animation: spin 1s linear infinite;
+}
+
+.autocomplete-error {
+    padding: 12px 16px;
+    color: #dc3545;
+    background: #fef2f2;
+    border-bottom: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.autocomplete-stats {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.8rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.autocomplete-help {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.autocomplete-help.enhanced {
+    color: #00b894;
+    font-weight: 500;
+}
+
+/* Animações */
+@keyframes slideDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(40, 167, 69, 0.6);
+    }
+}
+
+/* Estilos para alertas de pré-preenchimento */
+.alert.alert-success.prefill-notification {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 1px solid #28a745;
+    border-radius: 12px;
+    animation: slideInFromTop 0.5s ease-out;
+}
+
+.alert.alert-info.origin-notification {
+    background: linear-gradient(135deg, #d1ecf1 0%, #b8daff 100%);
+    border: 1px solid #17a2b8;
+    border-radius: 12px;
+    animation: slideInFromTop 0.5s ease-out 0.3s both;
+}
+
+/* Campos pré-preenchidos */
+.field-input.prefilled {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #22c55e;
+    animation: pulseGlow 2s ease-in-out;
+}
+
+.field-feedback.prefilled {
+    color: #15803d;
+    font-weight: 600;
+}
+
+/* Toast de sucesso melhorado */
+.toast-success-prefill {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+/* Grupo CNES */
+.cnes-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: end;
+}
+
+.cnes-group .field-input {
+    flex: 1;
+}
+
+.btn-search {
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.25rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+}
+
+.btn-search:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.4);
+}
+
+/* Seção Especial (Admin) */
+.special-section {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+    border: 2px solid #ffc107;
+    position: relative;
+}
+
+.special-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ffc107, #ff9800);
+}
+
+.readonly-field {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%) !important;
+    border-color: #ffc107 !important;
+    cursor: not-allowed;
+    color: #f57c00 !important;
+    font-weight: 600;
+}
+
+/* Botões de Ação */
+.action-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.8rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 150px;
+    justify-content: center;
+}
+
+.btn-action.primary {
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+
+.btn-action.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-action.secondary {
+    background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 110, 114, 0.3);
+}
+
+.btn-action.secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 110, 114, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.shortcuts-info {
+    font-size: 0.85rem;
+    color: #636e72;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.shortcuts-info kbd {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.8rem;
+    color: #495057;
+    margin: 0 0.25rem;
+}
+
+/* Animações */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.form-section {
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .hero-title { font-size: 2rem; }
+    .hero-header { padding: 1.5rem 0 3rem 0; }
+    .fields-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .action-buttons { flex-direction: column; align-items: center; }
+    .btn-action { width: 100%; max-width: 280px; }
+    .section-content { padding: 1.25rem; }
+    .cnes-group { flex-direction: column; }
+    .progress-section { flex-direction: column; gap: 1rem; text-align: center; }
+    .progress-bar-container { margin: 0; }
+}
+
+@media (max-width: 480px) {
+    .hero-title { font-size: 1.75rem; }
+    .section-header { padding: 1rem; flex-direction: column; text-align: center; gap: 0.75rem; }
+    .progress-section { padding: 1rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Header -->
+<div class="hero-header">
+    <div class="container">
+        <div class="hero-content">
+            <!-- Breadcrumb -->
+            <div class="hero-breadcrumb">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-home"></i>
+                    Início
+                </a>
+                <span class="separator">/</span>
+                <a href="{% url 'unidades_saude' %}">
+                    <i class="fas fa-hospital-alt"></i>
+                    Unidades de Saúde
+                </a>
+                <span class="separator">/</span>
+                <span class="current">
+                    <i class="fas fa-plus-circle"></i>
+                    Criar Nova
+                </span>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title">Criar Nova Unidade de Saúde</h1>
+                    <p class="hero-subtitle">Cadastre uma nova unidade de saúde no sistema com informações completas e organizadas</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <div id="currentDateTime"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Container Principal -->
+<div class="container main-container">
+    <!-- Alerta Informativo -->
+    <div class="info-alert">
+        <i class="fas fa-info-circle"></i>
+        <span><strong>Atenção:</strong> Os campos marcados com * são obrigatórios e devem ser preenchidos.</span>
+    </div>
+
+    <!-- Card do Formulário -->
+    <div class="form-card">
+        <!-- Barra de Progresso -->
+        <div class="progress-section">
+            <div class="progress-info">
+                <h6>
+                    <i class="fas fa-tasks"></i>
+                    Progresso do Cadastro
+                </h6>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+                <div class="progress-label">Concluído</div>
+            </div>
+        </div>
+
+        <!-- Formulário -->
+        <form method="post" id="createForm">
+            {% csrf_token %}
+            
+            <!-- Seção 1: Informações da Unidade -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon info">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div class="section-title">
+                        <h3>Informações da Unidade</h3>
+                        <p>Dados principais da unidade de saúde</p>
+                    </div>
+                </div>
+                
+                <div class="section-content">
+                    <div class="fields-grid">
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-hospital"></i>
+                                Nome da Unidade
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="field-input" 
+                                   name="nome" 
+                                   id="id_nome"
+                                   placeholder="Ex: Hospital Municipal João Silva"
+                                   required>
+                            <div class="field-feedback" id="nome-feedback"></div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-barcode"></i>
+                                CNES
+                                <span class="required">*</span>
+                            </label>
+                            <div class="cnes-group">
+                                <input type="text" 
+                                       class="field-input" 
+                                       name="cnes" 
+                                       id="id_cnes"
+                                       placeholder="Ex: 2567891"
+                                       maxlength="7"
+                                       required>
+                                <button type="button" class="btn-search" id="consultarCnes">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="field-hint">Código Nacional de Estabelecimentos de Saúde (7 dígitos)</div>
+                            <div class="field-feedback" id="cnes-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="fields-grid">
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-tags"></i>
+                                Tipo
+                                <span class="required">*</span>
+                            </label>
+                            <select class="field-select" name="tipo" id="id_tipo" required>
+                                <option value="">Selecione o tipo...</option>
+                                <option value="UNIDADE_EXECUTANTE">Unidade Executante</option>
+                                <option value="UNIDADE_SOLICITANTE">Unidade Solicitante</option>
+                                <option value="EXECUTANTE_SOLICITANTE">Executante/Solicitante</option>
+                            </select>
+                            <div class="field-hint">Tipo de operação da unidade no sistema</div>
+                            <div class="field-feedback" id="tipo-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção 2: Localização -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon location">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="section-title">
+                        <h3>Localização</h3>
+                        <p>Endereço e localização da unidade</p>
+                    </div>
+                </div>
+                
+                <div class="section-content">
+                    <div class="fields-grid">
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-city"></i>
+                                Município da Unidade de Saúde
+                                <span class="required">*</span>
+                            </label>
+                            <div class="autocomplete-container">
+                                <input type="text" 
+                                       class="field-input" 
+                                       name="municipio" 
+                                       id="id_municipio"
+                                       placeholder="Digite o nome do município..."
+                                       autocomplete="off"
+                                       required>
+                                <div class="autocomplete-loading" id="municipio-loading">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
+                                <div class="autocomplete-dropdown" id="municipio-dropdown"></div>
+                            </div>
+                            <div class="autocomplete-help" id="municipio-help">
+                                ⚡ Digite 2+ caracteres • 🔄 Busca inteligente • 📊 Máx. 10 resultados
+                            </div>
+                            <div class="field-feedback" id="municipio-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="fields-grid single">
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-map-marked-alt"></i>
+                                Endereço Completo
+                                <span class="required">*</span>
+                            </label>
+                            <textarea class="field-textarea" 
+                                      name="endereco" 
+                                      id="id_endereco"
+                                      rows="3" 
+                                      required 
+                                      placeholder="Ex: Av. Eng. Lutero Lopes, 36 - Conj. Aero Rancho, Campo Grande - MS"></textarea>
+                            <div class="field-feedback" id="endereco-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção 3: Contato e Responsável -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon contact">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="section-title">
+                        <h3>Contato e Responsável</h3>
+                        <p>Informações de contato da unidade</p>
+                    </div>
+                </div>
+                
+                <div class="section-content">
+                    <div class="fields-grid">
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-phone"></i>
+                                Telefone
+                                <span class="required">*</span>
+                            </label>
+                            <input type="tel" 
+                                   class="field-input" 
+                                   name="telefone" 
+                                   id="id_telefone"
+                                   placeholder="(67) 99999-8999"
+                                   maxlength="15"
+                                   required>
+                            <div class="field-hint">Formato: (XX) XXXXX-XXXX</div>
+                            <div class="field-feedback" id="telefone-feedback"></div>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-user-tie"></i>
+                                Responsável
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="field-input" 
+                                   name="responsavel" 
+                                   id="id_responsavel"
+                                   placeholder="Ex: Dr. João Silva Santos"
+                                   required>
+                            <div class="field-feedback" id="responsavel-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção 4: Informações do Cadastrante -->
+            <div class="form-section special-section">
+                <div class="section-header">
+                    <div class="section-icon admin">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="section-title">
+                        <h3>Informações do Cadastrante</h3>
+                        <p>Dados sobre quem está realizando este cadastro</p>
+                    </div>
+                </div>
+                
+                <div class="section-content">
+                    <div class="fields-grid">
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-user-check"></i>
+                                Responsável pelo Cadastro
+                            </label>
+                            <input type="text" 
+                                   class="field-input readonly-field" 
+                                   value="{{ user.get_full_name|default:user.username }}" 
+                                   readonly>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label class="field-label">
+                                <i class="fas fa-calendar-plus"></i>
+                                Data do Cadastro
+                            </label>
+                            <input type="text" 
+                                   class="field-input readonly-field" 
+                                   id="dataCadastro"
+                                   readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="action-section">
+                <div class="action-buttons">
+                    <button type="submit" class="btn-action primary" id="saveBtn">
+                        <i class="fas fa-save"></i>
+                        Salvar Unidade
+                    </button>
+                    
+                    <a href="{% url 'unidades_saude' %}" class="btn-action secondary" id="cancelBtn">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </a>
+                </div>
+                
+                <div class="shortcuts-info">
+                    <i class="fas fa-keyboard"></i>
+                    <span>Atalhos disponíveis:</span>
+                    <kbd>Ctrl + S</kbd> para salvar
+                    <kbd>ESC</kbd> para cancelar
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Informações do CNES -->
+<div class="modal fade" id="cnesModal" tabindex="-1" aria-labelledby="cnesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-primary">
+                <h5 class="modal-title text-white" id="cnesModalLabel">
+                    <i class="fas fa-hospital-alt me-2"></i>
+                    Informações da Unidade de Saúde
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="cnesModalBody">
+                <!-- Conteúdo será inserido via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="preencherDados">
+                    <i class="fas fa-download me-1"></i>
+                    Preencher Dados no Formulário
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* Estilos para o Modal CNES */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border-radius: 15px 15px 0 0;
+    border: none;
+}
+
+.cnes-info-container {
+    padding: 0;
+}
+
+.cnes-info-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+}
+
+.cnes-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.cnes-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 10px 0 5px 0;
+}
+
+.cnes-subtitle {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.cnes-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.cnes-info-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.cnes-info-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.cnes-info-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cnes-info-value {
+    color: #2c3e50;
+    font-size: 1rem;
+    word-wrap: break-word;
+}
+
+.cnes-loading {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.cnes-loading i {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.cnes-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: #dc3545;
+}
+
+.cnes-error i {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+    .cnes-info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Estilos para modal sem Bootstrap */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1055;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+}
+
+.modal.show {
+    display: block !important;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 0.5rem;
+    pointer-events: none;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    opacity: 0.5;
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 500px;
+        margin: 1.75rem auto;
+    }
+}
+
+@media (min-width: 992px) {
+    .modal-dialog.modal-lg {
+        max-width: 800px;
+    }
+}
+</style>
+
+<script>
+// Variáveis globais
+let dadosCNESAtual = null;
+let municipioAutocomplete = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    setupMasks();
+    setupValidation();
+    setupKeyboardShortcuts();
+    updateProgress();
+    setupMunicipioAutocomplete();
+    
+    // Configurar botão de preencher dados do modal
+    const preencherBtn = document.getElementById('preencherDados');
+    if (preencherBtn) {
+        preencherBtn.addEventListener('click', function() {
+            if (dadosCNESAtual) {
+                preencherFormularioComDadosCNES(dadosCNESAtual);
+                // Tentar fechar o modal de diferentes formas para compatibilidade
+                const modal = document.getElementById('cnesModal');
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                } else {
+                    fecharModal();
+                }
+            }
+        });
+    }
+    
+    // Configurar botões de fechar do modal
+    const closeButtons = document.querySelectorAll('#cnesModal .btn-close, #cnesModal [data-bs-dismiss="modal"]');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('cnesModal'));
+                if (modal) {
+                    modal.hide();
+                }
+            } else {
+                fecharModal();
+            }
+        });
+    });
+});
+
+// Classe para gerenciar o autocomplete de municípios
+class MunicipioAutocomplete {
+    constructor(inputId, dropdownId, loadingId, helpId) {
+        this.input = document.getElementById(inputId);
+        this.dropdown = document.getElementById(dropdownId);
+        this.loading = document.getElementById(loadingId);
+        this.help = document.getElementById(helpId);
+        this.debounceTimer = null;
+        this.currentIndex = -1;
+        this.results = [];
+        this.init();
+    }
+
+    init() {
+        if (!this.input || !this.dropdown || !this.loading) return;
+
+        // Event listeners
+        this.input.addEventListener('input', (e) => this.handleInput(e));
+        this.input.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        this.input.addEventListener('focus', (e) => this.handleFocus(e));
+        this.input.addEventListener('blur', (e) => this.handleBlur(e));
+        
+        // Click fora do dropdown para fechar
+        document.addEventListener('click', (e) => this.handleDocumentClick(e));
+    }
+
+    handleInput(e) {
+        const query = e.target.value.trim();
+        
+        // Limpar timer anterior
+        if (this.debounceTimer) {
+            clearTimeout(this.debounceTimer);
+        }
+
+        // Atualizar texto de ajuda
+        this.updateHelpText(query);
+
+        // Se menos de 2 caracteres, esconder dropdown
+        if (query.length < 2) {
+            this.hideDropdown();
+            return;
+        }
+
+        // Debounce de 300ms
+        this.debounceTimer = setTimeout(() => {
+            this.searchMunicipios(query);
+        }, 300);
+    }
+
+    handleKeyDown(e) {
+        if (!this.dropdown.classList.contains('show')) return;
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                this.navigateDown();
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                this.navigateUp();
+                break;
+            case 'Enter':
+                e.preventDefault();
+                this.selectCurrentItem();
+                break;
+            case 'Escape':
+                this.hideDropdown();
+                this.input.blur();
+                break;
+        }
+    }
+
+    handleFocus(e) {
+        const query = e.target.value.trim();
+        if (query.length >= 2 && this.results.length > 0) {
+            this.showDropdown();
+        }
+    }
+
+    handleBlur(e) {
+        // Delay para permitir click nos itens
+        setTimeout(() => {
+            this.hideDropdown();
+        }, 150);
+    }
+
+    handleDocumentClick(e) {
+        if (!this.input.contains(e.target) && !this.dropdown.contains(e.target)) {
+            this.hideDropdown();
+        }
+    }
+
+    updateHelpText(query) {
+        if (!this.help) return;
+
+        if (query.length === 0) {
+            this.help.textContent = '⚡ Digite 2+ caracteres • 🔄 Busca inteligente • 📊 Máx. 10 resultados';
+            this.help.className = 'autocomplete-help';
+        } else if (query.length === 1) {
+            this.help.textContent = '⚡ Digite mais 1 caractere para iniciar a busca...';
+            this.help.className = 'autocomplete-help';
+        } else {
+            this.help.textContent = '🔄 Buscando municípios do MS...';
+            this.help.className = 'autocomplete-help enhanced';
+        }
+    }
+
+    async searchMunicipios(query) {
+        this.showLoading();
+        
+        try {
+            const response = await fetch(`/api/municipios/autocomplete/?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            this.hideLoading();
+            this.results = data.results || [];
+            this.displayResults(this.results);
+            
+            // Atualizar texto de ajuda com resultado
+            if (this.help) {
+                if (this.results.length > 0) {
+                    this.help.textContent = `✅ ${this.results.length} município(s) encontrado(s)`;
+                    this.help.className = 'autocomplete-help enhanced';
+                } else {
+                    this.help.textContent = '❌ Nenhum município encontrado';
+                    this.help.className = 'autocomplete-help';
+                }
+            }
+            
+        } catch (error) {
+            console.error('Erro ao buscar municípios:', error);
+            this.hideLoading();
+            this.showError('Erro ao buscar municípios. Verifique sua conexão.');
+            
+            if (this.help) {
+                this.help.textContent = '❌ Erro na busca. Tente novamente.';
+                this.help.className = 'autocomplete-help';
+            }
+        }
+    }
+
+    displayResults(results) {
+        this.dropdown.innerHTML = '';
+        this.currentIndex = -1;
+
+        if (results.length === 0) {
+            this.dropdown.innerHTML = `
+                <div class="autocomplete-no-results">
+                    <i class="fas fa-search"></i>
+                    Nenhum município encontrado no MS
+                </div>
+            `;
+            this.showDropdown();
+            return;
+        }
+
+        // Adicionar estatísticas
+        const stats = document.createElement('div');
+        stats.className = 'autocomplete-stats';
+        stats.innerHTML = `
+            <span><i class="fas fa-map-marker-alt"></i> ${results.length} município(s)</span>
+            <span><i class="fas fa-clock"></i> MS - Brasil</span>
+        `;
+        this.dropdown.appendChild(stats);
+
+        // Adicionar itens
+        results.forEach((municipio, index) => {
+            const item = document.createElement('div');
+            item.className = 'autocomplete-item';
+            item.textContent = municipio.nome;
+            item.setAttribute('data-index', index);
+            
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault(); // Prevenir blur do input
+                this.selectMunicipio(municipio.nome);
+            });
+            
+            item.addEventListener('mouseenter', () => {
+                this.highlightItem(index);
+            });
+            
+            this.dropdown.appendChild(item);
+        });
+
+        this.showDropdown();
+    }
+
+    showError(message) {
+        this.dropdown.innerHTML = `
+            <div class="autocomplete-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                ${message}
+            </div>
+        `;
+        this.showDropdown();
+    }
+
+    navigateDown() {
+        const items = this.dropdown.querySelectorAll('.autocomplete-item');
+        if (items.length === 0) return;
+
+        this.currentIndex = Math.min(this.currentIndex + 1, items.length - 1);
+        this.highlightItem(this.currentIndex);
+    }
+
+    navigateUp() {
+        const items = this.dropdown.querySelectorAll('.autocomplete-item');
+        if (items.length === 0) return;
+
+        this.currentIndex = Math.max(this.currentIndex - 1, -1);
+        this.highlightItem(this.currentIndex);
+    }
+
+    highlightItem(index) {
+        const items = this.dropdown.querySelectorAll('.autocomplete-item');
+        
+        // Remover highlight anterior
+        items.forEach(item => item.classList.remove('highlighted'));
+        
+        // Adicionar highlight atual
+        if (index >= 0 && index < items.length) {
+            items[index].classList.add('highlighted');
+            items[index].scrollIntoView({ block: 'nearest' });
+        }
+        
+        this.currentIndex = index;
+    }
+
+    selectCurrentItem() {
+        const items = this.dropdown.querySelectorAll('.autocomplete-item');
+        if (this.currentIndex >= 0 && this.currentIndex < items.length) {
+            const selectedText = items[this.currentIndex].textContent;
+            this.selectMunicipio(selectedText);
+        }
+    }
+
+    selectMunicipio(nome) {
+        this.input.value = nome;
+        this.hideDropdown();
+        this.currentIndex = -1;
+        
+        // Disparar evento de validação
+        const event = new Event('input', { bubbles: true });
+        this.input.dispatchEvent(event);
+        
+        // Feedback visual de sucesso
+        this.input.style.borderColor = '#00b894';
+        setTimeout(() => {
+            this.input.style.borderColor = '';
+        }, 1000);
+        
+        // Atualizar texto de ajuda
+        if (this.help) {
+            this.help.textContent = `✅ Município selecionado: ${nome}`;
+            this.help.className = 'autocomplete-help enhanced';
+        }
+        
+        // Atualizar progresso
+        updateProgress();
+    }
+
+    showDropdown() {
+        this.dropdown.classList.add('show');
+    }
+
+    hideDropdown() {
+        this.dropdown.classList.remove('show');
+    }
+
+    showLoading() {
+        this.loading.classList.add('show');
+    }
+
+    hideLoading() {
+        this.loading.classList.remove('show');
+    }
+}
+
+// Função para configurar o autocomplete de municípios
+function setupMunicipioAutocomplete() {
+    municipioAutocomplete = new MunicipioAutocomplete(
+        'id_municipio',
+        'municipio-dropdown', 
+        'municipio-loading',
+        'municipio-help'
+    );
+}
+
+function updateDateTime() {
+    const now = new Date();
+    const formatted = now.toLocaleDateString('pt-BR', {
+        weekday: 'short',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    document.getElementById('currentDateTime').textContent = formatted;
+    
+    const dataCadastro = now.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const dataCadastroElement = document.getElementById('dataCadastro');
+    if (dataCadastroElement) {
+        dataCadastroElement.value = dataCadastro;
+    }
+}
+
+function setupMasks() {
+    const telefoneInput = document.getElementById('id_telefone');
+    if (telefoneInput) {
+        telefoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                if (value.length <= 10) {
+                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                } else {
+                    value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                }
+            }
+            e.target.value = value;
+        });
+    }
+
+    const cnesInput = document.getElementById('id_cnes');
+    if (cnesInput) {
+        cnesInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+            
+            // Detectar quando 7 dígitos são digitados
+            if (e.target.value.length === 7) {
+                consultarCNESAutomatico(e.target.value);
+            }
+        });
+    }
+}
+
+function setupValidation() {
+    const inputs = document.querySelectorAll('.field-input, .field-select, .field-textarea');
+    inputs.forEach(input => {
+        if (!input.readOnly) {
+            input.addEventListener('blur', validateField);
+            input.addEventListener('input', updateProgress);
+        }
+    });
+}
+
+function validateField(e) {
+    const field = e.target;
+    const feedbackElement = document.getElementById(field.id + '-feedback');
+    
+    if (!feedbackElement) return;
+    
+    field.classList.remove('is-valid', 'is-invalid');
+    feedbackElement.classList.remove('text-success', 'text-danger');
+    
+    if (field.hasAttribute('required') && !field.value.trim()) {
+        field.classList.add('is-invalid');
+        feedbackElement.classList.add('text-danger');
+        feedbackElement.textContent = 'Este campo é obrigatório';
+        return false;
+    }
+    
+    if (field.id === 'id_cnes' && field.value) {
+        if (field.value.length !== 7) {
+            field.classList.add('is-invalid');
+            feedbackElement.classList.add('text-danger');
+            feedbackElement.textContent = 'CNES deve ter exatamente 7 dígitos';
+            return false;
+        }
+    }
+    
+    if (field.id === 'id_telefone' && field.value) {
+        const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+        if (!phoneRegex.test(field.value)) {
+            field.classList.add('is-invalid');
+            feedbackElement.classList.add('text-danger');
+            feedbackElement.textContent = 'Formato inválido: (XX) XXXXX-XXXX';
+            return false;
+        }
+    }
+    
+    field.classList.add('is-valid');
+    feedbackElement.classList.add('text-success');
+    feedbackElement.textContent = ' Válido';
+    return true;
+}
+
+function updateProgress() {
+    const requiredFields = document.querySelectorAll('[required]');
+    const filledFields = Array.from(requiredFields).filter(field => field.value.trim() !== '');
+    const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+    
+    const progressBar = document.getElementById('progressBar');
+    const progressPercentage = document.getElementById('progressPercentage');
+    
+    if (progressBar && progressPercentage) {
+        progressBar.style.width = progress + '%';
+        progressPercentage.textContent = progress + '%';
+    }
+}
+
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            document.getElementById('createForm').submit();
+        }
+        
+        if (e.key === 'Escape') {
+            window.location.href = "{% url 'unidades_saude' %}";
+        }
+    });
+}
+
+// Função para consulta automática do CNES
+function consultarCNESAutomatico(cnes) {
+    if (!cnes || cnes.length !== 7) return;
+    
+    // Delay para evitar múltiplas chamadas
+    setTimeout(() => {
+        const cnesInput = document.getElementById('id_cnes');
+        if (cnesInput && cnesInput.value === cnes) {
+            exibirModalCNES(cnes);
+        }
+    }, 500);
+}
+
+// Função para exibir o modal com informações do CNES
+function exibirModalCNES(cnes) {
+    const modalBody = document.getElementById('cnesModalBody');
+    const modalElement = document.getElementById('cnesModal');
+    
+    // Mostrar loading
+    modalBody.innerHTML = `
+        <div class="cnes-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <h5>Consultando CNES...</h5>
+            <p>Buscando informações na base do Ministério da Saúde</p>
+        </div>
+    `;
+    
+    // Tentar usar Bootstrap se disponível, senão usar JavaScript puro
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    } else {
+        // Fallback para JavaScript puro
+        modalElement.style.display = 'block';
+        modalElement.classList.add('show');
+        document.body.classList.add('modal-open');
+        
+        // Adicionar backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade show';
+        document.body.appendChild(backdrop);
+        
+        // Adicionar listener para fechar com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                fecharModal();
+            }
+        });
+        
+        // Adicionar listener para fechar clicando no backdrop
+        backdrop.addEventListener('click', fecharModal);
+        
+        // Adicionar listener para botão de fechar
+        const closeBtn = modalElement.querySelector('.btn-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', fecharModal);
+        }
+    }
+    
+    // Fazer a consulta
+    fetch(`/accounts/api/cnes/${cnes}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.sucesso) {
+                dadosCNESAtual = data.dados;
+                exibirDadosCNES(data.dados);
+            } else {
+                exibirErroCNES(data.erro || 'CNES não encontrado');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            exibirErroCNES('Erro ao consultar CNES. Verifique sua conexão.');
+                 });
+}
+
+// Função para fechar o modal
+function fecharModal() {
+    const modalElement = document.getElementById('cnesModal');
+    if (modalElement) {
+        modalElement.style.display = 'none';
+        modalElement.classList.remove('show');
+        document.body.classList.remove('modal-open');
+        
+        // Remover backdrop
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
+}
+
+// Função para exibir os dados do CNES no modal
+function exibirDadosCNES(dados) {
+    const modalBody = document.getElementById('cnesModalBody');
+    
+    modalBody.innerHTML = `
+        <div class="cnes-info-container">
+            <div class="cnes-info-header">
+                <div class="cnes-badge">
+                    <i class="fas fa-shield-alt me-1"></i>
+                    CNES: ${dados.codigo_cnes || dados.codigo || 'N/A'}
+                </div>
+                <div class="cnes-title">${dados.nome_fantasia || dados.nome || 'Nome não informado'}</div>
+                <div class="cnes-subtitle">
+                    <i class="fas fa-building me-1"></i>
+                    ${dados.nome_razao_social || 'Razão social não informada'}
+                </div>
+            </div>
+            
+            <div class="cnes-info-grid">
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Localização
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.descricao_municipio || dados.municipio || 'Não informado'} - ${dados.sigla_uf || dados.uf || 'N/A'}
+                    </div>
+                </div>
+                
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-building"></i>
+                        Tipo de Unidade
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.descricao_nivel_hierarquia || dados.tipo || 'Não informado'}
+                    </div>
+                </div>
+                
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-map-signs"></i>
+                        Endereço
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.endereco_estabelecimento || dados.endereco || 'Não informado'}
+                        ${dados.numero_estabelecimento ? ', ' + dados.numero_estabelecimento : ''}
+                    </div>
+                </div>
+                
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-map"></i>
+                        Bairro/CEP
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.bairro_estabelecimento || 'Não informado'}
+                        ${dados.codigo_cep_estabelecimento ? ' - CEP: ' + dados.codigo_cep_estabelecimento : ''}
+                    </div>
+                </div>
+                
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-phone"></i>
+                        Telefone
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.numero_telefone_estabelecimento || dados.telefone || 'Não informado'}
+                    </div>
+                </div>
+                
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-envelope"></i>
+                        E-mail
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.endereco_email_estabelecimento || dados.email || 'Não informado'}
+                    </div>
+                </div>
+                
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-file-alt"></i>
+                        CNPJ
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.numero_cnpj_entidade || 'Não informado'}
+                    </div>
+                </div>
+                
+                <div class="cnes-info-item">
+                    <div class="cnes-info-label">
+                        <i class="fas fa-cogs"></i>
+                        Gestão
+                    </div>
+                    <div class="cnes-info-value">
+                        ${dados.tipo_gestao || 'Não informado'}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Função para exibir erro no modal
+function exibirErroCNES(erro) {
+    const modalBody = document.getElementById('cnesModalBody');
+    
+    modalBody.innerHTML = `
+        <div class="cnes-error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h5>Erro na Consulta</h5>
+            <p>${erro}</p>
+            <p><small>Verifique se o código CNES está correto e tente novamente.</small></p>
+        </div>
+    `;
+}
+
+// Função para preencher o formulário com dados do CNES
+function preencherFormularioComDadosCNES(dados) {
+    // Preencher nome
+    if (dados.nome_fantasia || dados.nome) {
+        const nomeInput = document.getElementById('id_nome');
+        if (nomeInput && !nomeInput.value) {
+            nomeInput.value = dados.nome_fantasia || dados.nome;
+            validateField({target: nomeInput});
+        }
+    }
+    
+    // Preencher município
+    if (dados.descricao_municipio || dados.municipio) {
+        const municipioInput = document.getElementById('id_municipio');
+        if (municipioInput && !municipioInput.value) {
+            municipioInput.value = dados.descricao_municipio || dados.municipio;
+            validateField({target: municipioInput});
+        }
+    }
+    
+    // Preencher endereço
+    if (dados.endereco_estabelecimento || dados.endereco) {
+        const enderecoInput = document.getElementById('id_endereco');
+        if (enderecoInput && !enderecoInput.value) {
+            let endereco = dados.endereco_estabelecimento || dados.endereco;
+            if (dados.numero_estabelecimento) {
+                endereco += ', ' + dados.numero_estabelecimento;
+            }
+            if (dados.bairro_estabelecimento) {
+                endereco += ' - ' + dados.bairro_estabelecimento;
+            }
+            if (dados.codigo_cep_estabelecimento) {
+                endereco += ', CEP: ' + dados.codigo_cep_estabelecimento;
+            }
+            enderecoInput.value = endereco;
+            validateField({target: enderecoInput});
+        }
+    }
+    
+    // Preencher telefone
+    if (dados.numero_telefone_estabelecimento || dados.telefone) {
+        const telefoneInput = document.getElementById('id_telefone');
+        if (telefoneInput && !telefoneInput.value) {
+            telefoneInput.value = dados.numero_telefone_estabelecimento || dados.telefone;
+            validateField({target: telefoneInput});
+        }
+    }
+    
+    updateProgress();
+    
+    // Mostrar mensagem de sucesso
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <i class="fas fa-check-circle me-2"></i>
+        <strong>Sucesso!</strong> Dados do CNES preenchidos automaticamente no formulário.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.main-container');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    // Remover o alerta após 5 segundos
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+
+// Botão de consulta manual (mantido para compatibilidade)
+document.getElementById('consultarCnes').addEventListener('click', function() {
+    const cnesInput = document.getElementById('id_cnes');
+    const cnes = cnesInput.value.trim();
+    
+    if (!cnes || cnes.length !== 7) {
+        alert('Por favor, digite um código CNES válido (7 dígitos)');
+        return;
+    }
+    
+    exibirModalCNES(cnes);
+});
+
+// ===== PRÉ-PREENCHIMENTO AUTOMÁTICO =====
+// Função para pré-preencher formulário com dados vindos da URL
+function preencherFormularioComDadosURL() {
+    {% if dados_preenchimento %}
+        console.log('🔄 [CADASTRO] Iniciando pré-preenchimento...');
+        
+        const dadosPreenchimento = {{ dados_preenchimento|safe }};
+        let camposPreenchidos = 0;
+        
+        // Preencher cada campo se não estiver vazio
+        Object.keys(dadosPreenchimento).forEach(campo => {
+            const valor = dadosPreenchimento[campo];
+            if (!valor) return;
+            
+            const input = document.getElementById(`id_${campo}`);
+            if (input && !input.value.trim()) {
+                input.value = valor;
+                
+                // Aplicar validação visual
+                input.classList.add('is-valid');
+                const feedbackElement = document.getElementById(input.id + '-feedback');
+                if (feedbackElement) {
+                    feedbackElement.classList.add('text-success');
+                    feedbackElement.textContent = '✓ Pré-preenchido automaticamente';
+                }
+                
+                camposPreenchidos++;
+                console.log(`   ✅ ${campo}: ${valor}`);
+            }
+        });
+        
+        // Atualizar progresso
+        if (camposPreenchidos > 0) {
+            updateProgress();
+            
+            // Mostrar notificação de sucesso
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+            alertDiv.style.marginTop = '1rem';
+            alertDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle me-2 text-success" style="font-size: 1.2rem;"></i>
+                    <div>
+                        <strong>Pré-preenchimento realizado!</strong>
+                        <br><small>${camposPreenchidos} campo(s) foram preenchidos automaticamente com dados da consulta CNES.</small>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            const container = document.querySelector('.main-container');
+            const firstCard = container.querySelector('.form-card');
+            if (firstCard) {
+                container.insertBefore(alertDiv, firstCard);
+            }
+            
+            // Auto-remover após 8 segundos
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.classList.remove('show');
+                    setTimeout(() => alertDiv.remove(), 150);
+                }
+            }, 8000);
+        }
+        
+        console.log(`🔄 [CADASTRO] Pré-preenchimento concluído: ${camposPreenchidos} campos preenchidos`);
+    {% endif %}
+}
+
+// ===== NOTIFICAÇÃO DE ORIGEM =====
+// Mostrar banner informativo se veio do registro de chamadas
+{% if veio_de_registro %}
+function mostrarBannerOrigem() {
+    const bannerDiv = document.createElement('div');
+    bannerDiv.className = 'alert alert-info alert-dismissible fade show';
+    bannerDiv.style.marginTop = '1rem';
+    bannerDiv.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas fa-info-circle me-2 text-info" style="font-size: 1.2rem;"></i>
+            <div>
+                <strong>Cadastro iniciado a partir do Registro de Chamadas</strong>
+                <br><small>Após cadastrar, você pode retornar à página de registro e verificar novamente a unidade.</small>
+            </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    const container = document.querySelector('.main-container');
+    const heroSection = container.querySelector('.info-alert');
+    if (heroSection) {
+        heroSection.parentNode.insertBefore(bannerDiv, heroSection.nextSibling);
+    }
+}
+{% endif %}
+
+// ===== INICIALIZAÇÃO =====
+// Executar funções de pré-preenchimento quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    // Aguardar um pequeno delay para garantir que todos os elementos estejam carregados
+    setTimeout(() => {
+        {% if dados_preenchimento %}
+            preencherFormularioComDadosURL();
+        {% endif %}
+        
+        {% if veio_de_registro %}
+            mostrarBannerOrigem();
+        {% endif %}
+    }, 500);
+});
+</script>
+{% endblock %}

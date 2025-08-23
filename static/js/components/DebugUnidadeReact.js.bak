@@ -1,0 +1,98 @@
+// DebugUnidadeReact.js - Componente simples para debug
+class DebugUnidadeReact extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            debug: true
+        };
+    }
+
+    componentDidMount() {
+        console.log('🔍 [DEBUG] Verificando dados disponíveis:');
+        console.log('window.unidadeData:', window.unidadeData);
+        console.log('window.editUnidadeData:', window.editUnidadeData);
+        console.log('React:', typeof React);
+        console.log('ReactDOM:', typeof ReactDOM);
+    }
+
+    render() {
+        return React.createElement('div', {
+            style: {
+                padding: '20px',
+                background: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '10px',
+                margin: '20px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }
+        }, [
+            React.createElement('h2', { key: 'title' }, '🔧 Modo Debug - Dados da Unidade'),
+            React.createElement('div', { key: 'info' }, [
+                React.createElement('h3', { key: 'react-title' }, 'Status React:'),
+                React.createElement('p', { key: 'react-status' }, `React: ${typeof React !== 'undefined' ? '✅ OK' : '❌ Não encontrado'}`),
+                React.createElement('p', { key: 'reactdom-status' }, `ReactDOM: ${typeof ReactDOM !== 'undefined' ? '✅ OK' : '❌ Não encontrado'}`),
+                
+                React.createElement('h3', { key: 'data-title' }, 'Dados Disponíveis:'),
+                React.createElement('pre', { 
+                    key: 'data-content',
+                    style: { 
+                        background: '#f5f5f5', 
+                        padding: '10px', 
+                        borderRadius: '5px',
+                        fontSize: '12px',
+                        overflow: 'auto'
+                    } 
+                }, JSON.stringify({
+                    unidadeData: window.unidadeData || null,
+                    editUnidadeData: window.editUnidadeData || null,
+                    url: window.location.href,
+                    userAgent: navigator.userAgent
+                }, null, 2))
+            ])
+        ]);
+    }
+}
+
+// Função para renderizar debug
+function renderDebugUnidade() {
+    console.log('🔧 [DEBUG] Inicializando componente debug');
+    
+    const containers = [
+        'visualizar-unidade-react-root',
+        'editar-unidade-react-root', 
+        'criar-unidade-react-root'
+    ];
+    
+    containers.forEach(containerId => {
+        const container = document.getElementById(containerId);
+        if (container) {
+            console.log(`🔧 [DEBUG] Renderizando debug em ${containerId}`);
+            
+            if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined') {
+                const root = ReactDOM.createRoot ? ReactDOM.createRoot(container) : null;
+                
+                if (root) {
+                    root.render(React.createElement(DebugUnidadeReact));
+                } else {
+                    ReactDOM.render(React.createElement(DebugUnidadeReact), container);
+                }
+            } else {
+                container.innerHTML = `
+                    <div style="padding: 20px; background: #ffeeee; border: 1px solid #ff0000; border-radius: 5px; margin: 20px;">
+                        <h2>❌ Erro: React não encontrado</h2>
+                        <p>Verifique se o React está carregado corretamente.</p>
+                        <p>URL atual: ${window.location.href}</p>
+                    </div>
+                `;
+            }
+        }
+    });
+}
+
+// Auto-inicializar em modo debug
+if (window.location.search.includes('debug=true')) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderDebugUnidade);
+    } else {
+        renderDebugUnidade();
+    }
+} 

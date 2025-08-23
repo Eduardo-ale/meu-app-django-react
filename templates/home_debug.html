@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Debug Home - Sistema de Registro de Chamadas{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    
+    .debug-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .debug-section {
+        background: rgba(255, 255, 255, 0.1);
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .debug-title {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        color: #4ade80;
+    }
+    
+    .debug-info {
+        margin: 10px 0;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        font-family: monospace;
+    }
+    
+    .status-ok { color: #4ade80; }
+    .status-error { color: #ef4444; }
+    .status-warning { color: #fbbf24; }
+    
+    #home-react-root {
+        min-height: 200px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .loading-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .test-button {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 14px;
+    }
+    
+    .test-button:hover {
+        background: #2563eb;
+    }
+    
+    #debug-log {
+        background: rgba(0, 0, 0, 0.5);
+        color: #4ade80;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="debug-container">
+    <h1>🔍 Debug da Página Principal</h1>
+    
+    <div class="debug-section">
+        <div class="debug-title">📋 Informações do Sistema</div>
+        <div class="debug-info">
+            <strong>Usuário:</strong> {{ user.username }} ({{ user.first_name|default:"Sem nome" }})<br>
+            <strong>Template:</strong> home_debug.html<br>
+            <strong>Data/Hora:</strong> <span id="current-time"></span><br>
+            <strong>User Agent:</strong> <span id="user-agent"></span>
+        </div>
+    </div>
+    
+    <div class="debug-section">
+        <div class="debug-title">📊 Dados do Dashboard</div>
+        <div class="debug-info">
+            <strong>Total Unidades:</strong> {{ estatisticas.total_unidades|default:0 }}<br>
+            <strong>Total Chamadas:</strong> {{ estatisticas.total_chamadas|default:0 }}<br>
+            <strong>Chamadas Hoje:</strong> {{ estatisticas.chamadas_hoje|default:0 }}<br>
+            <strong>Chamadas Mês:</strong> {{ estatisticas.chamadas_mes|default:0 }}
+        </div>
+    </div>
+    
+    <div class="debug-section">
+        <div class="debug-title">🔧 Testes de Dependências</div>
+        <div class="debug-info">
+            <div id="dependency-status">Verificando...</div>
+        </div>
+        <button class="test-button" onclick="testDependencies()">🔄 Testar Dependências</button>
+        <button class="test-button" onclick="testReactComponent()">⚛️ Testar Componente React</button>
+        <button class="test-button" onclick="clearLog()">🗑️ Limpar Log</button>
+    </div>
+    
+    <div class="debug-section">
+        <div class="debug-title">⚛️ Container React</div>
+        <div id="home-react-root">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <div>Aguardando carregamento do React...</div>
+                <div style="font-size: 12px; opacity: 0.7;">Se esta mensagem persistir, há um problema no carregamento</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="debug-section">
+        <div class="debug-title">📝 Log de Debug</div>
+        <div id="debug-log">Iniciando debug...\n</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- React CDN -->
+<!-- Scripts removidos do CDN, agora React é carregado via include central ou arquivos locais -->
+
+<!-- Serviços React -->
+<script src="{% static 'js/dist/react-services.bundle.js' %}"></script>
+
+<!-- Bundle do Componente Home -->
+<script src="{% static 'js/dist/home.bundle.js' %}"></script>
+
+<script>
+// Configuração global de debug
+window.DEBUG_MODE = true;
+
+// Função para adicionar ao log
+function addToLog(message, type = 'info') {
+    const log = document.getElementById('debug-log');
+    const timestamp = new Date().toLocaleTimeString();
+    const prefix = type === 'error' ? '❌' : type === 'warning' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️';
+    log.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+    log.scrollTop = log.scrollHeight;
+}
+
+// Função para testar dependências
+function testDependencies() {
+    addToLog('Iniciando teste de dependências...');
+    
+    const tests = [
+        { name: 'React', test: () => typeof React !== 'undefined', version: () => React.version },
+        { name: 'ReactDOM', test: () => typeof ReactDOM !== 'undefined' },
+        { name: 'HomeReact Component', test: () => typeof window.HomeReact !== 'undefined' },
+        { name: 'Container DOM', test: () => document.getElementById('home-react-root') !== null }
+    ];
+    
+    let allPassed = true;
+    let statusHtml = '';
+    
+    tests.forEach(({ name, test, version }) => {
+        const passed = test();
+        const status = passed ? 'OK' : 'FALHOU';
+        const statusClass = passed ? 'status-ok' : 'status-error';
+        const versionInfo = passed && version ? ` (v${version()})` : '';
+        
+        statusHtml += `<span class="${statusClass}">${name}: ${status}${versionInfo}</span><br>`;
+        addToLog(`${name}: ${status}${versionInfo}`, passed ? 'success' : 'error');
+        
+        if (!passed) allPassed = false;
+    });
+    
+    document.getElementById('dependency-status').innerHTML = statusHtml;
+    
+    if (allPassed) {
+        addToLog('Todas as dependências estão OK!', 'success');
+    } else {
+        addToLog('Algumas dependências falharam!', 'error');
+    }
+}
+
+// Função para testar componente React
+function testReactComponent() {
+    addToLog('Testando renderização do componente React...');
+    
+    const container = document.getElementById('home-react-root');
+    if (!container) {
+        addToLog('Container não encontrado!', 'error');
+        return;
+    }
+    
+    // Verificar dependências
+    if (typeof React === 'undefined') {
+        addToLog('React não está carregado!', 'error');
+        return;
+    }
+    
+    if (typeof ReactDOM === 'undefined') {
+        addToLog('ReactDOM não está carregado!', 'error');
+        return;
+    }
+    
+    if (typeof window.HomeReact === 'undefined') {
+        addToLog('Componente HomeReact não está disponível!', 'error');
+        return;
+    }
+    
+    try {
+        // Dados para o componente
+        const data = {
+            usuario: {
+                first_name: "{{ user.first_name|default:'Usuário' }}",
+                username: "{{ user.username }}",
+                avatar_url: "{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% endif %}"
+            },
+            estatisticas: {
+                total_unidades: {{ estatisticas.total_unidades|default:0 }},
+                total_chamadas: {{ estatisticas.total_chamadas|default:0 }},
+                chamadas_hoje: {{ estatisticas.chamadas_hoje|default:0 }},
+                chamadas_mes: {{ estatisticas.chamadas_mes|default:0 }},
+                executantes: {{ estatisticas.executantes|default:0 }},
+                solicitantes: {{ estatisticas.solicitantes|default:0 }},
+                executante_solicitante: {{ estatisticas.executante_solicitante|default:0 }}
+            },
+            ultimas_unidades: [],
+            ultimas_chamadas: []
+        };
+        
+        addToLog('Dados preparados para o componente');
+        addToLog(`Dados: ${JSON.stringify(data, null, 2)}`);
+        
+        // Renderizar componente
+        if (ReactDOM.createRoot) {
+            const root = ReactDOM.createRoot(container);
+            root.render(React.createElement(window.HomeReact, data));
+            addToLog('Componente renderizado com createRoot!', 'success');
+        } else {
+            ReactDOM.render(React.createElement(window.HomeReact, data), container);
+            addToLog('Componente renderizado com render!', 'success');
+        }
+        
+    } catch (error) {
+        addToLog(`Erro ao renderizar componente: ${error.message}`, 'error');
+        addToLog(`Stack trace: ${error.stack}`, 'error');
+        
+        // Mostrar fallback
+        container.innerHTML = `
+            <div style="text-align: center; color: #ef4444;">
+                <h3>❌ Erro na Renderização</h3>
+                <p>Erro: ${error.message}</p>
+                <button class="test-button" onclick="testReactComponent()">🔄 Tentar Novamente</button>
+            </div>
+        `;
+    }
+}
+
+// Função para limpar log
+function clearLog() {
+    document.getElementById('debug-log').textContent = 'Log limpo...\n';
+}
+
+// Atualizar informações da página
+function updatePageInfo() {
+    document.getElementById('current-time').textContent = new Date().toLocaleString();
+    document.getElementById('user-agent').textContent = navigator.userAgent;
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    addToLog('DOM carregado');
+    updatePageInfo();
+    
+    // Testar dependências automaticamente
+    setTimeout(() => {
+        testDependencies();
+        
+        // Se tudo estiver OK, tentar renderizar
+        setTimeout(() => {
+            if (typeof window.HomeReact !== 'undefined') {
+                testReactComponent();
+            } else {
+                addToLog('HomeReact não disponível após 2 segundos', 'warning');
+            }
+        }, 2000);
+    }, 1000);
+});
+
+// Capturar erros JavaScript
+window.addEventListener('error', function(e) {
+    addToLog(`Erro JavaScript: ${e.message} em ${e.filename}:${e.lineno}`, 'error');
+});
+
+// Capturar erros de Promise rejeitadas
+window.addEventListener('unhandledrejection', function(e) {
+    addToLog(`Promise rejeitada: ${e.reason}`, 'error');
+});
+</script>
+{% endblock %}

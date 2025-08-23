@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                <i class="fas fa-cog"></i> Configurações
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-cog fa-3x me-3"></i>
+                            <div>
+                                <h1 class="mb-1">Configurações do Sistema</h1>
+                                <p class="mb-0">Gerencie configurações e preferências do usuário</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <div class="text-center">
+                                <div class="h4 mb-0">{{ usuario.first_name|default:usuario.username }}</div>
+                                <small>Usuário</small>
+                            </div>
+                            <div class="text-center">
+                                <div class="h4 mb-0">{{ data_atual|date:"d/m/Y" }}</div>
+                                <small>Data</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Sistema -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-server"></i> Sistema</h3>
+                    <p class="mb-0">Configurações gerais do sistema</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-database fa-2x text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Backup</h5>
+                                        <p class="mb-2">Faça backup dos dados do sistema</p>
+                                        <small class="text-muted">
+                                            {{ estatisticas.total_unidades }} unidades • {{ estatisticas.total_chamadas }} chamadas
+                                        </small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'backup_sistema' %}" class="btn btn-primary">
+                                            <i class="fas fa-download"></i> Fazer Backup
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-chart-bar fa-2x text-success"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Relatórios</h5>
+                                        <p class="mb-2">Visualize relatórios do sistema</p>
+                                        <small class="text-muted">
+                                            Estatísticas • Análises
+                                        </small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'relatorios_sistema' %}" class="btn btn-success">
+                                            <i class="fas fa-chart-line"></i> Ver Relatórios
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usuário -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user"></i> Usuário</h3>
+                    <p class="mb-0">Configurações do perfil do usuário</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-user-edit fa-2x text-info"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Editar Perfil</h5>
+                                        <p class="mb-2">Altere seus dados pessoais</p>
+                                        <small class="text-muted">Nome • Email • Foto</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'editar_perfil' %}" class="btn btn-info">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-key fa-2x text-warning"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Alterar Senha</h5>
+                                        <p class="mb-2">Modifique sua senha de acesso</p>
+                                        <small class="text-muted">Segurança • Privacidade</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'alterar_senha' %}" class="btn btn-warning">
+                                            <i class="fas fa-lock"></i> Alterar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-bell fa-2x text-secondary"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Notificações</h5>
+                                        <p class="mb-2">Configure alertas e avisos</p>
+                                        <small class="text-muted">Email • Sistema</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'notificacoes' %}" class="btn btn-secondary">
+                                            <i class="fas fa-cog"></i> Configurar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gerenciamento -->
+    {% if user.is_staff %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users-cog"></i> Gerenciamento</h3>
+                    <p class="mb-0">Administração de usuários e sistema</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-user-plus fa-2x text-success"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Criar Usuário</h5>
+                                        <p class="mb-2">Adicione novos usuários ao sistema</p>
+                                        <small class="text-muted">{{ total_usuarios }} usuários cadastrados</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'criar_usuario' %}" class="btn btn-success">
+                                            <i class="fas fa-plus"></i> Criar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-users fa-2x text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Gerenciar Usuários</h5>
+                                        <p class="mb-2">Edite e gerencie usuários existentes</p>
+                                        <small class="text-muted">Editar • Desativar • Permissões</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'gerenciar_usuarios' %}" class="btn btn-primary">
+                                            <i class="fas fa-users-cog"></i> Gerenciar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Ajuda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-question-circle"></i> Ajuda</h3>
+                    <p class="mb-0">Suporte e informações do sistema</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-book fa-2x text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Manual</h5>
+                                        <p class="mb-2">Guia completo de uso do sistema</p>
+                                        <small class="text-muted">Documentação • Tutoriais</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="{% url 'manual_sistema' %}" class="btn btn-primary">
+                                            <i class="fas fa-book-open"></i> Acessar Manual
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-headset fa-2x text-secondary"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Suporte</h5>
+                                        <p class="mb-2">Entre em contato com o suporte técnico</p>
+                                        <small class="text-muted">Chat • Email</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-secondary" disabled>
+                                            <i class="fas fa-comments"></i> Em Breve
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="fas fa-info-circle fa-2x text-info"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5>Sobre</h5>
+                                        <p class="mb-2">Informações sobre o sistema</p>
+                                        <small class="text-muted">Versão 1.0 • Central de Regulação - MS</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <button class="btn btn-info" disabled>
+                                            <i class="fas fa-info"></i> Em Breve
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voltar -->
+    <div class="row">
+        <div class="col-12">
+            <a href="{% url 'home' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

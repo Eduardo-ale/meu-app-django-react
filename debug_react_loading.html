@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug React Loading</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug React Loading</h1>
+    
+    <div id="test-results"></div>
+    
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- React Services Bundle -->
+    <script src="/static/js/dist/react-services.bundle.js" 
+            onload="console.log('✅ react-services.bundle.js carregado')"
+            onerror="console.error('❌ Erro ao carregar react-services.bundle.js')"></script>
+    
+    <!-- Component Bundle -->
+    <script src="/static/js/dist/criar-unidade.bundle.js"
+            onload="console.log('✅ criar-unidade.bundle.js carregado')"
+            onerror="console.error('❌ Erro ao carregar criar-unidade.bundle.js')"></script>
+
+    <script>
+        // Aguardar carregamento completo
+        window.addEventListener('load', function() {
+            setTimeout(runDiagnostics, 1000);
+        });
+
+        function runDiagnostics() {
+            const results = document.getElementById('test-results');
+            let html = '';
+            
+            // Test 1: React Libraries
+            html += '<div class="test-section ' + (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined' ? 'success' : 'error') + '">';
+            html += '<h3>📚 React Libraries</h3>';
+            html += '<p>React: ' + (typeof React !== 'undefined' ? '✅ Disponível (v' + React.version + ')' : '❌ Não disponível') + '</p>';
+            html += '<p>ReactDOM: ' + (typeof ReactDOM !== 'undefined' ? '✅ Disponível' : '❌ Não disponível') + '</p>';
+            html += '</div>';
+            
+            // Test 2: Window Objects
+            const windowObjects = [
+                'ReactDebugger',
+                'ReactErrorHandling', 
+                'SafeComponentLoader',
+                'ReactErrorBoundary',
+                'ReactInitializer',
+                'ComponentDetectionSystem'
+            ];
+            
+            html += '<div class="test-section">';
+            html += '<h3>🪟 Window Objects</h3>';
+            windowObjects.forEach(obj => {
+                const available = typeof window[obj] !== 'undefined';
+                html += '<p>' + obj + ': ' + (available ? '✅ Disponível' : '❌ Não disponível') + '</p>';
+            });
+            html += '</div>';
+            
+            // Test 3: React Components
+            const components = [
+                'CriarUnidadeReact',
+                'RegistroChamadaReact',
+                'HomeReact'
+            ];
+            
+            html += '<div class="test-section">';
+            html += '<h3>⚛️ React Components</h3>';
+            components.forEach(comp => {
+                const available = typeof window[comp] !== 'undefined';
+                html += '<p>' + comp + ': ' + (available ? '✅ Disponível' : '❌ Não disponível') + '</p>';
+                
+                if (available) {
+                    try {
+                        const testElement = React.createElement(window[comp], {});
+                        html += '<p style="margin-left: 20px;">Instanciação: ✅ OK</p>';
+                    } catch (error) {
+                        html += '<p style="margin-left: 20px;">Instanciação: ❌ Erro - ' + error.message + '</p>';
+                    }
+                }
+            });
+            html += '</div>';
+            
+            // Test 4: Console Errors
+            html += '<div class="test-section">';
+            html += '<h3>🚨 Console Errors</h3>';
+            html += '<p>Abra o Console do Navegador (F12) para ver erros detalhados</p>';
+            html += '<button onclick="testComponentRendering()">Testar Renderização de Componente</button>';
+            html += '<div id="component-test-result" style="margin-top: 10px;"></div>';
+            html += '</div>';
+            
+            // Test 5: Network Requests
+            html += '<div class="test-section">';
+            html += '<h3>🌐 Network Status</h3>';
+            html += '<button onclick="testNetworkAccess()">Testar Acesso aos Bundles</button>';
+            html += '<div id="network-test-result" style="margin-top: 10px;"></div>';
+            html += '</div>';
+            
+            results.innerHTML = html;
+        }
+        
+        function testComponentRendering() {
+            const resultDiv = document.getElementById('component-test-result');
+            
+            if (typeof window.CriarUnidadeReact === 'undefined') {
+                resultDiv.innerHTML = '<p class="error">❌ CriarUnidadeReact não está disponível</p>';
+                return;
+            }
+            
+            try {
+                // Criar container de teste
+                const testContainer = document.createElement('div');
+                testContainer.id = 'test-component-container';
+                document.body.appendChild(testContainer);
+                
+                // Tentar renderizar componente
+                const root = ReactDOM.createRoot(testContainer);
+                const element = React.createElement(window.CriarUnidadeReact, {
+                    dadosPreenchimento: {},
+                    usuario: { username: 'teste' },
+                    csrfToken: 'test-token'
+                });
+                
+                root.render(element);
+                
+                resultDiv.innerHTML = '<p class="success">✅ Componente renderizado com sucesso!</p>';
+                
+                // Limpar após 3 segundos
+                setTimeout(() => {
+                    if (testContainer.parentNode) {
+                        testContainer.parentNode.removeChild(testContainer);
+                    }
+                }, 3000);
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<p class="error">❌ Erro ao renderizar: ' + error.message + '</p>';
+                console.error('Erro detalhado:', error);
+            }
+        }
+        
+        async function testNetworkAccess() {
+            const resultDiv = document.getElementById('network-test-result');
+            const bundles = [
+                '/static/js/dist/react-services.bundle.js',
+                '/static/js/dist/criar-unidade.bundle.js',
+                '/static/js/dist/registro-chamada.bundle.js'
+            ];
+            
+            let html = '<h4>Testando acesso aos bundles:</h4>';
+            
+            for (const bundle of bundles) {
+                try {
+                    const response = await fetch(bundle, { method: 'HEAD' });
+                    const status = response.ok ? '✅ OK' : '❌ Status ' + response.status;
+                    html += '<p>' + bundle + ': ' + status + '</p>';
+                } catch (error) {
+                    html += '<p>' + bundle + ': ❌ Erro de rede - ' + error.message + '</p>';
+                }
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        // Log de carregamento de scripts
+        console.log('🚀 Página de debug carregada');
+        console.log('📍 URL atual:', window.location.href);
+        console.log('🔧 User Agent:', navigator.userAgent);
+    </script>
+</body>
+</html>

@@ -1,0 +1,3425 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- Token CSRF para requisições AJAX -->
+<meta name="csrf-token" content="{{ csrf_token }}">
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+{% block content %}
+<!-- Background Premium com Efeitos Avançados -->
+<div class="users-management-background">
+    <div class="gradient-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+                </div>
+    <div class="mesh-gradient"></div>
+    <div class="noise-texture"></div>
+    <div class="dark-overlay"></div>
+</div>
+
+<!-- Container Principal Premium -->
+<div class="users-management-container">
+    <!-- Header Premium -->
+    <header class="users-header-premium">
+        <div class="header-glass">
+            <!-- Breadcrumb Moderno -->
+            <nav class="breadcrumb-premium">
+                <a href="{% url 'home' %}" class="breadcrumb-link">
+                    <div class="breadcrumb-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span>Dashboard</span>
+                </a>
+                <div class="breadcrumb-separator">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <a href="{% url 'configuracoes' %}" class="breadcrumb-link">
+                    <div class="breadcrumb-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <span>Configurações</span>
+                </a>
+                <div class="breadcrumb-separator">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="breadcrumb-current">
+                    <div class="breadcrumb-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <span>Gerenciar Usuários</span>
+                </span>
+            </nav>
+
+            <!-- Hero Section Ultra Premium -->
+            <div class="hero-ultra-premium">
+                <!-- Background Elements -->
+                <div class="hero-background">
+                    <div class="hero-gradient"></div>
+                    <div class="hero-pattern"></div>
+                    <div class="hero-orbs">
+                        <div class="hero-orb hero-orb-1"></div>
+                        <div class="hero-orb hero-orb-2"></div>
+                        <div class="hero-orb hero-orb-3"></div>
+                    </div>
+                </div>
+                
+                <!-- Content Container -->
+                <div class="hero-content">
+                    <!-- Badge Premium -->
+                    <div class="hero-badge-premium">
+                        <div class="badge-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <span class="badge-text">Gerenciamento</span>
+                        <div class="badge-glow"></div>
+                        <div class="badge-sparkle">
+                            <div class="sparkle"></div>
+                            <div class="sparkle"></div>
+                            <div class="sparkle"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Title Section -->
+                    <div class="hero-title-section">
+                        <h1 class="hero-title-ultra">
+                            <span class="title-line-1">Gerenciar</span>
+                            <span class="title-line-2">Usuários</span>
+                            <div class="title-accent"></div>
+                        </h1>
+                        <p class="hero-subtitle-ultra">
+                            Controle completo dos usuários do sistema com 
+                            <span class="subtitle-highlight">análises avançadas</span> e gestão inteligente
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content-users">
+        <div class="content-wrapper">
+            <!-- Toast Notifications Premium -->
+                    {% if messages %}
+                <div class="notifications-premium">
+                        {% for message in messages %}
+                        <div class="notification-toast {{ message.tags|default:'info' }}" role="alert">
+                            <div class="toast-icon">
+                                {% if message.tags == 'success' %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% elif message.tags == 'error' %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                {% elif message.tags == 'warning' %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                {% else %}
+                                    <i class="fas fa-info-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="toast-content">
+                                {{ message }}
+                            </div>
+                            <button type="button" class="toast-close" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            </div>
+                        {% endfor %}
+                </div>
+                    {% endif %}
+
+            <!-- Dashboard de Estatísticas Premium -->
+            <div class="stats-dashboard-ultra">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Visão Geral dos Usuários</span>
+                                </div>
+                    <div class="dashboard-live">
+                        <div class="live-indicator"></div>
+                        <span>Ao vivo</span>
+                            </div>
+                        </div>
+                
+                <div class="stats-grid-premium">
+                    <div class="stat-card-premium primary" data-tooltip="Total de usuários cadastrados no sistema">
+                        <div class="stat-background">
+                            <div class="stat-pattern"></div>
+                            <div class="stat-gradient"></div>
+                                </div>
+                        <div class="stat-header-premium">
+                            <div class="stat-icon-premium">
+                                <i class="fas fa-users"></i>
+                                <div class="icon-ripple"></div>
+                            </div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-trending-up"></i>
+                                <span>+5%</span>
+                        </div>
+                                </div>
+                        <div class="stat-body-premium">
+                            <div class="stat-number-premium">
+                                <span class="number-value">{{ total_usuarios }}</span>
+                                <div class="number-animation"></div>
+                            </div>
+                            <div class="stat-label-premium">
+                                <span class="label-main">Total de Usuários</span>
+                                <span class="label-sub">Cadastrados no sistema</span>
+                        </div>
+                                </div>
+                        <div class="stat-footer-premium">
+                            <div class="progress-line">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                            <span class="progress-text">85% da capacidade</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-premium success" data-tooltip="Usuários ativos no momento">
+                        <div class="stat-background">
+                            <div class="stat-pattern"></div>
+                            <div class="stat-gradient"></div>
+                        </div>
+                        <div class="stat-header-premium">
+                            <div class="stat-icon-premium">
+                                <i class="fas fa-user-check"></i>
+                                <div class="icon-ripple"></div>
+                            </div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-trending-up"></i>
+                                <span>+8%</span>
+                            </div>
+                        </div>
+                        <div class="stat-body-premium">
+                            <div class="stat-number-premium">
+                                <span class="number-value">{{ usuarios_ativos }}</span>
+                                <div class="number-animation"></div>
+                            </div>
+                            <div class="stat-label-premium">
+                                <span class="label-main">Usuários Ativos</span>
+                                <span class="label-sub">Online agora</span>
+                            </div>
+                        </div>
+                        <div class="stat-footer-premium">
+                            <div class="progress-line">
+                                <div class="progress-fill" style="width: 90%"></div>
+                            </div>
+                            <span class="progress-text">90% de engajamento</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-premium warning" data-tooltip="Administradores do sistema">
+                        <div class="stat-background">
+                            <div class="stat-pattern"></div>
+                            <div class="stat-gradient"></div>
+                        </div>
+                        <div class="stat-header-premium">
+                            <div class="stat-icon-premium">
+                                <i class="fas fa-crown"></i>
+                                <div class="icon-ripple"></div>
+                            </div>
+                            <div class="stat-trend stable">
+                                <i class="fas fa-equals"></i>
+                                <span>0%</span>
+                            </div>
+                        </div>
+                        <div class="stat-body-premium">
+                            <div class="stat-number-premium">
+                                <span class="number-value">{{ usuarios_staff }}</span>
+                                <div class="number-animation"></div>
+                            </div>
+                            <div class="stat-label-premium">
+                                <span class="label-main">Administradores</span>
+                                <span class="label-sub">Acesso privilegiado</span>
+                            </div>
+                        </div>
+                        <div class="stat-footer-premium">
+                            <div class="progress-line">
+                                <div class="progress-fill" style="width: 30%"></div>
+                            </div>
+                            <span class="progress-text">Controle restrito</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-premium danger" data-tooltip="Usuários desativados">
+                        <div class="stat-background">
+                            <div class="stat-pattern"></div>
+                            <div class="stat-gradient"></div>
+                        </div>
+                        <div class="stat-header-premium">
+                            <div class="stat-icon-premium">
+                                <i class="fas fa-user-slash"></i>
+                                <div class="icon-ripple"></div>
+                            </div>
+                            <div class="stat-trend negative">
+                                <i class="fas fa-trending-down"></i>
+                                <span>-2%</span>
+                            </div>
+                        </div>
+                        <div class="stat-body-premium">
+                            <div class="stat-number-premium">
+                                <span class="number-value">{{ usuarios_inativos }}</span>
+                                <div class="number-animation"></div>
+                            </div>
+                            <div class="stat-label-premium">
+                                <span class="label-main">Usuários Inativos</span>
+                                <span class="label-sub">Desativados</span>
+                            </div>
+                        </div>
+                        <div class="stat-footer-premium">
+                            <div class="progress-line">
+                                <div class="progress-fill" style="width: 15%"></div>
+                            </div>
+                            <span class="progress-text">Meta: reduzir para 10%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toolbar de Ações Premium -->
+            <div class="actions-toolbar-premium">
+                <div class="toolbar-glass">
+                    <div class="toolbar-left">
+                        <a href="{% url 'criar_usuario' %}" class="action-btn-premium primary">
+                            <div class="btn-icon-premium">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <span class="btn-text">Novo Usuário</span>
+                            <div class="btn-shine"></div>
+                            <div class="btn-particles">
+                                <div class="particle"></div>
+                                <div class="particle"></div>
+                                <div class="particle"></div>
+                            </div>
+                        </a>
+                        
+                        <div class="toolbar-separator"></div>
+                        
+                        <button class="action-btn-premium secondary" onclick="exportUsers()">
+                            <div class="btn-icon-premium">
+                                <i class="fas fa-download"></i>
+                    </div>
+                            <span class="btn-text">Exportar</span>
+                        </button>
+                        
+                        <button class="action-btn-premium ghost" onclick="refreshStats()">
+                            <div class="btn-icon-premium">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <span class="btn-text">Atualizar</span>
+                        </button>
+                    </div>
+                    
+                    <div class="toolbar-right">
+                        <div class="view-toggle">
+                            <button class="toggle-btn active" data-view="grid" title="Visualização em Grid">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="toggle-btn" data-view="list" title="Visualização em Lista">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros Avançados Premium -->
+            <div class="filters-container-premium">
+                <div class="filters-glass">
+                    <form method="get" class="filters-form-premium" id="filtersForm">
+                        <div class="filters-header">
+                            <div class="filters-title">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtros Avançados</span>
+                            </div>
+                            <div class="filters-actions">
+                                <button type="button" class="filter-clear-btn" onclick="clearFilters()">
+                                    <i class="fas fa-times"></i>
+                                    Limpar
+                                </button>
+                                <button type="button" class="filter-toggle-btn" onclick="toggleAdvancedFilters()">
+                                    <i class="fas fa-chevron-down"></i>
+                                    Avançados
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="filters-grid">
+                            <!-- Search Input Premium -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-search"></i>
+                                    Buscar Usuário
+                                </label>
+                                <div class="search-wrapper-premium">
+                                    <div class="search-icon">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <input type="text" name="busca" class="search-input-premium" 
+                                           placeholder="Nome, usuário ou email..." 
+                                           value="{{ filtros.busca }}"
+                                           autocomplete="off">
+                                    <div class="search-border"></div>
+                                    <div class="search-focus"></div>
+                                    {% if filtros.busca %}
+                                        <button type="button" class="search-clear" onclick="clearSearch()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Status Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-user-check"></i>
+                                    Status
+                                </label>
+                                <div class="select-wrapper-premium">
+                                    <select name="is_active" class="select-premium">
+                                    <option value="">Todos os Status</option>
+                                        <option value="true" {% if filtros.is_active == 'true' %}selected{% endif %}>
+                                            🟢 Ativos
+                                        </option>
+                                        <option value="false" {% if filtros.is_active == 'false' %}selected{% endif %}>
+                                            🔴 Inativos
+                                        </option>
+                                </select>
+                                    <div class="select-arrow">
+                                        <i class="fas fa-chevron-down"></i>
+                            </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Type Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-crown"></i>
+                                    Tipo
+                                </label>
+                                <div class="select-wrapper-premium">
+                                    <select name="is_staff" class="select-premium">
+                                    <option value="">Todos os Tipos</option>
+                                        <option value="true" {% if filtros.is_staff == 'true' %}selected{% endif %}>
+                                            👑 Administradores
+                                        </option>
+                                        <option value="false" {% if filtros.is_staff == 'false' %}selected{% endif %}>
+                                            👤 Usuários
+                                        </option>
+                                </select>
+                                    <div class="select-arrow">
+                                        <i class="fas fa-chevron-down"></i>
+                            </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Filter Action Button -->
+                            <div class="filter-group">
+                                <button type="submit" class="filter-submit-btn">
+                                    <div class="btn-icon">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <span class="btn-text">Filtrar</span>
+                                    <div class="btn-glow"></div>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Advanced Filters (Hidden by default) -->
+                        <div class="filters-advanced" id="advancedFilters" style="display: none;">
+                            <div class="advanced-grid">
+                                <div class="filter-group">
+                                    <label class="filter-label">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Data de Cadastro
+                                    </label>
+                                    <div class="date-range-wrapper-premium">
+                                        <div class="date-input-wrapper">
+                                            <input type="text" id="data_inicio" name="data_inicio" 
+                                                   class="date-input-premium" 
+                                                   placeholder="dd/mm/aaaa"
+                                                   value="{{ filtros.data_inicio }}">
+                                            <div class="date-icon">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                        <span class="date-separator-premium">até</span>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" id="data_fim" name="data_fim" 
+                                                   class="date-input-premium" 
+                                                   placeholder="dd/mm/aaaa"
+                                                   value="{{ filtros.data_fim }}">
+                                            <div class="date-icon">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="filter-group">
+                                    <label class="filter-label">
+                                        <i class="fas fa-sort"></i>
+                                        Ordenar por
+                                    </label>
+                                    <div class="select-wrapper-premium">
+                                        <select name="order_by" class="select-premium">
+                                            <option value="">Padrão</option>
+                                            <option value="name">Nome</option>
+                                            <option value="username">Usuário</option>
+                                            <option value="date_joined">Data de Cadastro</option>
+                                            <option value="last_login">Último Login</option>
+                                        </select>
+                                        <div class="select-arrow">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lista/Grid de Usuários Premium -->
+            <div class="users-container-premium" id="usersContainer">
+                    {% if page_obj %}
+                    <!-- Cabeçalho da Lista -->
+                    <div class="list-header-premium">
+                        <div class="list-info">
+                            <span class="results-count">
+                                Exibindo {{ page_obj|length }} de {{ page_obj.paginator.count }} usuários
+                            </span>
+                        </div>
+                        <div class="list-actions">
+                            <button class="sort-btn" onclick="toggleSort()">
+                                <i class="fas fa-sort-amount-down"></i>
+                                Ordenar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grid de Usuários -->
+                    <div class="users-grid-premium" id="usersGrid">
+                                    {% for item in page_obj %}
+                            <div class="user-card-premium">
+                                <div class="card-glass">
+                                    <!-- Header do Card -->
+                                    <div class="card-header-premium">
+                                        <div class="user-avatar">
+                                            {% if item.usuario.get_full_name %}
+                                                <span class="avatar-text">
+                                                    {{ item.usuario.get_full_name|slice:":2"|upper }}
+                                                </span>
+                                            {% else %}
+                                                <span class="avatar-text">
+                                                    {{ item.usuario.username|slice:":2"|upper }}
+                                                </span>
+                                            {% endif %}
+                                                {% if item.usuario.is_active %}
+                                                <div class="status-indicator online"></div>
+                                                {% else %}
+                                                <div class="status-indicator offline"></div>
+                                                {% endif %}
+                                        </div>
+                                        
+                                        <div class="user-info">
+                                            <h3 class="user-name">
+                                                {{ item.usuario.get_full_name|default:item.usuario.username }}
+                                            </h3>
+                                            <p class="user-username">@{{ item.usuario.username }}</p>
+                                        </div>
+                                        
+                                        <div class="card-badges">
+                                                {% if item.usuario.is_staff %}
+                                                <div class="badge-premium admin">
+                                                    <i class="fas fa-crown"></i>
+                                                    <span>Admin</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="badge-premium user">
+                                                    <i class="fas fa-user"></i>
+                                                    <span>Usuário</span>
+                                                </div>
+                                                {% endif %}
+                                            
+                                            {% if item.usuario.is_active %}
+                                                <div class="badge-premium active">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    <span>Ativo</span>
+                                                </div>
+                                            {% else %}
+                                                <div class="badge-premium inactive">
+                                                    <i class="fas fa-times-circle"></i>
+                                                    <span>Inativo</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Body do Card -->
+                                    <div class="card-body-premium">
+                                        <div class="user-details">
+                                            <div class="detail-item">
+                                                <div class="detail-icon">
+                                                    <i class="fas fa-envelope"></i>
+                                                </div>
+                                                <div class="detail-content">
+                                                    <span class="detail-label">Email</span>
+                                                    <span class="detail-value">{{ item.usuario.email|default:"Não informado" }}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="detail-item">
+                                                <div class="detail-icon">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </div>
+                                                <div class="detail-content">
+                                                    <span class="detail-label">Cadastrado</span>
+                                                    <span class="detail-value">{{ item.usuario.date_joined|date:"d/m/Y" }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Estatísticas do Usuário -->
+                                        <div class="user-stats">
+                                            <div class="stat-item">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-building"></i>
+                                                </div>
+                                                <div class="stat-content">
+                                                    <span class="stat-number">{{ item.unidades_count }}</span>
+                                                    <span class="stat-label">Unidades</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="stat-item">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-phone"></i>
+                                                </div>
+                                                <div class="stat-content">
+                                                    <span class="stat-number">{{ item.chamadas_count }}</span>
+                                                    <span class="stat-label">Chamadas</span>
+                                                </div>
+                                            </div>
+                                            
+                                            {% if item.ultima_atividade %}
+                                                <div class="stat-item">
+                                                    <div class="stat-icon">
+                                                        <i class="fas fa-clock"></i>
+                                                    </div>
+                                                    <div class="stat-content">
+                                                        <span class="stat-number">{{ item.ultima_atividade|timesince }}</span>
+                                                        <span class="stat-label">Última atividade</span>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Footer do Card -->
+                                    <div class="card-footer-premium">
+                                                {% if request.user.is_staff %}
+                                            <div class="card-actions">
+                                                <a href="{% url 'editar_usuario' item.usuario.id %}" 
+                                                   class="action-btn-card primary" title="Editar usuário">
+                                                            <i class="fas fa-edit"></i>
+                                                    <span>Editar</span>
+                                                        </a>
+                                                
+                                                        {% if item.usuario != request.user %}
+                                                            <a href="{% url 'desativar_usuario' item.usuario.id %}" 
+                                                       class="action-btn-card {% if item.usuario.is_active %}danger{% else %}success{% endif %}"
+                                                       onclick="return confirm('Tem certeza que deseja {% if item.usuario.is_active %}desativar{% else %}ativar{% endif %} este usuário?')"
+                                                       title="{% if item.usuario.is_active %}Desativar usuário{% else %}Ativar usuário{% endif %}">
+                                                                <i class="fas {% if item.usuario.is_active %}fa-user-slash{% else %}fa-user-check{% endif %}"></i>
+                                                        <span>{% if item.usuario.is_active %}Desativar{% else %}Ativar{% endif %}</span>
+                                                            </a>
+                                                            
+                                                            <!-- Botão EXCLUIR - apenas para usuários inativos -->
+                                                            {% if not item.usuario.is_active %}
+                                                                <button class="action-btn-card delete" 
+                                                                        onclick="excluirUsuario({{ item.usuario.id }}, '{{ item.usuario.get_full_name|default:item.usuario.username|escapejs }}')"
+                                                                        title="Excluir usuário permanentemente">
+                                                                    <i class="fas fa-trash"></i>
+                                                                    <span>Excluir</span>
+                                                                </button>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                
+                                                <button class="action-btn-card ghost" onclick="viewUserDetails({{ item.usuario.id }})" 
+                                                        title="Ver detalhes">
+                                                    <i class="fas fa-eye"></i>
+                                                    <span>Detalhes</span>
+                                                </button>
+                                                    </div>
+                                                {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                                    {% endfor %}
+                        </div>
+
+                <!-- Paginação Premium -->
+                        {% if page_obj.has_other_pages %}
+                    <div class="pagination-premium">
+                        <div class="pagination-glass">
+                            <div class="pagination-info">
+                                <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                            </div>
+                            
+                            <div class="pagination-controls">
+                                    {% if page_obj.has_previous %}
+                                    <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                       class="pagination-btn first">
+                                        <i class="fas fa-angle-double-left"></i>
+                                        <span>Primeira</span>
+                                    </a>
+                                    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                       class="pagination-btn prev">
+                                        <i class="fas fa-angle-left"></i>
+                                        <span>Anterior</span>
+                                    </a>
+                                    {% endif %}
+                                    
+                                    {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                       class="pagination-btn next">
+                                        <span>Próxima</span>
+                                        <i class="fas fa-angle-right"></i>
+                                    </a>
+                                    <a href="?page={{ page_obj.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                       class="pagination-btn last">
+                                        <span>Última</span>
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                        {% endif %}
+                    {% else %}
+                <!-- Estado Vazio Premium -->
+                <div class="empty-state-premium">
+                    <div class="empty-illustration">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="empty-content">
+                        <h2>Nenhum usuário encontrado</h2>
+                        <p>Comece criando o primeiro usuário do sistema ou ajuste seus filtros de busca.</p>
+                        <a href="{% url 'criar_usuario' %}" class="empty-action-btn">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Criar Primeiro Usuário</span>
+                        </a>
+                    </div>
+                        </div>
+                    {% endif %}
+                </div>
+    </main>
+            </div>
+
+<!-- CSS Premium para Página de Usuários -->
+<style>
+/* ===== VARIÁVEIS CSS PREMIUM ===== */
+:root {
+    --primary: #4f46e5;
+    --primary-light: #6366f1;
+    --primary-dark: #4338ca;
+    --secondary: #10b981;
+    --secondary-light: #34d399;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.7);
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ===== BACKGROUND PREMIUM ===== */
+.users-management-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 70%, #475569 100%);
+    overflow: hidden;
+}
+
+.gradient-orbs {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(45deg, #06b6d4, #0891b2);
+    top: 60%;
+    right: 20%;
+    animation-delay: 5s;
+}
+
+.orb-3 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+    bottom: 20%;
+    left: 30%;
+    animation-delay: 10s;
+}
+
+.orb-4 {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(45deg, #6366f1, #4f46e5);
+    top: 30%;
+    right: 10%;
+    animation-delay: 15s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+    25% { transform: translateY(-20px) translateX(10px) rotate(90deg); }
+    50% { transform: translateY(0px) translateX(20px) rotate(180deg); }
+    75% { transform: translateY(10px) translateX(-10px) rotate(270deg); }
+}
+
+.mesh-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+}
+
+.noise-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    pointer-events: none;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.users-management-container {
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== HEADER PREMIUM ===== */
+.users-header-premium {
+    margin-bottom: 2rem;
+}
+
+.header-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    margin: 2rem;
+    box-shadow: var(--shadow-large);
+}
+
+/* ===== BREADCRUMB PREMIUM ===== */
+.breadcrumb-premium {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.breadcrumb-link:hover {
+    background: rgba(255, 255, 255, 0.45);
+    transform: translateY(-1px);
+    color: white;
+}
+
+.breadcrumb-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breadcrumb-separator {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-ultra-premium {
+    position: relative;
+    padding: 4rem 0;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.hero-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(96, 165, 250, 0.2) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50px;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.badge-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: badgeGlow 3s infinite;
+}
+
+@keyframes badgeGlow {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+}
+
+.hero-title-ultra {
+    font-size: 4rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+.title-line-1,
+.title-line-2 {
+    display: block;
+}
+
+.title-line-2 {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle-ultra {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.subtitle-highlight {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content-users {
+    padding: 0 2rem;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ===== NOTIFICATIONS PREMIUM ===== */
+.notifications-premium {
+    margin-bottom: 2rem;
+}
+
+.notification-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-medium);
+    animation: slideInDown 0.3s ease-out;
+}
+
+.notification-toast.success {
+    border-left: 4px solid var(--success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.notification-toast.error {
+    border-left: 4px solid var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.notification-toast.warning {
+    border-left: 4px solid var(--warning);
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.toast-content {
+    flex: 1;
+    color: white;
+    font-weight: 500;
+}
+
+.toast-close {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== DASHBOARD DE ESTATÍSTICAS ===== */
+.stats-dashboard-ultra {
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: var(--shadow-large);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dashboard-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.dashboard-live {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.live-indicator {
+    width: 8px;
+    height: 8px;
+    background: #3b82f6;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.stats-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card-premium {
+    position: relative;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 1);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card-premium:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-premium.primary:hover {
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.stat-card-premium.success:hover {
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.stat-card-premium.warning:hover {
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.stat-card-premium.danger:hover {
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+.stat-card-premium.primary {
+    border-left: 6px solid #3b82f6;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 197, 253, 0.05) 100%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.stat-card-premium.success {
+    border-left: 6px solid #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(110, 231, 183, 0.05) 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.stat-card-premium.warning {
+    border-left: 6px solid #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.stat-card-premium.danger {
+    border-left: 6px solid #ef4444;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(252, 165, 165, 0.05) 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.stat-header-premium {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.stat-icon-premium {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-premium.primary .stat-icon-premium {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 197, 253, 0.2));
+    color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.stat-card-premium.success .stat-icon-premium {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(110, 231, 183, 0.2));
+    color: #10b981;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.stat-card-premium.warning .stat-icon-premium {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.2));
+    color: #f59e0b;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.stat-card-premium.danger .stat-icon-premium {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(252, 165, 165, 0.2));
+    color: #ef4444;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.stat-trend.positive {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.stat-trend.negative {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.stat-trend.stable {
+    color: #6b7280;
+    background: rgba(107, 114, 128, 0.1);
+}
+
+.stat-number-premium {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1f2937;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label-premium .label-main {
+    display: block;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label-premium .label-sub {
+    display: block;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.stat-footer-premium {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.progress-line {
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.stat-card-premium.primary .progress-fill {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.stat-card-premium.success .progress-fill {
+    background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.stat-card-premium.warning .progress-fill {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.stat-card-premium.danger .progress-fill {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.progress-text {
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* ===== TOOLBAR DE AÇÕES ===== */
+.actions-toolbar-premium {
+    margin-bottom: 2rem;
+}
+
+.toolbar-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-medium);
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.action-btn-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn-premium.primary {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.action-btn-premium.secondary {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.action-btn-premium.ghost {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.btn-icon-premium {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.view-toggle {
+    display: flex;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.toggle-btn {
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn.active,
+.toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* ===== FILTROS PREMIUM ===== */
+.filters-container-premium {
+    margin-bottom: 2rem;
+}
+
+.filters-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: var(--shadow-medium);
+}
+
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.filters-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.filters-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-clear-btn,
+.filter-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-clear-btn:hover,
+.filter-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.search-wrapper-premium {
+    position: relative;
+}
+
+.search-input-premium {
+    width: 100%;
+    padding: 12px 16px 12px 48px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.search-input-premium:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.search-input-premium::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.select-wrapper-premium {
+    position: relative;
+}
+
+.select-premium {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.875rem;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.select-premium:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.select-premium option {
+    background: #1f2937;
+    color: white;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+}
+
+.filter-submit-btn {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* ===== ESTILOS PARA CAMPOS DE DATA PREMIUM ===== */
+.filters-advanced {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.advanced-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: end;
+}
+
+.date-range-wrapper-premium {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.date-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.date-input-premium {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.date-input-premium:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.date-input-premium::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.date-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.date-input-wrapper:hover .date-icon,
+.date-input-premium:focus + .date-icon {
+    color: #3b82f6;
+}
+
+.date-separator-premium {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0 4px;
+    white-space: nowrap;
+}
+
+/* Responsividade para filtros avançados */
+@media (max-width: 768px) {
+    .advanced-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .date-range-wrapper-premium {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .date-separator-premium {
+        align-self: center;
+    }
+}
+
+/* ===== GRID DE USUÁRIOS ===== */
+.users-container-premium {
+    margin-bottom: 3rem;
+}
+
+.list-header-premium {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px 16px 0 0;
+    margin-bottom: 0;
+}
+
+.results-count {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+}
+
+.sort-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.users-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+}
+
+.user-card-premium {
+    transition: all 0.3s ease;
+}
+
+.user-card-premium:hover {
+    transform: translateY(-4px);
+}
+
+.card-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.user-card-premium:hover .card-glass {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: var(--shadow-large);
+}
+
+.card-header-premium {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.status-indicator.online {
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.status-indicator.offline {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+.user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    color: #1f2937;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-username {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+}
+
+.badge-premium {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-premium.admin {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-premium.user {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.badge-premium.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.badge-premium.inactive {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.card-body-premium {
+    padding: 1.5rem;
+}
+
+.user-details {
+    margin-bottom: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.detail-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.detail-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.detail-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.detail-value {
+    display: block;
+    color: #1f2937;
+    font-size: 0.875rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    margin: 0 auto 0.5rem;
+}
+
+.stat-number {
+    display: block;
+    color: #1f2937;
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.card-footer-premium {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(248, 250, 252, 0.8);
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.action-btn-card {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.action-btn-card.primary {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.action-btn-card.danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.action-btn-card.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.action-btn-card.ghost {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6b7280;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.action-btn-card.delete {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.action-btn-card.delete:hover {
+    background: rgba(220, 38, 38, 0.2);
+    color: #b91c1c;
+    border-color: rgba(220, 38, 38, 0.4);
+}
+
+.action-btn-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== PAGINAÇÃO PREMIUM ===== */
+.pagination-premium {
+    margin-top: 2rem;
+}
+
+.pagination-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-medium);
+}
+
+.pagination-info {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pagination-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover {
+    background: rgba(255, 255, 255, 0.45);
+    transform: translateY(-1px);
+    color: white;
+}
+
+/* ===== ESTADO VAZIO ===== */
+.empty-state-premium {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-medium);
+}
+
+.empty-illustration {
+    font-size: 4rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 2rem;
+}
+
+.empty-content h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.empty-content p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.empty-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.empty-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+    color: white;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1200px) {
+    .users-grid-premium {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .header-glass {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .hero-title-ultra {
+        font-size: 2.5rem;
+    }
+    
+    .toolbar-glass {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .toolbar-left {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .users-grid-premium {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    
+    .pagination-glass {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .stats-grid-premium {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .card-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title-ultra {
+        font-size: 2rem;
+    }
+    
+    .action-btn-premium {
+        padding: 10px 16px;
+        font-size: 0.875rem;
+    }
+    
+    .card-header-premium {
+        padding: 1rem;
+    }
+    
+    .card-body-premium {
+        padding: 1rem;
+    }
+    
+    .user-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
+<!-- JavaScript Premium -->
+<script>
+// Funcionalidades JavaScript serão adicionadas na próxima etapa
+function toggleAdvancedFilters() {
+    const advanced = document.getElementById('advancedFilters');
+    const isVisible = advanced.style.display !== 'none';
+    advanced.style.display = isVisible ? 'none' : 'block';
+}
+
+function clearFilters() {
+    document.getElementById('filtersForm').reset();
+    window.location.href = window.location.pathname;
+}
+
+function clearSearch() {
+    document.querySelector('input[name="busca"]').value = '';
+}
+
+function toggleSort() {
+    // Implementar lógica de ordenação
+    console.log('Toggle sort');
+}
+
+function exportUsers() {
+    // Implementar exportação
+    console.log('Export users');
+}
+
+function refreshStats() {
+    // Implementar refresh
+    location.reload();
+}
+
+function viewUserDetails(userId) {
+    // Redirecionar para página de detalhes do usuário
+    window.location.href = `/accounts/usuarios/${userId}/detalhes/`;
+}
+
+function excluirUsuario(userId, nomeUsuario) {
+    // Primeiro, verificar se o usuário pode ser excluído
+    fetch(`/accounts/usuarios/${userId}/excluir/`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const usuario = data.usuario;
+            
+            // Verificar se o usuário tem dados relacionados
+            if (!usuario.pode_excluir) {
+                mostrarModalBloqueio(usuario);
+                return;
+            }
+            
+            // Mostrar modal de confirmação
+            mostrarModalConfirmacao(usuario, userId, nomeUsuario);
+        } else {
+            mostrarModalErro('Erro ao verificar usuário: ' + (data.message || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao verificar usuário:', error);
+        mostrarModalErro('Erro de conexão. Tente novamente.');
+    });
+}
+
+function mostrarModalBloqueio(usuario) {
+    const modal = criarModalBase();
+    modal.innerHTML = `
+        <div class="modal-container warning">
+            <div class="modal-header warning">
+                <div class="modal-icon warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h2 class="modal-title">Exclusão Bloqueada</h2>
+                <button class="modal-close" onclick="fecharModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="warning-content">
+                    <div class="user-info-block">
+                        <h3>📋 Usuário: <strong>${usuario.nome}</strong></h3>
+                        <p class="user-details">@${usuario.username}</p>
+                    </div>
+                    
+                    <div class="data-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-number">${usuario.unidades_cadastradas}</span>
+                                <span class="stat-label">Unidades cadastradas</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-number">${usuario.chamadas_registradas}</span>
+                                <span class="stat-label">Chamadas registradas</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="warning-message">
+                        <div class="warning-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="warning-text">
+                            <h4>Por motivos de integridade dos dados</h4>
+                            <p>Este usuário não pode ser excluído pois possui dados importantes vinculados ao sistema. Para manter a consistência e rastreabilidade, recomendamos manter o usuário como <strong>inativo</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="fecharModal()">
+                    <i class="fas fa-check"></i>
+                    Entendido
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Adicionar evento para fechar ao clicar fora do modal
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            fecharModal();
+        }
+    });
+    
+    document.body.appendChild(modal);
+    
+    // Força a exibição do modal
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.classList.add('show');
+        
+        // Garantir que o container do modal também seja visível
+        const container = modal.querySelector('.modal-container');
+        if (container) {
+            container.style.cssText = `
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                background: #ffffff !important;
+                border-radius: 12px !important;
+                border: 5px solid #1f2937 !important;
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.8) !important;
+                max-width: 700px !important;
+                width: 95% !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+                color: #000000 !important;
+                z-index: 1000000 !important;
+            `;
+        }
+    }, 10);
+}
+
+function mostrarModalConfirmacao(usuario, userId, nomeUsuario) {
+    const modal = criarModalBase();
+    modal.innerHTML = `
+        <div class="modal-container danger">
+            <div class="modal-header danger">
+                <div class="modal-icon danger">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <h2 class="modal-title">Exclusão Permanente</h2>
+                <button class="modal-close" onclick="fecharModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="deletion-content">
+                    <div class="user-info-block">
+                        <h3>👤 Usuário: <strong>${usuario.nome}</strong></h3>
+                        <p class="user-details">@${usuario.username}</p>
+                    </div>
+                    
+                    <div class="warning-alerts">
+                        <div class="alert-item critical">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Esta ação <strong>NÃO PODE</strong> ser desfeita!</span>
+                        </div>
+                        <div class="alert-item critical">
+                            <i class="fas fa-database"></i>
+                            <span>Todos os dados do usuário serão <strong>perdidos permanentemente</strong>!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="confirmation-input">
+                        <label for="confirmText">Para confirmar, digite <strong>EXCLUIR</strong> no campo abaixo:</label>
+                        <input type="text" id="confirmText" class="confirm-input" placeholder="Digite: EXCLUIR" autocomplete="off">
+                        <div class="input-status" id="inputStatus"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal ghost" onclick="fecharModal()">
+                    <i class="fas fa-ban"></i>
+                    Cancelar
+                </button>
+                <button class="btn-modal danger" id="confirmDeleteBtn" onclick="confirmarExclusao(${userId}, '${nomeUsuario.replace(/'/g, "\\'")}')">
+                    <i class="fas fa-trash"></i>
+                    Excluir Permanentemente
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Adicionar evento para fechar ao clicar fora do modal
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            fecharModal();
+        }
+    });
+    
+    document.body.appendChild(modal);
+    
+    // Força a exibição do modal
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.classList.add('show');
+        
+        // Garantir que o container do modal também seja visível
+        const container = modal.querySelector('.modal-container');
+        if (container) {
+            container.style.cssText = `
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                background: #ffffff !important;
+                border-radius: 12px !important;
+                border: 5px solid #ef4444 !important;
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.8) !important;
+                max-width: 700px !important;
+                width: 95% !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+                color: #000000 !important;
+                z-index: 1000000 !important;
+            `;
+        }
+    }, 10);
+    
+    // Setup da validação do input
+    const confirmInput = document.getElementById('confirmText');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    const inputStatus = document.getElementById('inputStatus');
+    
+    confirmBtn.disabled = true;
+    confirmBtn.style.opacity = '0.5';
+    
+    confirmInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        
+        if (value === 'EXCLUIR') {
+            confirmBtn.disabled = false;
+            confirmBtn.style.opacity = '1';
+            inputStatus.innerHTML = '<i class="fas fa-check-circle"></i> Confirmação válida';
+            inputStatus.className = 'input-status valid';
+            this.style.borderColor = '#10b981';
+        } else if (value.length > 0) {
+            confirmBtn.disabled = true;
+            confirmBtn.style.opacity = '0.5';
+            inputStatus.innerHTML = '<i class="fas fa-times-circle"></i> Digite exatamente: EXCLUIR';
+            inputStatus.className = 'input-status invalid';
+            this.style.borderColor = '#ef4444';
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.style.opacity = '0.5';
+            inputStatus.innerHTML = '';
+            inputStatus.className = 'input-status';
+            this.style.borderColor = '#d1d5db';
+        }
+    });
+    
+    // Focus no input
+    setTimeout(() => confirmInput.focus(), 100);
+}
+
+function confirmarExclusao(userId, nomeUsuario) {
+    const confirmInput = document.getElementById('confirmText');
+    
+    if (confirmInput.value.trim() !== 'EXCLUIR') {
+        mostrarModalErro('Texto de confirmação incorreto. Digite exatamente: EXCLUIR');
+        return;
+    }
+    
+    fecharModal();
+    realizarExclusao(userId, nomeUsuario);
+}
+
+function mostrarModalErro(mensagem) {
+    const modal = criarModalBase();
+    modal.innerHTML = `
+        <div class="modal-container error">
+            <div class="modal-header error">
+                <div class="modal-icon error">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <h2 class="modal-title">Erro</h2>
+                <button class="modal-close" onclick="fecharModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="error-content">
+                    <p>${mensagem}</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal primary" onclick="fecharModal()">
+                    <i class="fas fa-check"></i>
+                    OK
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Adicionar evento para fechar ao clicar fora do modal
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            fecharModal();
+        }
+    });
+    
+    document.body.appendChild(modal);
+    
+    // Força a exibição do modal
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.classList.add('show');
+        
+        // Garantir que o container do modal também seja visível
+        const container = modal.querySelector('.modal-container');
+        if (container) {
+            container.style.cssText = `
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                background: #ffffff !important;
+                border-radius: 12px !important;
+                border: 5px solid #dc2626 !important;
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.8) !important;
+                max-width: 700px !important;
+                width: 95% !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+                color: #000000 !important;
+                z-index: 1000000 !important;
+            `;
+        }
+    }, 10);
+}
+
+function criarModalBase() {
+    // Remover qualquer modal existente
+    const existingModal = document.getElementById('modalExclusao');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay-premium';
+    modal.id = 'modalExclusao';
+    
+    // Força estilos inline para garantir visibilidade
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 999999 !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    
+    return modal;
+}
+
+function fecharModal() {
+    const modal = document.getElementById('modalExclusao');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    }
+}
+
+function realizarExclusao(userId, nomeUsuario) {
+    // Mostrar loading
+    const loadingToast = document.createElement('div');
+    loadingToast.className = 'notification-toast info';
+    loadingToast.innerHTML = `
+        <div class="toast-icon">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        <div class="toast-content">
+            Excluindo usuário "${nomeUsuario}"...
+        </div>
+    `;
+    
+    const notificationsContainer = document.querySelector('.notifications-premium') || 
+                                  document.querySelector('.main-content-users');
+    notificationsContainer.insertBefore(loadingToast, notificationsContainer.firstChild);
+    
+    // Fazer requisição de exclusão
+    fetch('/accounts/api/excluir-usuario/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+        },
+        body: JSON.stringify({
+            user_id: userId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Remover loading
+        loadingToast.remove();
+        
+        if (data.success) {
+            // Mostrar sucesso
+            const successToast = document.createElement('div');
+            successToast.className = 'notification-toast success';
+            successToast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="toast-content">
+                    ${data.message}
+                </div>
+                <button type="button" class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            notificationsContainer.insertBefore(successToast, notificationsContainer.firstChild);
+            
+            // Remover o card do usuário da interface
+            const userCard = document.querySelector(`[onclick*="excluirUsuario(${userId}"]`)?.closest('.user-card-premium');
+            if (userCard) {
+                userCard.style.transition = 'all 0.5s ease';
+                userCard.style.opacity = '0';
+                userCard.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    userCard.remove();
+                    
+                    // Verificar se não há mais usuários
+                    const remainingCards = document.querySelectorAll('.user-card-premium');
+                    if (remainingCards.length === 0) {
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                }, 500);
+            }
+            
+            // Auto-remover toast após 5 segundos
+            setTimeout(() => {
+                if (successToast.parentElement) {
+                    successToast.remove();
+                }
+            }, 5000);
+            
+        } else {
+            // Mostrar erro
+            const errorToast = document.createElement('div');
+            errorToast.className = 'notification-toast error';
+            errorToast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="toast-content">
+                    ❌ ${data.message}
+                </div>
+                <button type="button" class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            notificationsContainer.insertBefore(errorToast, notificationsContainer.firstChild);
+        }
+    })
+    .catch(error => {
+        // Remover loading
+        loadingToast.remove();
+        
+        console.error('Erro na exclusão:', error);
+        
+        const errorToast = document.createElement('div');
+        errorToast.className = 'notification-toast error';
+        errorToast.innerHTML = `
+            <div class="toast-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="toast-content">
+                ❌ Erro de conexão ao excluir usuário. Tente novamente.
+            </div>
+            <button type="button" class="toast-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        const notificationsContainer = document.querySelector('.notifications-premium') || 
+                                      document.querySelector('.main-content-users');
+        notificationsContainer.insertBefore(errorToast, notificationsContainer.firstChild);
+    });
+}
+
+// Inicialização quando a página carrega
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Sistema de gerenciamento de usuários carregado!');
+    
+    // Animação de entrada para os cards
+    const cards = document.querySelectorAll('.user-card-premium');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+    
+    // Animação de entrada para estatísticas
+    const statCards = document.querySelectorAll('.stat-card-premium');
+    statCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.4s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+        }, index * 200);
+    });
+    
+    // Auto-refresh das estatísticas a cada 30 segundos
+    setInterval(() => {
+        const statNumbers = document.querySelectorAll('.stat-number-premium .number-value');
+        statNumbers.forEach(number => {
+            number.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                number.style.transform = 'scale(1)';
+            }, 200);
+        });
+    }, 30000);
+    
+    // Tooltips para cards
+    const tooltipElements = document.querySelectorAll('[data-tooltip]');
+    tooltipElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-premium';
+            tooltip.textContent = this.getAttribute('data-tooltip');
+            document.body.appendChild(tooltip);
+            
+            const rect = this.getBoundingClientRect();
+            tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+            tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+            
+            setTimeout(() => tooltip.classList.add('show'), 10);
+        });
+        
+        element.addEventListener('mouseleave', function() {
+            const tooltip = document.querySelector('.tooltip-premium');
+            if (tooltip) {
+                tooltip.remove();
+            }
+        });
+    });
+});
+
+// Adicionar estilos para tooltips
+const tooltipStyles = document.createElement('style');
+tooltipStyles.textContent = `
+.tooltip-premium {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.tooltip-premium.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tooltip-premium::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* ===== MODAIS PREMIUM DE EXCLUSÃO ===== */
+.modal-overlay-premium {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.modal-overlay-premium.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.modal-container {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8) !important;
+    min-width: 600px !important;
+    max-width: 700px !important;
+    width: 95% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    transition: all 0.3s ease;
+    border: 5px solid #1f2937 !important;
+    z-index: 1000000 !important;
+}
+
+.modal-overlay-premium.show .modal-container {
+    transform: translate(-50%, -50%) scale(1) !important;
+}
+
+/* Variações do modal */
+.modal-container.warning {
+    border: 5px solid #f59e0b !important;
+    background: #ffffff !important;
+}
+
+.modal-container.danger {
+    border: 5px solid #ef4444 !important;
+    background: #ffffff !important;
+}
+
+.modal-container.error {
+    border: 5px solid #dc2626 !important;
+    background: #ffffff !important;
+}
+
+/* Header do modal */
+.modal-header {
+    padding: 3rem 3rem 2rem 3rem !important;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+    background: #ffffff !important;
+    border-bottom: 3px solid #1f2937 !important;
+}
+
+.modal-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: iconShine 3s infinite;
+}
+
+@keyframes iconShine {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+}
+
+.modal-icon.warning {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white;
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+}
+
+.modal-icon.danger {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    color: white;
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+}
+
+.modal-icon.error {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white;
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+}
+
+.modal-title {
+    flex: 1;
+    color: #000000;
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: none;
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: #374151;
+    transform: scale(1.1);
+}
+
+/* Body do modal */
+.modal-body {
+    padding: 3rem !important;
+    background: #ffffff !important;
+}
+
+.user-info-block {
+    background: #f1f5f9;
+    border: 3px solid #334155;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: none;
+}
+
+.user-info-block h3 {
+    color: #000000;
+    font-size: 1.3rem;
+    margin: 0 0 0.75rem 0;
+    font-weight: 900;
+}
+
+.user-details {
+    color: #1e293b;
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Stats dos dados */
+.data-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.data-stats .stat-item {
+    background: #fef3c7;
+    border: 3px solid #d97706;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: none;
+}
+
+.data-stats .stat-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.data-stats .stat-content {
+    flex: 1;
+}
+
+.data-stats .stat-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #000000;
+    margin-bottom: 0.5rem;
+}
+
+.data-stats .stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+/* Mensagem de aviso */
+.warning-message {
+    background: #fef3c7;
+    border: 3px solid #d97706;
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    box-shadow: none;
+}
+
+.warning-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+.warning-text h4 {
+    color: #000000;
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0 0 0.75rem 0;
+}
+
+.warning-text p {
+    color: #1e293b;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Alertas críticos */
+.warning-alerts {
+    margin-bottom: 1.5rem;
+}
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+}
+
+.alert-item.critical {
+    background: #fecaca;
+    border: 3px solid #dc2626;
+    color: #000000;
+    box-shadow: none;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.alert-item i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Input de confirmação */
+.confirmation-input {
+    margin-top: 1.5rem;
+}
+
+.confirmation-input label {
+    display: block;
+    color: #000000;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.confirm-input {
+    width: 100%;
+    padding: 1.25rem;
+    border: 4px solid #64748b;
+    border-radius: 8px;
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.2s ease;
+    background: #ffffff;
+    color: #000000;
+    box-shadow: none;
+}
+
+.confirm-input:focus {
+    outline: none;
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 4px #93c5fd;
+    background: #ffffff;
+}
+
+.input-status {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+}
+
+.input-status.valid {
+    color: #000000;
+    background: #d1fae5;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    border: 3px solid #059669;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.input-status.invalid {
+    color: #000000;
+    background: #fecaca;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    border: 3px solid #dc2626;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+/* Footer do modal */
+.modal-footer {
+    padding: 3rem !important;
+    display: flex;
+    gap: 2rem;
+    justify-content: flex-end;
+    background: #ffffff !important;
+    border-top: 3px solid #1f2937 !important;
+}
+
+.btn-modal {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-modal:hover::before {
+    left: 100%;
+}
+
+.btn-modal.primary {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-modal.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-modal.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-modal.danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+}
+
+.btn-modal.danger:disabled {
+    background: #9ca3af;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-modal.ghost {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6b7280;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-modal.ghost:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #374151;
+    transform: translateY(-1px);
+}
+
+/* FORÇAS CSS PARA GARANTIR VISIBILIDADE MÁXIMA */
+.modal-overlay-premium,
+.modal-overlay-premium *,
+.modal-container,
+.modal-container * {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+.modal-overlay-premium.show {
+    background: rgba(0, 0, 0, 0.85) !important;
+}
+
+.modal-container {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Texto super escuro */
+.modal-container h1,
+.modal-container h2,
+.modal-container h3,
+.modal-container h4,
+.modal-container h5,
+.modal-container h6,
+.modal-container p,
+.modal-container span,
+.modal-container div,
+.modal-container label,
+.modal-container button {
+    color: #000000 !important;
+    text-shadow: none !important;
+}
+
+/* Input super visível */
+.confirm-input {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 4px solid #000000 !important;
+}
+
+/* Responsividade dos modais */
+@media (max-width: 768px) {
+    .modal-container {
+        min-width: 0 !important;
+        width: 95% !important;
+        margin: 1rem !important;
+    }
+    
+    .modal-header {
+        padding: 2rem !important;
+    }
+    
+    .modal-body {
+        padding: 2rem !important;
+    }
+    
+    .modal-footer {
+        padding: 2rem !important;
+        flex-direction: column;
+    }
+    
+    .data-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .warning-message {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+`;
+document.head.appendChild(tooltipStyles);
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.flatpickr) {
+        flatpickr("#data_inicio", {
+            dateFormat: "d/m/Y",
+            locale: "pt",
+            allowInput: true,
+            clickOpens: true,
+            disableMobile: false,
+            maxDate: "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                // Atualizar o valor do campo
+                instance.input.value = dateStr;
+            }
+        });
+        flatpickr("#data_fim", {
+            dateFormat: "d/m/Y", 
+            locale: "pt",
+            allowInput: true,
+            clickOpens: true,
+            disableMobile: false,
+            maxDate: "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                // Atualizar o valor do campo
+                instance.input.value = dateStr;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

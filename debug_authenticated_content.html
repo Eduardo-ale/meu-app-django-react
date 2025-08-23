@@ -1,0 +1,2462 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Unidade de Saúde - Sistema de Registro de Chamadas</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicons/favicon-16x16.png">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); box-shadow: 0 4px 20px rgba(0,0,0,.08); border-bottom: 1px solid #e2e8f0; padding: 2rem 0;">
+    <div class="container">
+        <a class="navbar-brand" href="/" style="display: flex; align-items: center; gap: 2.5rem; text-decoration: none; color: #1f2937; font-weight: 600; font-size: 1.1rem;">
+            <img src="/static/images/logo%20nova.jpeg" alt="Logo" style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <span style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Sistema de Registro de Chamadas</span>
+                <span style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">CENTRAL DE REGULAÇÃO - MS</span>
+            </div>
+        </a>
+    </div>
+</nav>
+<div class="modern-container-criar">
+    <!-- Breadcrumb Moderno -->
+    <nav aria-label="breadcrumb" class="breadcrumb-container-react">
+        <ol class="breadcrumb-react">
+            <li class="breadcrumb-item-react">
+                <a href="/" class="breadcrumb-link-react">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator-react"></i>
+            </li>
+            <li class="breadcrumb-item-react">
+                <a href="/accounts/unidades-saude/" class="breadcrumb-link-react">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Unidades de Saúde</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator-react"></i>
+            </li>
+            <li class="breadcrumb-item-react breadcrumb-current-react">
+                <span class="breadcrumb-current-text-react">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Nova Unidade</span>
+                </span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Container do Componente React -->
+    <div id="criar-unidade-react-root">
+        <!-- Fallback HTML caso React falhe -->
+        <div class="fallback-container">
+            <!-- Header Premium -->
+            <div class="fallback-header">
+                <div class="header-background-pattern"></div>
+                <div class="header-content-fallback">
+                    <div class="header-info-fallback">
+                        <div class="header-icon-fallback">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="header-text-fallback">
+                            <h1 class="header-title-fallback">Nova Unidade de Saúde</h1>
+                            <p class="header-subtitle-fallback">Cadastre uma nova unidade no sistema</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulário Premium -->
+            <div class="fallback-form-container">
+                <form method="post" class="fallback-form">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="rdJQRxND9gm5KfGJNdw4ueBgcl1QLUrFlKV0CWMOdQ2MsdIU1eQfhw2FpqCnCYzK">
+                    
+                    <!-- Seção: Informações Básicas -->
+                    <div class="form-section-fallback">
+                        <div class="section-header-fallback">
+                            <div class="section-icon-fallback">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <h3 class="section-title-fallback">Informações Básicas</h3>
+                        </div>
+                        <div class="section-content-fallback">
+                            <div class="form-grid-fallback">
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-hospital"></i>
+                                        Nome da Unidade
+                                        <span class="required-star">*</span>
+                                    </label>
+                                    <input type="text" name="nome" class="form-input-fallback" placeholder="Ex: Hospital Municipal..." value="" required>
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-tag"></i>
+                                        Tipo da Unidade
+                                        <span class="required-star">*</span>
+                                    </label>
+                                    <select name="tipo" class="form-select-fallback" required>
+                                        <option value="">Selecione o tipo...</option>
+                                        <option value="UNIDADE_EXECUTANTE">🏥 Executante</option>
+                                        <option value="UNIDADE_SOLICITANTE">📞 Solicitante</option>
+                                        <option value="EXECUTANTE_SOLICITANTE">🏥📞 Executante/Solicitante</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-id-card"></i>
+                                        CNES
+                                    </label>
+                                    <div class="cnes-input-container-fallback">
+                                        <input type="text" name="cnes" class="form-input-fallback" maxlength="7" placeholder="Ex: 1234567" value="" id="cnes-input-fallback">
+                                        <div class="cnes-loading-fallback" id="cnes-loading-fallback" style="display: none;">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </div>
+                                    </div>
+                                    <div class="cnes-feedback-fallback" id="cnes-feedback-fallback"></div>
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-user-tie"></i>
+                                        Responsável
+                                    </label>
+                                    <input type="text" name="responsavel" class="form-input-fallback" placeholder="Nome do responsável">
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-phone-alt"></i>
+                                        Contato Telefônico
+                                    </label>
+                                    <input type="text" name="contato_telefonico" class="form-input-fallback" placeholder="(67) 99999-9999" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção: Localização -->
+                    <div class="form-section-fallback">
+                        <div class="section-header-fallback">
+                            <div class="section-icon-fallback">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3 class="section-title-fallback">Localização</h3>
+                        </div>
+                        <div class="section-content-fallback">
+                            <div class="form-grid-fallback">
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-city"></i>
+                                        Município
+                                    </label>
+                                    <input type="text" name="municipio" class="form-input-fallback" placeholder="Digite o município" value="">
+                                </div>
+                                
+                                <div class="form-group-fallback full-width">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-map"></i>
+                                        Endereço Completo
+                                    </label>
+                                    <textarea name="endereco" rows="3" class="form-textarea-fallback" placeholder="Rua, número, bairro..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção: Contato -->
+                    <div class="form-section-fallback">
+                        <div class="section-header-fallback">
+                            <div class="section-icon-fallback">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <h3 class="section-title-fallback">Informações de Contato</h3>
+                        </div>
+                        <div class="section-content-fallback">
+                            <div class="form-grid-fallback">
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-phone"></i>
+                                        Telefone
+                                    </label>
+                                    <input type="text" name="telefone" class="form-input-fallback" placeholder="(67) 99999-9999">
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-envelope"></i>
+                                        E-mail
+                                    </label>
+                                    <input type="email" name="email" class="form-input-fallback" placeholder="contato@unidade.com.br">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção: Log do Cadastrante -->
+                    <div class="form-section-fallback">
+                        <div class="section-header-fallback">
+                            <div class="section-icon-fallback" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <h3 class="section-title-fallback">Informações do Cadastrante</h3>
+                        </div>
+                        <div class="section-content-fallback">
+                            <div class="form-grid-fallback">
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-user-check"></i>
+                                        Responsável pelo Cadastro
+                                    </label>
+                                    <input type="text" class="form-input-fallback readonly-field" value="Test User" readonly>
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        Data do Cadastro
+                                    </label>
+                                    <input type="text" class="form-input-fallback readonly-field" id="data-cadastro-fallback" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de Ação -->
+                    <div class="form-actions-fallback">
+                        <a href="/accounts/unidades-saude/" class="btn-cancel-fallback">
+                            <i class="fas fa-times"></i>
+                            <span>Cancelar</span>
+                        </a>
+                        <button type="submit" class="btn-save-fallback">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Criar Unidade</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts React e Dependências -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<!-- Sistema de Tratamento de Erros -->
+<script src="/static/js/services/ReactDebugger.js"></script>
+<script src="/static/js/components/ReactErrorBoundary.js"></script>
+<script src="/static/js/services/SafeComponentLoader.js"></script>
+<script src="/static/js/services/ReactErrorHandling.js"></script>
+<script src="/static/js/services/ReactInitializer.js"></script>
+
+<!-- Carregar serviços React primeiro -->
+<script src="/static/js/dist/react-services.bundle.js"></script>
+
+<!-- Bundle do Componente -->
+<script src="/static/js/dist/criar-unidade.bundle.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar dados do Django
+    window.ReactInitializer.setDjangoData({
+        user: {
+            id: 5,
+            username: 'testuser',
+            full_name: 'Test User'
+        },
+        urls: {
+            home: '/',
+            unidades_saude: '/accounts/unidades-saude/',
+            criar_unidade: '/accounts/unidades-saude/criar/'
+        }
+    });
+
+    // Props específicas do componente
+    const componentProps = {
+        dadosPreenchimento: {},
+        municipios: [],
+        tiposUnidade: [
+            { value: 'UNIDADE_EXECUTANTE', label: '🏥 Executante' },
+            { value: 'UNIDADE_SOLICITANTE', label: '📞 Solicitante' },
+            { value: 'EXECUTANTE_SOLICITANTE', label: '🏥📞 Executante/Solicitante' }
+        ]
+    };
+
+    // Inicializar componente com sistema de detecção aprimorado
+    window.ReactInitializer.initComponent(
+        'CriarUnidadeReact',
+        'criar-unidade-react-root',
+        componentProps,
+        {
+            fallbackMessage: 'Componente React não disponível. Usando formulário HTML como alternativa.',
+            showStatusIndicator: true,
+            enablePerformanceMonitoring: true,
+            onSuccess: function(componentName, container) {
+                console.log('✅ Componente CriarUnidadeReact carregado com sucesso');
+                
+                // Ocultar fallback HTML quando React carrega
+                const fallbackContainer = container.querySelector('.fallback-container');
+                if (fallbackContainer) {
+                    fallbackContainer.style.display = 'none';
+                }
+                
+                // Notificar sistema de detecção sobre sucesso
+                if (window.ComponentDetectionSystem) {
+                    window.ComponentDetectionSystem._showNotification(
+                        '🎉 Interface React Ativa',
+                        'Formulário interativo carregado com sucesso',
+                        'success'
+                    );
+                }
+            },
+            onFallback: function(componentName, container) {
+                console.log('⚠️ Usando fallback HTML para CriarUnidadeReact');
+                
+                // Garantir que fallback HTML está visível
+                const fallbackContainer = container.querySelector('.fallback-container');
+                if (fallbackContainer) {
+                    fallbackContainer.style.display = 'block';
+                }
+                
+                // Inicializar funcionalidades do fallback HTML
+                initializeFallbackFeatures();
+                
+                // Notificar sobre modo fallback
+                if (window.ComponentDetectionSystem) {
+                    window.ComponentDetectionSystem._showNotification(
+                        '📝 Modo Compatibilidade',
+                        'Usando formulário HTML tradicional',
+                        'warning'
+                    );
+                }
+            },
+            onError: function(error, componentName, container) {
+                console.error('❌ Erro ao carregar CriarUnidadeReact:', error);
+                
+                // Log detalhado do erro
+                if (window.ReactDebugger) {
+                    window.ReactDebugger.logComponentError(componentName, error, {
+                        componentStack: 'Erro na inicialização do componente de criação de unidade'
+                    });
+                }
+            }
+        }
+    );
+});
+
+// Funcionalidades para o fallback HTML
+function initializeFallbackFeatures() {
+    // Configurar data atual
+    const dataInput = document.getElementById('data-cadastro-fallback');
+    if (dataInput) {
+        dataInput.value = new Date().toLocaleDateString('pt-BR');
+    }
+    
+    // Configurar máscara de telefone
+    const telefoneInputs = document.querySelectorAll('input[name="contato_telefonico"], input[name="telefone"]');
+    telefoneInputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                if (value.length < 14) {
+                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                }
+            }
+            e.target.value = value;
+        });
+    });
+    
+    // Configurar validação de CNES
+    const cnesInput = document.getElementById('cnes-input-fallback');
+    if (cnesInput) {
+        cnesInput.addEventListener('input', function(e) {
+            const value = e.target.value.replace(/\D/g, '');
+            e.target.value = value;
+            
+            if (value.length === 7) {
+                // Simular validação de CNES
+                const feedback = document.getElementById('cnes-feedback-fallback');
+                if (feedback) {
+                    feedback.innerHTML = '<small style="color: #10b981;"><i class="fas fa-check-circle"></i> CNES válido</small>';
+                }
+            }
+        });
+    }
+    
+    console.log('✅ Funcionalidades do fallback HTML inicializadas');
+}
+</script>
+
+<style>
+/* ===== CONTAINER PRINCIPAL ===== */
+.modern-container-criar {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-attachment: fixed;
+    padding: 2rem;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-container-react {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-react {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-item-react {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-link-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-link-react:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    text-decoration: none;
+}
+
+.breadcrumb-separator-react {
+    color: #cbd5e1;
+    font-size: 0.7rem;
+    margin: 0 0.5rem;
+}
+
+.breadcrumb-current-text-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* ===== COMPONENTE CRIAR ===== */
+.criar-unidade-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== NOTIFICAÇÃO DE PREENCHIMENTO ===== */
+.preenchimento-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.notification-content {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    max-width: 400px;
+}
+
+.notification-content i:first-child {
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+}
+
+.notification-content div {
+    flex: 1;
+}
+
+.notification-content strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.notification-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.notification-content button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.notification-content button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== HEADER ===== */
+.create-header-react {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="0.5" fill="white" opacity="0.1"/><circle cx="80" cy="80" r="0.3" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.header-content-react {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.create-icon-react {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.create-title-react {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.create-subtitle-react {
+    font-size: 1rem;
+    margin: 0.25rem 0 0 0;
+    opacity: 0.9;
+}
+
+.header-actions .btn-clear {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.header-actions .btn-clear:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* ===== FORMULÁRIO ===== */
+.create-form-react {
+    padding: 0;
+}
+
+.form-section-react {
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.form-section-react:last-child {
+    border-bottom: none;
+}
+
+.section-header-react {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.section-icon-react {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.section-title-react {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-left: auto;
+    font-style: italic;
+}
+
+.section-content-react {
+    padding: 2rem;
+}
+
+.form-grid-react {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group-react.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group-react {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label-react {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.help-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 400;
+    margin-left: 0.5rem;
+}
+
+.form-input-react,
+.form-textarea-react {
+    padding: 0.875rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input-react:focus,
+.form-textarea-react:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input-react.error,
+.form-textarea-react.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-input-react.success {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-textarea-react {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.error-message-react {
+    color: #ef4444;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+.warning-message-react {
+    color: #f59e0b;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== CNES INPUT ===== */
+.cnes-input-wrapper {
+    position: relative;
+}
+
+.input-loading,
+.input-success {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+}
+
+.input-success {
+    color: #10b981;
+}
+
+.cnes-info-react {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    border: 1px solid #86efac;
+    border-radius: 8px;
+}
+
+.cnes-success {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #166534;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.cnes-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cnes-details small {
+    color: #166534;
+}
+
+/* ===== RADIO CARDS ===== */
+.radio-grid-react {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.radio-card-react {
+    position: relative;
+    cursor: pointer;
+}
+
+.radio-card-react input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.radio-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: white;
+    height: 100%;
+}
+
+.radio-card-react input[type="radio"]:checked + .radio-card-content {
+    border-color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+}
+
+.radio-card-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
+.radio-card-react input[type="radio"]:checked + .radio-card-content .radio-card-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.radio-card-text {
+    flex: 1;
+}
+
+.radio-card-text strong {
+    display: block;
+    color: #374151;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.radio-card-text small {
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+/* ===== CHECKBOX ===== */
+.checkbox-label-react {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.checkbox-label-react input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom-react {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.checkbox-label-react input[type="checkbox"]:checked + .checkbox-custom-react {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+}
+
+.checkbox-custom-react i {
+    color: white;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.checkbox-label-react input[type="checkbox"]:checked + .checkbox-custom-react i {
+    opacity: 1;
+}
+
+.checkbox-label-react span {
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ===== AUTOCOMPLETE ===== */
+.autocomplete-wrapper-react {
+    position: relative;
+}
+
+.autocomplete-loading {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+}
+
+.autocomplete-results-react {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-item-react {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.autocomplete-item-react:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.autocomplete-item-react:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item-react i {
+    color: #667eea;
+    width: 16px;
+}
+
+/* ===== BOTÕES DE AÇÃO ===== */
+.form-actions-react {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.btn-cancel-react,
+.btn-save-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-cancel-react {
+    background: white;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-cancel-react:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.btn-save-react {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-save-react:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+.btn-save-react:disabled,
+.btn-cancel-react:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* ===== CONTAINER DE TOAST ===== */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    pointer-events: none;
+}
+
+.toast-notification {
+    pointer-events: auto;
+}
+
+/* Estilos para campos pré-preenchidos */
+.form-input-fallback.preenchido,
+.form-textarea-fallback.preenchido {
+    background-color: #dcfce7 !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+@keyframes animate-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: animate-fade-in 0.6s ease-out forwards;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .modern-container-criar {
+        padding: 1rem;
+    }
+    
+    .header-content-react {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .form-grid-react {
+        grid-template-columns: 1fr;
+    }
+    
+    .radio-grid-react {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions-react {
+        flex-direction: column;
+    }
+    
+    .breadcrumb-react {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .breadcrumb-item-react {
+        width: 100%;
+    }
+    
+    .breadcrumb-link-react {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .notification-content {
+        margin: 0 1rem;
+        max-width: calc(100vw - 2rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .create-header-react {
+        padding: 1.5rem;
+    }
+    
+    .section-content-react {
+        padding: 1rem;
+    }
+    
+    .form-actions-react {
+        padding: 1rem;
+    }
+    
+    .breadcrumb-link-react span,
+    .breadcrumb-current-text-react span {
+        display: none;
+    }
+    
+    .radio-card-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+}
+
+/* ===== ESTILOS DO FALLBACK ===== */
+.fallback-container {
+    position: relative;
+    z-index: 1;
+}
+
+.fallback-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+}
+
+.header-background-pattern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 20s ease-in-out infinite;
+}
+
+.header-content-fallback {
+    position: relative;
+    z-index: 2;
+}
+
+.header-info-fallback {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-icon-fallback {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-text-fallback {
+    flex: 1;
+}
+
+.header-title-fallback {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle-fallback {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+}
+
+.fallback-form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.fallback-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.form-section-fallback {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+}
+
+.section-header-fallback {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.section-icon-fallback {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.section-title-fallback {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.form-grid-fallback {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group-fallback {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-fallback.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label-fallback {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.required-star {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.form-input-fallback,
+.form-select-fallback,
+.form-textarea-fallback {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input-fallback:focus,
+.form-select-fallback:focus,
+.form-textarea-fallback:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-textarea-fallback {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions-fallback {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f1f5f9;
+}
+
+.btn-cancel-fallback,
+.btn-save-fallback {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-cancel-fallback {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-cancel-fallback:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(107, 114, 128, 0.3);
+}
+
+.btn-save-fallback {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-save-fallback:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Responsividade para Fallback */
+@media (max-width: 768px) {
+    .header-info-fallback {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .header-title-fallback {
+        font-size: 2rem;
+    }
+    
+    .fallback-form-container {
+        padding: 2rem;
+    }
+    
+    .form-grid-fallback {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions-fallback {
+        flex-direction: column;
+    }
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA FUNCIONALIDADES ===== */
+.cnes-input-container-fallback {
+    position: relative;
+}
+
+.cnes-loading-fallback {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+}
+
+.cnes-feedback-fallback {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.cnes-feedback-fallback.success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.cnes-feedback-fallback.error {
+    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+.cnes-feedback-fallback.loading {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.readonly-field {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    border-color: #cbd5e1 !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    cursor: not-allowed !important;
+}
+
+.readonly-field:focus {
+    box-shadow: 0 0 0 3px rgba(203, 213, 225, 0.3) !important;
+    border-color: #94a3b8 !important;
+}
+</style>
+
+<!-- Container de Toast -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- React CDN -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<!-- Componente React -->
+<script src="/static/js/components/CriarUnidadeReact.js"></script>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+// ===== PREENCHER CAMPOS COM PARÂMETROS DA URL =====
+(function() {
+    'use strict';
+    
+    console.log('🚀 Script de pré-preenchimento carregado!');
+    
+    function preencherCamposComURL() {
+        console.log('🔄 Executando preencherCamposComURL...');
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            console.log('🔍 Parâmetros da URL:', Object.fromEntries(urlParams));
+            
+            let camposPreenchidos = 0;
+            
+            // Preencher campo Nome
+            const nomeInput = document.querySelector('input[name="nome"]');
+            if (nomeInput && urlParams.get('nome')) {
+                nomeInput.value = decodeURIComponent(urlParams.get('nome'));
+                nomeInput.style.backgroundColor = '#dcfce7';
+                nomeInput.style.borderColor = '#10b981';
+                camposPreenchidos++;
+                console.log('✅ Nome preenchido:', nomeInput.value);
+            }
+            
+            // Preencher campo CNES
+            const cnesInput = document.querySelector('input[name="cnes"]');
+            if (cnesInput && urlParams.get('cnes')) {
+                cnesInput.value = urlParams.get('cnes');
+                cnesInput.style.backgroundColor = '#dcfce7';
+                cnesInput.style.borderColor = '#10b981';
+                camposPreenchidos++;
+                console.log('✅ CNES preenchido:', cnesInput.value);
+            }
+            
+            // Preencher campo Contato Telefônico
+            const contatoInput = document.querySelector('input[name="contato_telefonico"]');
+            if (contatoInput && urlParams.get('contato_telefonico')) {
+                contatoInput.value = decodeURIComponent(urlParams.get('contato_telefonico'));
+                contatoInput.style.backgroundColor = '#dcfce7';
+                contatoInput.style.borderColor = '#10b981';
+                camposPreenchidos++;
+                console.log('✅ Contato telefônico preenchido:', contatoInput.value);
+            }
+            
+            // Preencher campo Município
+            const municipioInput = document.querySelector('input[name="municipio"]');
+            if (municipioInput && urlParams.get('municipio')) {
+                municipioInput.value = decodeURIComponent(urlParams.get('municipio'));
+                municipioInput.style.backgroundColor = '#dcfce7';
+                municipioInput.style.borderColor = '#10b981';
+                camposPreenchidos++;
+                console.log('✅ Município preenchido:', municipioInput.value);
+            }
+            
+            // Preencher campo Endereço
+            const enderecoInput = document.querySelector('textarea[name="endereco"]');
+            if (enderecoInput && urlParams.get('endereco')) {
+                enderecoInput.value = decodeURIComponent(urlParams.get('endereco'));
+                enderecoInput.style.backgroundColor = '#dcfce7';
+                enderecoInput.style.borderColor = '#10b981';
+                camposPreenchidos++;
+                console.log('✅ Endereço preenchido:', enderecoInput.value);
+            }
+            
+            // Mostrar notificação se campos foram preenchidos
+            if (camposPreenchidos > 0) {
+                console.log(`✅ Total de ${camposPreenchidos} campos preenchidos automaticamente`);
+                mostrarNotificacao(camposPreenchidos);
+            }
+            
+        } catch (error) {
+            console.error('❌ Erro ao preencher campos:', error);
+        }
+    }
+    
+    function mostrarNotificacao(quantidade) {
+        // Criar notificação visual
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease-out;
+        `;
+        
+        notification.innerHTML = `
+            <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i>
+            <div>
+                <strong>Dados pré-preenchidos!</strong>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.9rem; opacity: 0.9;">
+                    ${quantidade} campos foram preenchidos automaticamente com dados do CNES.
+                </p>
+            </div>
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; padding: 0.25rem; border-radius: 4px;">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remover notificação após 5 segundos
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+    
+    // Executar quando a página carregar
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', preencherCamposComURL);
+    } else {
+        preencherCamposComURL();
+    }
+    
+    // Executar também após delays para garantir que os elementos estejam prontos
+    setTimeout(preencherCamposComURL, 100);
+    setTimeout(preencherCamposComURL, 500);
+    setTimeout(preencherCamposComURL, 1000);
+    
+})();
+
+// ===== FUNCIONALIDADES DO FALLBACK =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar data de cadastro
+    const dataCadastroField = document.getElementById('data-cadastro-fallback');
+    if (dataCadastroField) {
+        const agora = new Date();
+        const dataFormatada = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+        dataCadastroField.value = dataFormatada;
+    }
+    
+    // Configurar verificação de CNES
+    const cnesInput = document.getElementById('cnes-input-fallback');
+    const cnesLoading = document.getElementById('cnes-loading-fallback');
+    const cnesFeedback = document.getElementById('cnes-feedback-fallback');
+    
+    if (cnesInput) {
+        let timeoutId;
+        
+        cnesInput.addEventListener('input', function() {
+            const cnes = this.value.trim();
+            
+            // Limpar timeout anterior
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+            
+            // Limpar feedback se campo estiver vazio
+            if (!cnes) {
+                cnesFeedback.innerHTML = '';
+                cnesFeedback.className = 'cnes-feedback-fallback';
+                return;
+            }
+            
+            // Validar se tem 7 dígitos
+            if (cnes.length !== 7 || !/^\d{7}$/.test(cnes)) {
+                cnesFeedback.innerHTML = '<i class="fas fa-info-circle"></i> Digite exatamente 7 números';
+                cnesFeedback.className = 'cnes-feedback-fallback loading';
+                return;
+            }
+            
+            // Aguardar 500ms antes de fazer a consulta (debounce)
+            timeoutId = setTimeout(() => {
+                verificarCNES(cnes);
+            }, 500);
+        });
+    }
+    
+    async function verificarCNES(cnes) {
+        if (!cnesLoading || !cnesFeedback) return;
+        
+        try {
+            // Mostrar loading
+            cnesLoading.style.display = 'block';
+            cnesFeedback.innerHTML = '<i class="fas fa-search"></i> Consultando CNES...';
+            cnesFeedback.className = 'cnes-feedback-fallback loading';
+            
+            const response = await fetch(`/accounts/api/cnes/${cnes}/`);
+            
+            if (response.ok) {
+                const dados = await response.json();
+                
+                // Sucesso - CNES encontrado
+                cnesFeedback.innerHTML = `<i class="fas fa-check-circle"></i> CNES encontrado: <strong>${dados.dados.nome || 'Nome não disponível'}</strong>`;
+                cnesFeedback.className = 'cnes-feedback-fallback success';
+                
+                // Pré-preencher campos se estiverem vazios
+                preencherCamposComCNES(dados.dados);
+                
+            } else {
+                // CNES não encontrado
+                cnesFeedback.innerHTML = '<i class="fas fa-exclamation-triangle"></i> CNES não encontrado na base de dados';
+                cnesFeedback.className = 'cnes-feedback-fallback error';
+            }
+            
+        } catch (error) {
+            console.error('Erro ao consultar CNES:', error);
+            cnesFeedback.innerHTML = '<i class="fas fa-times-circle"></i> Erro na consulta. Tente novamente.';
+            cnesFeedback.className = 'cnes-feedback-fallback error';
+        } finally {
+            // Esconder loading
+            cnesLoading.style.display = 'none';
+        }
+    }
+    
+    function preencherCamposComCNES(dados) {
+        // Preencher nome se estiver vazio
+        const nomeInput = document.querySelector('input[name="nome"]');
+        if (nomeInput && !nomeInput.value.trim() && dados.nome) {
+            nomeInput.value = dados.nome;
+            nomeInput.style.backgroundColor = '#dcfce7';
+            nomeInput.style.borderColor = '#10b981';
+        }
+        
+        // Preencher endereço se estiver vazio
+        const enderecoInput = document.querySelector('textarea[name="endereco"]');
+        if (enderecoInput && !enderecoInput.value.trim() && dados.endereco) {
+            enderecoInput.value = dados.endereco;
+            enderecoInput.style.backgroundColor = '#dcfce7';
+            enderecoInput.style.borderColor = '#10b981';
+        }
+        
+        // Preencher telefone se estiver vazio
+        const telefoneInput = document.querySelector('input[name="contato_telefonico"]');
+        if (telefoneInput && !telefoneInput.value.trim() && dados.telefone) {
+            telefoneInput.value = dados.telefone;
+            telefoneInput.style.backgroundColor = '#dcfce7';
+            telefoneInput.style.borderColor = '#10b981';
+        }
+        
+        // Preencher município se estiver vazio
+        const municipioInput = document.querySelector('input[name="municipio"]');
+        if (municipioInput && !municipioInput.value.trim() && dados.municipio) {
+            municipioInput.value = dados.municipio;
+            municipioInput.style.backgroundColor = '#dcfce7';
+            municipioInput.style.borderColor = '#10b981';
+        }
+        
+        console.log('✅ Campos preenchidos com dados do CNES:', dados);
+    }
+});
+</script>
+
+</body>
+</html>ng: 1.5rem;
+    }
+    
+    .section-content-react {
+        padding: 1rem;
+    }
+    
+    .form-actions-react {
+        padding: 1rem;
+    }
+    
+    .breadcrumb-link-react span,
+    .breadcrumb-current-text-react span {
+        display: none;
+    }
+    
+    .radio-card-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+}
+
+/* ===== ESTILOS DO FALLBACK ===== */
+.fallback-container {
+    position: relative;
+    z-index: 1;
+}
+
+.fallback-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+}
+
+.header-background-pattern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 20s ease-in-out infinite;
+}
+
+.header-content-fallback {
+    position: relative;
+    z-index: 2;
+}
+
+.header-info-fallback {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-icon-fallback {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-text-fallback {
+    flex: 1;
+}
+
+.header-title-fallback {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle-fallback {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+}
+
+.fallback-form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.fallback-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.form-section-fallback {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+}
+
+.section-header-fallback {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.section-icon-fallback {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.section-title-fallback {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.form-grid-fallback {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group-fallback {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-fallback.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label-fallback {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.required-star {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.form-input-fallback,
+.form-select-fallback,
+.form-textarea-fallback {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input-fallback:focus,
+.form-select-fallback:focus,
+.form-textarea-fallback:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-textarea-fallback {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions-fallback {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f1f5f9;
+}
+
+.btn-cancel-fallback,
+.btn-save-fallback {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-cancel-fallback {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-cancel-fallback:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(107, 114, 128, 0.3);
+}
+
+.btn-save-fallback {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-save-fallback:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Responsividade para Fallback */
+@media (max-width: 768px) {
+    .header-info-fallback {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .header-title-fallback {
+        font-size: 2rem;
+    }
+    
+    .fallback-form-container {
+        padding: 2rem;
+    }
+    
+    .form-grid-fallback {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions-fallback {
+    flex-direction: column;
+}
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA FUNCIONALIDADES ===== */
+.cnes-input-container-fallback {
+    position: relative;
+}
+
+.cnes-loading-fallback {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+}
+
+.cnes-feedback-fallback {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.cnes-feedback-fallback.success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.cnes-feedback-fallback.error {
+    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+.cnes-feedback-fallback.loading {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.readonly-field {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    border-color: #cbd5e1 !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    cursor: not-allowed !important;
+}
+
+.readonly-field:focus {
+    box-shadow: 0 0 0 3px rgba(203, 213, 225, 0.3) !important;
+    border-color: #94a3b8 !important;
+}
+</style>
+
+<!-- Scripts removidos temporariamente devido a erros de React -->
+
+<script>
+// ===== PREENCHER CAMPOS COM PARÂMETROS DA URL =====
+(function() {
+    'use strict';
+    
+    console.log('🚀 Script de pré-preenchimento carregado!');
+    
+    function preencherCamposComURL() {
+        console.log('🔄 Executando preencherCamposComURL...');
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            console.log('🔍 Parâmetros da URL:', Object.fromEntries(urlParams));
+            
+            let camposPreenchidos = 0;
+            
+            // Preencher campo Nome
+            const nomeInput = document.querySelector('input[name="nome"]');
+            if (nomeInput && urlParams.get('nome')) {
+                nomeInput.value = decodeURIComponent(urlParams.get('nome'));
+                nomeInput.style.backgroundColor = '#dcfce7';
+                camposPreenchidos++;
+                console.log('✅ Nome preenchido:', nomeInput.value);
+            }
+            
+            // Preencher campo CNES
+            const cnesInput = document.querySelector('input[name="cnes"]');
+            if (cnesInput && urlParams.get('cnes')) {
+                cnesInput.value = urlParams.get('cnes');
+                cnesInput.style.backgroundColor = '#dcfce7';
+                camposPreenchidos++;
+                console.log('✅ CNES preenchido:', cnesInput.value);
+            }
+            
+            // Preencher campo Contato Telefônico
+            const contatoInput = document.querySelector('input[name="contato_telefonico"]');
+            if (contatoInput && urlParams.get('contato_telefonico')) {
+                contatoInput.value = decodeURIComponent(urlParams.get('contato_telefonico'));
+                contatoInput.style.backgroundColor = '#dcfce7';
+                camposPreenchidos++;
+                console.log('✅ Contato telefônico preenchido:', contatoInput.value);
+            }
+            
+            // Preencher campo Município
+            const municipioInput = document.querySelector('input[name="municipio"]');
+            if (municipioInput && urlParams.get('municipio')) {
+                municipioInput.value = decodeURIComponent(urlParams.get('municipio'));
+                municipioInput.style.backgroundColor = '#dcfce7';
+                camposPreenchidos++;
+                console.log('✅ Município preenchido:', municipioInput.value);
+            }
+            
+            // Preencher campo Endereço
+            const enderecoInput = document.querySelector('textarea[name="endereco"]');
+            if (enderecoInput && urlParams.get('endereco')) {
+                enderecoInput.value = decodeURIComponent(urlParams.get('endereco'));
+                enderecoInput.style.backgroundColor = '#dcfce7';
+                camposPreenchidos++;
+                console.log('✅ Endereço preenchido:', enderecoInput.value);
+            }
+            
+            // Mostrar notificação se campos foram preenchidos
+            if (camposPreenchidos > 0) {
+                console.log(`✅ Total de ${camposPreenchidos} campos preenchidos automaticamente`);
+                mostrarNotificacao(camposPreenchidos);
+            }
+            
+        } catch (error) {
+            console.error('❌ Erro ao preencher campos:', error);
+        }
+    }
+    
+    function mostrarNotificacao(quantidade) {
+        // Criar notificação visual
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease-out;
+        `;
+        
+        notification.innerHTML = `
+            <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i>
+            <div>
+                <strong>Dados pré-preenchidos!</strong>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.9rem; opacity: 0.9;">
+                    ${quantidade} campos foram preenchidos automaticamente com dados do CNES.
+                </p>
+            </div>
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; padding: 0.25rem; border-radius: 4px;">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remover notificação após 5 segundos
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+    
+    // Executar quando a página carregar
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', preencherCamposComURL);
+    } else {
+        preencherCamposComURL();
+    }
+    
+    // Executar também após delays para garantir que os elementos estejam prontos
+    setTimeout(preencherCamposComURL, 100);
+    setTimeout(preencherCamposComURL, 500);
+    setTimeout(preencherCamposComURL, 1000);
+    
+})();
+</script>
+
+<script>
+// ===== DADOS PARA COMPONENTE REACT =====
+window.userData = {
+    username: "testuser",
+    full_name: "Test User",
+    first_name: "Test",
+    last_name: "User"
+};
+
+// ===== FUNCIONALIDADES DO FALLBACK =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar data de cadastro
+    const dataCadastroField = document.getElementById('data-cadastro-fallback');
+    if (dataCadastroField) {
+        const agora = new Date();
+        const dataFormatada = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+        dataCadastroField.value = dataFormatada;
+    }
+    
+    // Configurar verificação de CNES
+    const cnesInput = document.getElementById('cnes-input-fallback');
+    const cnesLoading = document.getElementById('cnes-loading-fallback');
+    const cnesFeedback = document.getElementById('cnes-feedback-fallback');
+    
+    if (cnesInput) {
+        let timeoutId;
+        
+        cnesInput.addEventListener('input', function() {
+            const cnes = this.value.trim();
+            
+            // Limpar timeout anterior
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+            
+            // Limpar feedback se campo estiver vazio
+            if (!cnes) {
+                cnesFeedback.innerHTML = '';
+                cnesFeedback.className = 'cnes-feedback-fallback';
+                return;
+            }
+            
+            // Validar se tem 7 dígitos
+            if (cnes.length !== 7 || !/^\d{7}$/.test(cnes)) {
+                cnesFeedback.innerHTML = '<i class="fas fa-info-circle"></i> Digite exatamente 7 números';
+                cnesFeedback.className = 'cnes-feedback-fallback loading';
+                return;
+            }
+            
+            // Aguardar 500ms antes de fazer a consulta (debounce)
+            timeoutId = setTimeout(() => {
+                verificarCNES(cnes);
+            }, 500);
+        });
+    }
+    
+    async function verificarCNES(cnes) {
+        if (!cnesLoading || !cnesFeedback) return;
+        
+        try {
+            // Mostrar loading
+            cnesLoading.style.display = 'block';
+            cnesFeedback.innerHTML = '<i class="fas fa-search"></i> Consultando CNES...';
+            cnesFeedback.className = 'cnes-feedback-fallback loading';
+            
+            const response = await fetch(`/accounts/api/cnes/${cnes}/`);
+            
+            if (response.ok) {
+                const dados = await response.json();
+                
+                // Sucesso - CNES encontrado
+                cnesFeedback.innerHTML = `<i class="fas fa-check-circle"></i> CNES encontrado: <strong>${dados.nome || 'Nome não disponível'}</strong>`;
+                cnesFeedback.className = 'cnes-feedback-fallback success';
+                
+                // Pré-preencher campos se estiverem vazios
+                preencherCamposComCNES(dados);
+                
+            } else {
+                // CNES não encontrado
+                cnesFeedback.innerHTML = '<i class="fas fa-exclamation-triangle"></i> CNES não encontrado na base de dados';
+                cnesFeedback.className = 'cnes-feedback-fallback error';
+            }
+            
+        } catch (error) {
+            console.error('Erro ao consultar CNES:', error);
+            cnesFeedback.innerHTML = '<i class="fas fa-times-circle"></i> Erro na consulta. Tente novamente.';
+            cnesFeedback.className = 'cnes-feedback-fallback error';
+        } finally {
+            // Esconder loading
+            cnesLoading.style.display = 'none';
+        }
+    }
+    
+    function preencherCamposComCNES(dados) {
+        // Preencher nome se estiver vazio
+        const nomeInput = document.querySelector('input[name="nome"]');
+        if (nomeInput && !nomeInput.value.trim() && dados.nome) {
+            nomeInput.value = dados.nome;
+            nomeInput.classList.add('is-valid');
+        }
+        
+        // Preencher endereço se estiver vazio
+        const enderecoInput = document.querySelector('textarea[name="endereco"]');
+        if (enderecoInput && !enderecoInput.value.trim() && dados.endereco) {
+            enderecoInput.value = dados.endereco;
+            enderecoInput.classList.add('is-valid');
+        }
+        
+        // Preencher telefone se estiver vazio
+        const telefoneInput = document.querySelector('input[name="telefone"]');
+        if (telefoneInput && !telefoneInput.value.trim() && dados.telefone) {
+            telefoneInput.value = dados.telefone;
+            telefoneInput.classList.add('is-valid');
+        }
+        
+        // Preencher município se estiver vazio
+        const municipioInput = document.querySelector('input[name="municipio"]');
+        if (municipioInput && !municipioInput.value.trim() && dados.municipio) {
+            municipioInput.value = dados.municipio;
+            municipioInput.classList.add('is-valid');
+        }
+        
+        console.log('✅ Campos preenchidos com dados do CNES:', dados);
+    }
+    
+    // Preencher campos do formulário fallback com parâmetros da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Preencher campo Nome
+    const nomeInput = document.querySelector('input[name="nome"]');
+    if (nomeInput && urlParams.get('nome')) {
+        nomeInput.value = urlParams.get('nome');
+    }
+    
+    // Preencher campo CNES
+    const cnesInput = document.querySelector('input[name="cnes"]');
+    if (cnesInput && urlParams.get('cnes')) {
+        cnesInput.value = urlParams.get('cnes');
+    }
+    
+    // Preencher campo Contato Telefônico
+    const contatoInput = document.querySelector('input[name="contato_telefonico"]');
+    if (contatoInput && urlParams.get('contato_telefonico')) {
+        contatoInput.value = urlParams.get('contato_telefonico');
+    }
+    
+    // Preencher campo Município
+    const municipioInput = document.querySelector('input[name="municipio"]');
+    if (municipioInput && urlParams.get('municipio')) {
+        municipioInput.value = urlParams.get('municipio');
+    }
+    
+    // Preencher campo Endereço
+    const enderecoInput = document.querySelector('textarea[name="endereco"]');
+    if (enderecoInput && urlParams.get('endereco')) {
+        enderecoInput.value = urlParams.get('endereco');
+    }
+    
+    // Mostrar notificação se campos foram preenchidos
+    if (urlParams.get('nome') || urlParams.get('cnes')) {
+        console.log('✅ Campos preenchidos automaticamente com dados da URL');
+        
+        // Criar notificação visual
+        const notification = document.createElement('div');
+        notification.className = 'preenchimento-notification';
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Dados pré-preenchidos!</strong>
+                    <p>Alguns campos foram preenchidos automaticamente com dados do CNES. Verifique e complete os dados necessários.</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        // Remover notificação após 5 segundos
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+    
+    // React removido - usando apenas JavaScript puro
+});
+
+// ===== INICIALIZAÇÃO DO COMPONENTE REACT =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Inicializando componente CriarUnidadeReact...');
+    
+    try {
+        // Verificar se React está disponível
+        if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+            console.warn('⚠️ React não está disponível. Usando fallback HTML.');
+            return;
+        }
+        
+        // Verificar se o componente está disponível
+        if (typeof window.CriarUnidadeReact === 'undefined') {
+            console.warn('⚠️ Componente CriarUnidadeReact não encontrado. Usando fallback HTML.');
+            return;
+        }
+        
+        // Obter container
+        const container = document.getElementById('criar-unidade-react-root');
+        if (!container) {
+            console.error('❌ Container criar-unidade-react-root não encontrado.');
+            return;
+        }
+        
+        // Preparar dados para o componente
+        const urlParams = new URLSearchParams(window.location.search);
+        const dadosPreenchimento = {
+            nome: urlParams.get('nome') || '',
+            cnes: urlParams.get('cnes') || '',
+            contato_telefonico: urlParams.get('contato_telefonico') || '',
+            municipio: urlParams.get('municipio') || '',
+            endereco: urlParams.get('endereco') || ''
+        };
+        
+        const criarUnidadeData = {
+            usuario: window.userData || {
+                username: "testuser",
+                get_full_name: "Test User"
+            },
+            dataAtual: new Date().toISOString(),
+            csrfToken: document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+            dadosPreenchimento: dadosPreenchimento
+        };
+        
+        console.log('📊 Dados do componente:', criarUnidadeData);
+        
+        // Renderizar componente React
+        if (ReactDOM.createRoot) {
+            // React 18+
+            const root = ReactDOM.createRoot(container);
+            root.render(React.createElement(window.CriarUnidadeReact, criarUnidadeData));
+            console.log('✅ Componente React 18+ renderizado com sucesso!');
+        } else {
+            // React 17 e anteriores
+            ReactDOM.render(React.createElement(window.CriarUnidadeReact, criarUnidadeData), container);
+            console.log('✅ Componente React 17 renderizado com sucesso!');
+        }
+        
+    } catch (error) {
+        console.error('❌ Erro ao inicializar componente React:', error);
+        console.log('🔄 Usando fallback HTML...');
+    }
+});
+</script>
+
+</body>
+</html> 

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Component Validation Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-header {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-success { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        .component-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .component-item {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-header">🧪 React Component Validation Tests</h1>
+        
+        <div style="margin-bottom: 20px;">
+            <button class="test-button" onclick="runAllTests()">🚀 Run All Tests</button>
+            <button class="test-button" onclick="testIndividualComponents()">⚛️ Test Components</button>
+            <button class="test-button" onclick="testBundleLoading()">📦 Test Bundles</button>
+            <button class="test-button" onclick="clearConsole()">🧹 Clear Console</button>
+        </div>
+        
+        <div id="console-output" class="console-output">
+            Console output will appear here...
+            Click "Run All Tests" to start the validation process.
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2 class="test-header">📊 Test Results Summary</h2>
+        <div id="test-summary">
+            <p>Run tests to see results...</p>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2 class="test-header">⚛️ Expected React Components</h2>
+        <div class="component-list" id="component-status">
+            <!-- Component status will be populated here -->
+        </div>
+    </div>
+
+    <!-- Load React and ReactDOM from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Load our React components bundles -->
+    <script src="/static/criar-unidade.bundle.js"></script>
+    <script src="/static/registro-chamada.bundle.js"></script>
+    <script src="/static/lista-telefonica.bundle.js"></script>
+    <script src="/static/notificacoes.bundle.js"></script>
+    <script src="/static/configuracoes.bundle.js"></script>
+    <script src="/static/relatorios.bundle.js"></script>
+    <script src="/static/unidades-saude.bundle.js"></script>
+    <script src="/static/perfil.bundle.js"></script>
+    <script src="/static/senha.bundle.js"></script>
+    <script src="/static/criar-usuario.bundle.js"></script>
+    <script src="/static/editar-unidade.bundle.js"></script>
+    <script src="/static/visualizar-unidade.bundle.js"></script>
+    <script src="/static/home.bundle.js"></script>
+    <script src="/static/home-simple.bundle.js"></script>
+
+    <script>
+        // Override console methods to capture output
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function appendToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'warn' ? '⚠️' : 'ℹ️';
+            consoleOutput.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            appendToConsole(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            appendToConsole(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            appendToConsole(args.join(' '), 'warn');
+        };
+
+        // Test functions
+        function clearConsole() {
+            consoleOutput.textContent = '';
+        }
+
+        function runAllTests() {
+            clearConsole();
+            console.log('🚀 Starting comprehensive React component validation...');
+            
+            if (typeof window.runReactComponentTests === 'function') {
+                window.runReactComponentTests();
+            } else {
+                // Run tests manually if the test script isn't loaded
+                testReactLibraries();
+                testIndividualComponents();
+                testBundleLoading();
+                testReactDevTools();
+                updateTestSummary();
+            }
+        }
+
+        function testReactLibraries() {
+            console.log('📚 Testing React libraries...');
+            
+            if (typeof React !== 'undefined') {
+                console.log(`✅ React available (version: ${React.version || 'unknown'})`);
+            } else {
+                console.error('❌ React not available');
+            }
+            
+            if (typeof ReactDOM !== 'undefined') {
+                console.log('✅ ReactDOM available');
+            } else {
+                console.error('❌ ReactDOM not available');
+            }
+        }
+
+        function testIndividualComponents() {
+            console.log('⚛️ Testing individual React components...');
+            
+            const expectedComponents = [
+                'CriarUnidadeReact',
+                'RegistroChamadaReact',
+                'ListaTelefonicaReact',
+                'NotificacoesReact',
+                'ConfiguracoesReact',
+                'RelatoriosReact',
+                'UnidadesSaudeReact',
+                'PerfilReact',
+                'SenhaReact',
+                'CriarUsuarioReact',
+                'EditarUnidadeReact',
+                'VisualizarUnidadeReact',
+                'HomeReact',
+                'HomeSimpleReact'
+            ];
+
+            const componentStatusDiv = document.getElementById('component-status');
+            componentStatusDiv.innerHTML = '';
+
+            expectedComponents.forEach(componentName => {
+                const isAvailable = typeof window[componentName] !== 'undefined';
+                
+                if (isAvailable) {
+                    console.log(`✅ Component available: ${componentName}`);
+                    
+                    // Test component instantiation
+                    try {
+                        const testElement = React.createElement(window[componentName], {});
+                        console.log(`✅ Component can be instantiated: ${componentName}`);
+                    } catch (error) {
+                        console.error(`❌ Component instantiation failed: ${componentName}`, error);
+                    }
+                } else {
+                    console.warn(`⚠️ Component not available: ${componentName}`);
+                }
+
+                // Update UI
+                const componentDiv = document.createElement('div');
+                componentDiv.className = 'component-item';
+                componentDiv.innerHTML = `
+                    <span class="status-indicator ${isAvailable ? 'status-success' : 'status-error'}"></span>
+                    ${componentName}
+                `;
+                componentStatusDiv.appendChild(componentDiv);
+            });
+        }
+
+        function testBundleLoading() {
+            console.log('📦 Testing bundle loading...');
+            
+            const bundles = [
+                'criar-unidade',
+                'registro-chamada',
+                'lista-telefonica',
+                'notificacoes',
+                'configuracoes',
+                'relatorios',
+                'unidades-saude',
+                'perfil',
+                'senha',
+                'criar-usuario',
+                'editar-unidade',
+                'visualizar-unidade',
+                'home',
+                'home-simple'
+            ];
+
+            bundles.forEach(bundleName => {
+                const script = document.querySelector(`script[src*="${bundleName}.bundle.js"]`);
+                if (script) {
+                    console.log(`✅ Bundle script tag found: ${bundleName}`);
+                } else {
+                    console.warn(`⚠️ Bundle script tag not found: ${bundleName}`);
+                }
+            });
+        }
+
+        function testReactDevTools() {
+            console.log('🔧 Testing React DevTools...');
+            
+            const hasDevTools = typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined';
+            
+            if (hasDevTools) {
+                console.log('✅ React DevTools detected');
+                
+                if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers && 
+                    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers.size > 0) {
+                    console.log('✅ React renderers registered with DevTools');
+                } else {
+                    console.warn('⚠️ No React renderers registered with DevTools yet');
+                }
+            } else {
+                console.warn('⚠️ React DevTools not detected (extension may not be installed)');
+            }
+        }
+
+        function updateTestSummary() {
+            const summaryDiv = document.getElementById('test-summary');
+            
+            // Count available components
+            const expectedComponents = [
+                'CriarUnidadeReact', 'RegistroChamadaReact', 'ListaTelefonicaReact',
+                'NotificacoesReact', 'ConfiguracoesReact', 'RelatoriosReact',
+                'UnidadesSaudeReact', 'PerfilReact', 'SenhaReact',
+                'CriarUsuarioReact', 'EditarUnidadeReact', 'VisualizarUnidadeReact',
+                'HomeReact', 'HomeSimpleReact'
+            ];
+            
+            const availableComponents = expectedComponents.filter(name => 
+                typeof window[name] !== 'undefined'
+            ).length;
+            
+            const hasReact = typeof React !== 'undefined';
+            const hasReactDOM = typeof ReactDOM !== 'undefined';
+            const hasDevTools = typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined';
+            
+            summaryDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <strong>📚 React Libraries:</strong><br>
+                        <span class="status-indicator ${hasReact ? 'status-success' : 'status-error'}"></span>React: ${hasReact ? 'Available' : 'Missing'}<br>
+                        <span class="status-indicator ${hasReactDOM ? 'status-success' : 'status-error'}"></span>ReactDOM: ${hasReactDOM ? 'Available' : 'Missing'}
+                    </div>
+                    <div>
+                        <strong>⚛️ Components:</strong><br>
+                        <span class="status-indicator ${availableComponents === expectedComponents.length ? 'status-success' : 'status-warning'}"></span>
+                        ${availableComponents}/${expectedComponents.length} Available
+                    </div>
+                    <div>
+                        <strong>🔧 DevTools:</strong><br>
+                        <span class="status-indicator ${hasDevTools ? 'status-success' : 'status-warning'}"></span>
+                        ${hasDevTools ? 'Available' : 'Not Detected'}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Auto-run basic tests when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                console.log('🏁 Page loaded, running initial tests...');
+                testReactLibraries();
+                updateTestSummary();
+            }, 1000);
+        });
+    </script>
+
+    <!-- Load the comprehensive test script -->
+    <script src="test_all_react_components.js"></script>
+</body>
+</html>

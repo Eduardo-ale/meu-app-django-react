@@ -1,0 +1,286 @@
+/* ===== CORREÇÕES DE Z-INDEX PARA DROPDOWN DE EXPORTAÇÃO ===== */
+/* Este arquivo resolve problemas de sobreposição entre elementos */
+
+/* ===== PRIORIDADE MÁXIMA PARA O MODAL DE EXPORTAÇÃO ===== */
+.export-modal-overlay {
+    z-index: 999999999 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    isolation: isolate !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    contain: layout style paint !important;
+    transform: translateZ(999999999px) !important;
+}
+
+.export-modal-overlay.show {
+    z-index: 999999999 !important;
+    display: block !important;
+}
+
+.export-modal-content {
+    z-index: 999999999 !important;
+    position: fixed !important;
+    transform: translate(-50%, -50%) translateZ(999999999px) !important;
+    isolation: isolate !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    contain: layout style paint !important;
+}
+
+/* ===== TODOS OS ELEMENTOS DO MODAL COM Z-INDEX MÁXIMO ===== */
+.export-modal-overlay *,
+.export-modal-header,
+.export-modal-items,
+.export-modal-item,
+.export-modal-title,
+.export-modal-close {
+    z-index: 999999999 !important;
+    isolation: isolate !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    contain: layout style paint !important;
+    transform: translateZ(999999999px) !important;
+}
+
+/* ===== Z-INDEX BAIXO PARA ELEMENTOS DA PÁGINA ===== */
+.unidade-card,
+.unidades-grid,
+.page-header-modern,
+.actions-bar,
+.stats-grid,
+.main-content,
+.content-wrapper,
+.page-wrapper,
+.container,
+.row,
+.col,
+.dropdown,
+.dropdown-menu,
+.btn,
+.card,
+.navbar,
+.nav,
+.nav-item,
+.nav-link {
+    z-index: 1 !important;
+    position: relative !important;
+    isolation: auto !important;
+    will-change: auto !important;
+    backface-visibility: visible !important;
+    contain: none !important;
+    transform: none !important;
+}
+
+/* ===== GARANTIR QUE O MODAL SEMPRE FIQUE POR CIMA ===== */
+.export-modal-overlay.show ~ *,
+.export-modal-overlay.show + * {
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* ===== FORÇAR RENDERIZAÇÃO EM CAMADA SEPARADA ===== */
+.export-modal-overlay,
+.export-modal-overlay * {
+    transform: translateZ(999999999px) !important;
+    isolation: isolate !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    contain: layout style paint !important;
+}
+
+/* ===== RESPONSIVIDADE PARA DIFERENTES ZOOMS ===== */
+@media (max-width: 768px) {
+    .export-modal-overlay {
+        z-index: 999999999 !important;
+    }
+    
+    .export-modal-content {
+        z-index: 999999999 !important;
+        transform: translate(-50%, -50%) translateZ(999999999px) !important;
+    }
+}
+
+/* ===== CORREÇÃO PARA NAVEGADORES COM PROBLEMAS DE Z-INDEX ===== */
+@supports not (z-index: 999999999) {
+    .export-modal-overlay {
+        z-index: 2147483647 !important; /* Valor máximo suportado */
+    }
+    
+    .export-modal-overlay * {
+        z-index: 2147483647 !important;
+    }
+}
+
+/* ===== FORÇAR PRIORIDADE EM TODOS OS NAVEGADORES ===== */
+.export-modal-overlay {
+    /* Chrome/Safari */
+    -webkit-transform: translateZ(999999999px);
+    /* Firefox */
+    -moz-transform: translateZ(999999999px);
+    /* IE/Edge */
+    -ms-transform: translateZ(999999999px);
+    /* Padrão */
+    transform: translateZ(999999999px);
+}
+
+/* ===== ISOLAMENTO DE CONTEXTO ===== */
+.export-modal-overlay {
+    /* Força contexto de empilhamento separado */
+    isolation: isolate;
+    /* Força renderização em camada separada */
+    will-change: transform;
+    /* Otimizações de renderização */
+    backface-visibility: hidden;
+    contain: layout style paint;
+}
+
+/* ===== CORREÇÕES ADICIONAIS PARA VISIBILIDADE ===== */
+.export-modal-overlay.show {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* ===== FORÇAR VISIBILIDADE EM TODOS OS NAVEGADORES ===== */
+.export-modal-overlay {
+    /* Garantir que seja visível */
+    display: none;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ===== CORREÇÃO ESPECÍFICA PARA PROBLEMAS DE SOBREPOSIÇÃO ===== */
+.export-modal-overlay.show {
+    /* Força visibilidade */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    
+    /* Força posicionamento */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    
+    /* Força z-index */
+    z-index: 999999999 !important;
+}
+
+/* ===== CORREÇÃO PARA ELEMENTOS QUE PODEM INTERFERIR ===== */
+body:has(.export-modal-overlay.show) {
+    overflow: hidden !important;
+}
+
+/* ===== GARANTIR QUE O MODAL SEJA SEMPRE VISÍVEL ===== */
+.export-modal-overlay.show * {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* ===== DESFOQUE DOS CARDS QUANDO MODAL ESTIVER ABERTO ===== */
+.export-modal-overlay.show ~ .unidades-grid .unidade-card,
+.export-modal-overlay.show + .unidades-grid .unidade-card,
+body:has(.export-modal-overlay.show) .unidade-card {
+    filter: blur(3px) !important;
+    transform: scale(0.98) !important;
+    transition: all 0.3s ease !important;
+    z-index: 1 !important;
+}
+
+/* ===== FORÇAR VISIBILIDADE DO MODAL ===== */
+.export-modal-overlay.show {
+    /* Força visibilidade */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    
+    /* Força posicionamento */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    
+    /* Força z-index */
+    z-index: 999999999 !important;
+    
+    /* Força renderização */
+    transform: translateZ(999999999px) !important;
+    isolation: isolate !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    contain: layout style paint !important;
+}
+
+/* ===== CORREÇÃO ESPECÍFICA PARA PROBLEMAS DE SOBREPOSIÇÃO ===== */
+.export-modal-overlay.show {
+    /* Força visibilidade */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    
+    /* Força posicionamento */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    
+    /* Força z-index */
+    z-index: 999999999 !important;
+}
+
+/* ===== CORREÇÃO PARA ELEMENTOS QUE PODEM INTERFERIR ===== */
+body:has(.export-modal-overlay.show) {
+    overflow: hidden !important;
+}
+
+/* ===== GARANTIR QUE O MODAL SEJA SEMPRE VISÍVEL ===== */
+.export-modal-overlay.show * {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* ===== CORREÇÃO ESPECÍFICA PARA O PROBLEMA ATUAL ===== */
+/* Força o modal a aparecer por cima de TUDO */
+.export-modal-overlay.show {
+    z-index: 999999999 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(5px) !important;
+}
+
+/* ===== CORREÇÃO PARA CARDS QUE INTERFEREM ===== */
+.unidade-card {
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* ===== CORREÇÃO PARA DROPDOWNS ANTIGOS ===== */
+.dropdown-menu,
+.dropdown-content,
+[class*="dropdown"]:not(.export-modal-overlay) {
+    display: none !important;
+    z-index: 1 !important;
+    position: relative !important;
+}

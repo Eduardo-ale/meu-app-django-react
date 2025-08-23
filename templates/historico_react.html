@@ -1,0 +1,860 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content %}
+<!-- Background Premium -->
+<div class="historico-background">
+    <div class="gradient-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="mesh-gradient"></div>
+    <div class="dark-overlay"></div>
+</div>
+
+<!-- Container Principal -->
+<div class="historico-container">
+    <!-- Header -->
+    <header class="historico-header-premium">
+        <div class="header-glass">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb-premium">
+                <a href="{% url 'home' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <div class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <span class="breadcrumb-current">
+                    <i class="fas fa-history"></i>
+                    <span>Histórico de Chamadas</span>
+                </span>
+            </nav>
+
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-icon">
+                        <i class="fas fa-history"></i>
+                        <div class="icon-pulse"></div>
+                    </div>
+                    <div class="hero-text">
+                        <h1 class="hero-title">Histórico de Chamadas</h1>
+                        <p class="hero-subtitle">Histórico completo de chamadas registradas no sistema</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content-historico">
+        <div class="content-wrapper">
+            <!-- Toast Notifications -->
+            {% if messages %}
+                <div class="notifications-premium">
+                    {% for message in messages %}
+                        <div class="notification-toast {{ message.tags|default:'info' }}" role="alert">
+                            <div class="toast-icon">
+                                {% if message.tags == 'success' %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% elif message.tags == 'error' %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                {% elif message.tags == 'warning' %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                {% else %}
+                                    <i class="fas fa-info-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="toast-content">{{ message }}</div>
+                            <button type="button" class="toast-close" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Estatísticas rápidas -->
+            <div class="stats-section-premium">
+                <div class="stats-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="total-chamadas">{{ total_chamadas|default:0 }}</div>
+                        <div class="stat-label">Total de Chamadas</div>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Total</span>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stat-icon today">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="chamadas-hoje">{{ chamadas_hoje|default:0 }}</div>
+                        <div class="stat-label">Chamadas Hoje</div>
+                    </div>
+                    <div class="stat-trend stable">
+                        <i class="fas fa-minus"></i>
+                        <span>Hoje</span>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stat-icon month">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="chamadas-mes">{{ chamadas_mes|default:0 }}</div>
+                        <div class="stat-label">Chamadas este Mês</div>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Mês</span>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stat-icon status">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="tipos-chamada">{{ tipos_chamadas|length|default:0 }}</div>
+                        <div class="stat-label">Tipos de Chamada</div>
+                    </div>
+                    <div class="stat-trend stable">
+                        <i class="fas fa-equals"></i>
+                        <span>Tipos</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container do Componente React -->
+            <div id="historico-react-root">
+                <!-- Loading inicial -->
+                <div class="historico-form-container">
+                    <div class="form-header-historico">
+                        <h2 class="form-title-historico">
+                            <i class="fas fa-filter"></i>
+                            Filtros e Resultados
+                        </h2>
+                        <p class="form-subtitle-historico">
+                            Carregando sistema de filtros...
+                        </p>
+                    </div>
+                    
+                    <div class="form-body-historico" style="text-align: center; padding: 4rem 2rem;">
+                        <div class="loading-spinner-historico" style="margin: 0 auto 2rem auto;"></div>
+                        <p style="color: #6b7280; font-size: 1rem;">
+                            Inicializando componente de histórico...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- CSS Premium -->
+<style>
+/* ===== VARIÁVEIS CSS ===== */
+:root {
+    --primary: #6366f1;
+    --secondary: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --info: #3b82f6;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ===== BACKGROUND ===== */
+.historico-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 30%, #6366f1 70%, #8b5cf6 100%);
+    overflow: hidden;
+}
+
+.gradient-orbs {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    animation: float 25s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(45deg, #10b981, #059669);
+    top: 10%;
+    left: 10%;
+}
+
+.orb-2 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(45deg, #f59e0b, #d97706);
+    top: 60%;
+    right: 20%;
+    animation-delay: 8s;
+}
+
+.orb-3 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #ef4444, #dc2626);
+    bottom: 20%;
+    left: 30%;
+    animation-delay: 15s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+    25% { transform: translateY(-30px) translateX(15px) rotate(90deg); }
+    50% { transform: translateY(0px) translateX(30px) rotate(180deg); }
+    75% { transform: translateY(15px) translateX(-15px) rotate(270deg); }
+}
+
+.mesh-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+}
+
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(76, 29, 149, 0.4);
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.historico-container {
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== HEADER ===== */
+.historico-header-premium {
+    margin-bottom: 2rem;
+}
+
+.header-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    margin: 2rem;
+    box-shadow: var(--shadow-large);
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-premium {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.breadcrumb-link:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    color: white;
+}
+
+.breadcrumb-separator {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    padding: 2rem 0;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.hero-icon {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6366f1;
+    font-size: 3rem;
+    flex-shrink: 0;
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+}
+
+.icon-pulse {
+    position: absolute;
+    inset: -8px;
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.hero-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.hero-title {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.75rem 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content-historico {
+    padding: 0 2rem;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ===== NOTIFICATIONS ===== */
+.notifications-premium {
+    margin-bottom: 2rem;
+}
+
+.notification-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-medium);
+    animation: slideInDown 0.3s ease-out;
+}
+
+.notification-toast.success {
+    border-left: 4px solid var(--success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.notification-toast.error {
+    border-left: 4px solid var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.notification-toast.warning {
+    border-left: 4px solid var(--warning);
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.toast-content {
+    flex: 1;
+    color: white;
+    font-weight: 500;
+}
+
+.toast-close {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== ESTATÍSTICAS ===== */
+.stats-section-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stats-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    border-radius: 20px 20px 0 0;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-large);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.stat-icon::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: iconGlow 3s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.stat-icon.total {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+.stat-icon.today {
+    background: linear-gradient(135deg, #10b981, #047857);
+}
+
+.stat-icon.month {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-icon.status {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.stat-trend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.stat-trend.positive {
+    background: rgba(16, 185, 129, 0.1);
+    color: #047857;
+}
+
+.stat-trend.stable {
+    background: rgba(156, 163, 175, 0.1);
+    color: #6b7280;
+}
+
+/* ===== FORMULÁRIO ===== */
+.historico-form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-large);
+    margin-bottom: 2rem;
+}
+
+.form-header-historico {
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+    padding: 2rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+    position: relative;
+}
+
+.form-header-historico::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #10b981 100%);
+    border-radius: 24px 24px 0 0;
+}
+
+.form-title-historico {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.form-subtitle-historico {
+    color: #6b7280;
+    margin: 0.5rem 0 0 0;
+    font-size: 1rem;
+}
+
+.form-body-historico {
+    padding: 2rem;
+}
+
+/* ===== LOADING STATE ===== */
+.loading-spinner-historico {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .header-glass {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+    
+    .stats-section-premium {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .stats-card {
+        padding: 1.25rem;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-icon {
+        width: 100px;
+        height: 100px;
+        font-size: 2.5rem;
+    }
+    
+    .hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .stats-section-premium {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-body-historico {
+        padding: 1.5rem;
+    }
+    
+    .form-header-historico {
+        padding: 1.5rem;
+    }
+}
+</style>
+
+<!-- JavaScript e Data -->
+<script>
+// Dados para o React
+window.historicoData = {
+    chamadas: [
+        {% for chamada in chamadas %}
+        {
+            id: {{ chamada.id }},
+            data_criacao: "{{ chamada.data_criacao|date:'d/m/Y H:i' }}",
+            nome_contato: "{{ chamada.nome_contato|escapejs }}",
+            telefone: "{{ chamada.telefone|escapejs }}",
+            unidade_solicitante: {
+                id: {{ chamada.unidade_solicitante.id|default:0 }},
+                nome: "{{ chamada.unidade_solicitante.nome|default:'N/A'|escapejs }}"
+            },
+            unidade_executante: {
+                id: {{ chamada.unidade_executante.id|default:0 }},
+                nome: "{{ chamada.unidade_executante.nome|default:'N/A'|escapejs }}"
+            },
+            tipo_chamada: "{{ chamada.tipo_chamada|escapejs }}",
+            status: "{{ chamada.status|escapejs }}",
+            descricao: "{{ chamada.descricao|escapejs }}",
+            nome_atendente: "{{ chamada.nome_atendente|escapejs }}",
+            usuario_criador: {
+                id: {{ chamada.usuario_criador.id|default:0 }},
+                username: "{{ chamada.usuario_criador.username|default:'Sistema'|escapejs }}"
+            }
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ],
+    estatisticas: {
+        total_chamadas: {{ total_chamadas|default:0 }},
+        chamadas_hoje: {{ chamadas_hoje|default:0 }},
+        chamadas_mes: {{ chamadas_mes|default:0 }},
+        tipos_chamadas: {{ tipos_chamadas|length|default:0 }}
+    },
+    filtros: {
+        tipo: "{{ filtros.tipo|default:''|escapejs }}",
+        status: "{{ filtros.status|default:''|escapejs }}",
+        data_inicio: "{{ filtros.data_inicio|default:''|escapejs }}",
+        data_fim: "{{ filtros.data_fim|default:''|escapejs }}",
+        busca: "{{ filtros.busca|default:''|escapejs }}"
+    },
+    opcoes: {
+        tipos_chamada: [
+            {% for tipo, nome in tipo_choices %}
+            {value: "{{ tipo|escapejs }}", label: "{{ nome|escapejs }}"}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
+        status_choices: [
+            {% for status, nome in status_choices %}
+            {value: "{{ status|escapejs }}", label: "{{ nome|escapejs }}"}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]
+    },
+    csrfToken: "{{ csrf_token }}",
+    urls: {
+        historico: "{% url 'historico_chamadas' %}",
+        export_pdf: "{% url 'export_historico_pdf' %}",
+        export_excel: "{% url 'export_historico_excel' %}",
+        export_csv: "{% url 'export_historico_csv' %}"
+    }
+};
+
+console.log('✅ Dados do histórico carregados:', window.historicoData);
+</script>
+
+{% include 'react_scripts_base.html' %}
+
+<!-- Carregar serviços React primeiro -->
+<script src="{% static 'js/dist/react-services.bundle.js' %}"></script>
+
+<!-- Bundle do Componente -->
+<script src="{% static 'js/dist/historico.bundle.js' %}"></script>
+
+<script>
+// Animar contadores das estatísticas
+document.addEventListener('DOMContentLoaded', function() {
+    // Animar estatísticas
+    animateCounter('total-chamadas', {{ total_chamadas|default:0 }});
+    animateCounter('chamadas-hoje', {{ chamadas_hoje|default:0 }});
+    animateCounter('chamadas-mes', {{ chamadas_mes|default:0 }});
+    
+    // Tentar inicializar componente React
+    if (window.initializeReactComponent) {
+        console.log('✅ Inicializando HistoricoReact...');
+        initializeReactComponent('HistoricoReact', 'historico-react-root', window.historicoData);
+    } else {
+        console.log('⚠️ Sistema React não disponível, mantendo HTML estático');
+    }
+    
+    // Auto-dismiss para toasts
+    setTimeout(() => {
+        const toasts = document.querySelectorAll('.notification-toast');
+        toasts.forEach(toast => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        });
+    }, 5000);
+});
+
+function animateCounter(elementId, targetValue) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    let current = 0;
+    const increment = targetValue / 30;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= targetValue) {
+            element.textContent = targetValue;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current);
+        }
+    }, 50);
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,170 @@
+{
+  "static_files": {
+    "/static/js/dist/react-services.bundle.js": {
+      "status": "error",
+      "error": "This WhiteNoiseFileResponse instance has no `content` attribute. Use `streaming_content` instead.",
+      "success": false
+    },
+    "/static/js/dist/criar-unidade.bundle.js": {
+      "status": "error",
+      "error": "This WhiteNoiseFileResponse instance has no `content` attribute. Use `streaming_content` instead.",
+      "success": false
+    },
+    "/static/js/dist/registro-chamada.bundle.js": {
+      "status": "error",
+      "error": "This WhiteNoiseFileResponse instance has no `content` attribute. Use `streaming_content` instead.",
+      "success": false
+    },
+    "/static/js/services/ReactDebugger.js": {
+      "status": "error",
+      "error": "This WhiteNoiseFileResponse instance has no `content` attribute. Use `streaming_content` instead.",
+      "success": false
+    },
+    "/static/js/components/ReactErrorBoundary.js": {
+      "status": "error",
+      "error": "This WhiteNoiseFileResponse instance has no `content` attribute. Use `streaming_content` instead.",
+      "success": false
+    }
+  },
+  "react_pages": {
+    "home": {
+      "status": 200,
+      "success": true,
+      "has_react_container": true,
+      "has_react_scripts": true
+    },
+    "criar_unidade": {
+      "status": 200,
+      "success": true,
+      "has_react_container": true,
+      "has_react_scripts": true
+    },
+    "registro_chamada_react": {
+      "status": 200,
+      "success": true,
+      "has_react_container": true,
+      "has_react_scripts": true
+    },
+    "test_react_validation": {
+      "status": 200,
+      "success": true,
+      "has_react_container": false,
+      "has_react_scripts": true
+    }
+  },
+  "bundles": {
+    "configuracoes.bundle.js": {
+      "size": 161495,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "criar-unidade.bundle.js": {
+      "size": 163399,
+      "has_react": true,
+      "has_component": true,
+      "has_exports": true,
+      "success": true
+    },
+    "criar-usuario.bundle.js": {
+      "size": 180137,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "editar-unidade.bundle.js": {
+      "size": 160216,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "home-simple.bundle.js": {
+      "size": 139730,
+      "has_react": true,
+      "has_component": true,
+      "has_exports": true,
+      "success": true
+    },
+    "home.bundle.js": {
+      "size": 152276,
+      "has_react": true,
+      "has_component": true,
+      "has_exports": true,
+      "success": true
+    },
+    "lista-telefonica.bundle.js": {
+      "size": 153350,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "notificacoes.bundle.js": {
+      "size": 164096,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "perfil.bundle.js": {
+      "size": 157184,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "react-services.bundle.js": {
+      "size": 171207,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "registro-chamada.bundle.js": {
+      "size": 186361,
+      "has_react": true,
+      "has_component": true,
+      "has_exports": true,
+      "success": true
+    },
+    "relatorios.bundle.js": {
+      "size": 177224,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "senha.bundle.js": {
+      "size": 160537,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "unidades-saude.bundle.js": {
+      "size": 166539,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    },
+    "visualizar-unidade.bundle.js": {
+      "size": 152436,
+      "has_react": true,
+      "has_component": false,
+      "has_exports": true,
+      "success": true
+    }
+  },
+  "summary": {
+    "static_success": 0,
+    "static_total": 5,
+    "pages_success": 4,
+    "pages_total": 4,
+    "bundle_success": 15,
+    "bundle_total": 15
+  }
+}

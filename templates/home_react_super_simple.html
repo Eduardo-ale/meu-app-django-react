@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Simplificado - Sistema de Registro de Chamadas{% endblock %}
+
+{% block content %}
+<div id="home-react-root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+            <h2>Carregando dashboard simplificado...</h2>
+            <p>Aguarde enquanto carregamos o sistema</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- React CDN -->
+<!-- Scripts removidos do CDN, agora React é carregado via include central ou arquivos locais -->
+
+<!-- Carregar serviços React primeiro -->
+<script src="{% static 'js/dist/react-services.bundle.js' %}"></script>
+
+<!-- Bundle do Componente Simplificado -->
+<script src="{% static 'js/dist/home-simple.bundle.js' %}"></script>
+
+<script>
+// Código super simples para inicializar o React
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando dashboard super simples...');
+    
+    // Verificar se React está disponível
+    if (!window.React || !window.ReactDOM) {
+        console.error('❌ React ou ReactDOM não estão disponíveis');
+        return;
+    }
+    
+    // Verificar se o componente está disponível
+    if (!window.HomeReactSimple) {
+        console.error('❌ HomeReactSimple não está disponível');
+        return;
+    }
+    
+    // Verificar se o container existe
+    var container = document.getElementById('home-react-root');
+    if (!container) {
+        console.error('❌ Container não encontrado');
+        return;
+    }
+    
+    // Dados mínimos para o componente
+    var data = {
+        titulo: "Dashboard Super Simples",
+        mensagem: "Este é um componente React simplificado para testes"
+    };
+    
+    try {
+        // Renderizar o componente
+        if (window.ReactDOM.createRoot) {
+            var root = window.ReactDOM.createRoot(container);
+            root.render(window.React.createElement(window.HomeReactSimple, data));
+        } else {
+            window.ReactDOM.render(window.React.createElement(window.HomeReactSimple, data), container);
+        }
+        console.log('🎉 Dashboard simplificado carregado com sucesso!');
+    } catch (e) {
+        console.error('❌ Erro na renderização:', e);
+        container.innerHTML = '<div style="text-align: center; padding: 50px; color: white;"><h2>⚠️ Erro no Dashboard</h2><p>Ocorreu um erro ao carregar o dashboard React.</p><p>Erro: ' + e.message + '</p></div>';
+    }
+});
+</script>
+{% endblock %}

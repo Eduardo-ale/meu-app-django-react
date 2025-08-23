@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Configurações do Sistema</h1>
+    <p>Usuário: {{ usuario.username }}</p>
+    <p>Data: {{ data_atual }}</p>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Estatísticas</h3>
+                </div>
+                <div class="card-body">
+                    <p>Total de Unidades: {{ estatisticas.total_unidades }}</p>
+                    <p>Total de Chamadas: {{ estatisticas.total_chamadas }}</p>
+                    <p>Total de Usuários: {{ total_usuarios }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Manual do Sistema</h3>
+                </div>
+                <div class="card-body">
+                    <p>Acesse o manual completo do sistema</p>
+                    <a href="{% url 'manual_sistema' %}" class="btn btn-primary">
+                        <i class="fas fa-book-open"></i> Acessar Manual
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voltar ao Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %} 

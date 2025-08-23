@@ -1,0 +1,1231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb Moderno -->
+    <nav aria-label="breadcrumb" class="breadcrumb-container">
+        <ol class="breadcrumb-modern">
+            <li class="breadcrumb-item-modern">
+                <a href="{% url 'home' %}" class="breadcrumb-link" title="Ir para página inicial">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+            </li>
+            <li class="breadcrumb-item-modern">
+                <a href="{% url 'unidades_saude' %}" class="breadcrumb-link" title="Voltar para lista de unidades">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Unidades de Saúde</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+            </li>
+            <li class="breadcrumb-item-modern breadcrumb-current">
+                <span class="breadcrumb-current-text">
+                    <i class="fas fa-eye"></i>
+                    <span>{{ unidade.nome|title }}</span>
+                </span>
+            </li>
+                </ol>
+            </nav>
+
+    <!-- Header da Página -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="header-info">
+                <h1 class="page-title">{{ unidade.nome }}</h1>
+                <p class="page-subtitle">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    {{ unidade.municipio|default:"Localização não informada" }}
+                </p>
+            </div>
+            <div class="header-actions">
+                <div class="status-badge">
+                    {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}
+                        <span class="badge badge-success">
+                            <i class="fas fa-hospital"></i>
+                            Executante
+                        </span>
+                    {% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}
+                        <span class="badge badge-info">
+                            <i class="fas fa-phone-alt"></i>
+                            Solicitante
+                        </span>
+                    {% else %}
+                        <span class="badge badge-primary">
+                            <i class="fas fa-hospital-user"></i>
+                            Executante/Solicitante
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Informações -->
+    <div class="row g-4">
+        <!-- Card de Informações Básicas -->
+        <div class="col-lg-8">
+            <div class="info-card">
+                <div class="card-header-custom">
+                    <div class="card-icon bg-blue">
+                        <i class="fas fa-hospital-alt"></i>
+                    </div>
+                    <div class="card-title-section">
+                        <h5>Informações da Unidade</h5>
+                        <p>Dados principais e identificação</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <div class="info-content">
+                                    <label>Nome da Unidade</label>
+                            <p>{{ unidade.nome }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <div class="info-content">
+                                    <label>CNES</label>
+                            <p>{{ unidade.cnes|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <label>Município</label>
+                                    <p>{{ unidade.municipio|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}
+                                        <i class="fas fa-hospital"></i>
+                                    {% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}
+                                        <i class="fas fa-phone-alt"></i>
+                                    {% else %}
+                                        <i class="fas fa-hospital-user"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="info-content">
+                                    <label>Tipo de Unidade</label>
+                                    <p>
+                                        {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}
+                                            Unidade Executante
+                                        {% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}
+                                            Unidade Solicitante
+                                        {% else %}
+                                            Executante/Solicitante
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card de Status e Ações -->
+        <div class="col-lg-4">
+            <div class="info-card">
+                <div class="card-header-custom">
+                    <div class="card-icon bg-green">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="card-title-section">
+                        <h5>Ações Rápidas</h5>
+                        <p>Operações disponíveis</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="quick-actions">
+                        <a href="{% url 'editar_unidade' unidade.pk %}" class="action-btn action-edit">
+                            <div class="action-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="action-text">
+                                <span>Editar Unidade</span>
+                                <small>Modificar informações</small>
+                            </div>
+                        </a>
+                        
+                        <a href="{% url 'unidades_saude' %}" class="action-btn action-back">
+                            <div class="action-icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                            <div class="action-text">
+                                <span>Voltar à Lista</span>
+                                <small>Ver todas as unidades</small>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Informações do Sistema -->
+                    <div class="system-info">
+                        <h6>Informações do Sistema</h6>
+                        <div class="system-item">
+                            <i class="fas fa-calendar-plus"></i>
+                            <div>
+                                <label>Cadastrado em</label>
+                                <span>{{ unidade.created_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+                        <div class="system-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <label>Última atualização</label>
+                                <span>{{ unidade.updated_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+                        <div class="system-item">
+                            <i class="fas fa-user-shield"></i>
+                            <div>
+                                <label>Cadastrado por</label>
+                                <span>{{ unidade.usuario_cadastrante.get_full_name|default:unidade.usuario_cadastrante.username|default:"Sistema" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        </div>
+                    </div>
+
+        <!-- Card de Contato e Localização -->
+        <div class="col-12">
+            <div class="info-card">
+                <div class="card-header-custom">
+                    <div class="card-icon bg-orange">
+                        <i class="fas fa-address-book"></i>
+                    </div>
+                    <div class="card-title-section">
+                        <h5>Contato & Localização</h5>
+                        <p>Informações para comunicação e endereço</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <label>Telefone</label>
+                                    <div id="telefone-unidade" data-telefone="{{ unidade.telefone }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <label>Responsável</label>
+                                    <p>{{ unidade.responsavel|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <label>Endereço Completo</label>
+                                    <p>{{ unidade.endereco }}</p>
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ unidade.endereco|urlencode }}" target="_blank" class="contact-action">
+                                        <i class="fas fa-map me-1"></i>Ver no mapa
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card de Log do Cadastrante -->
+        <div class="col-12">
+            <div class="info-card log-card">
+                <div class="card-header-custom log-header">
+                    <div class="card-icon bg-log">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="card-title-section">
+                        <h5>Log do Cadastrante</h5>
+                        <p>Informações sobre quem cadastrou esta unidade</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="log-info-item">
+                                <div class="log-info-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="log-info-content">
+                                    <label>Responsável pelo Cadastro</label>
+                                    {% if unidade.usuario_cadastrante %}
+                                        <p>{{ unidade.usuario_cadastrante.get_full_name|default:unidade.usuario_cadastrante.username }}</p>
+                                        <div class="log-badge">
+                                            <i class="fas fa-shield-alt"></i>
+                                            <span>Usuário Verificado</span>
+                                        </div>
+                                    {% else %}
+                                        <p>Sistema Automático</p>
+                                        <div class="log-badge log-badge-system">
+                                            <i class="fas fa-cog"></i>
+                                            <span>Cadastro Legado</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="log-info-item">
+                                <div class="log-info-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="log-info-content">
+                                    <label>Data do Cadastro</label>
+                                    <p>{{ unidade.created_at|date:"d/m/Y" }} às {{ unidade.created_at|date:"H:i:s" }}</p>
+                                    <div class="log-badge">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Registro Automático</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if unidade.usuario_cadastrante %}
+                    <!-- Informações Adicionais do Usuário -->
+                    <div class="user-details">
+                        <h6>Detalhes do Usuário Cadastrante</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="user-detail-item">
+                                    <i class="fas fa-user"></i>
+                                    <div>
+                                        <label>Nome de Usuário</label>
+                                        <span>{{ unidade.usuario_cadastrante.username }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if unidade.usuario_cadastrante.email %}
+                            <div class="col-md-4">
+                                <div class="user-detail-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <div>
+                                        <label>E-mail</label>
+                                        <span>{{ unidade.usuario_cadastrante.email }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-4">
+                                <div class="user-detail-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <div>
+                                        <label>Membro desde</label>
+                                        <span>{{ unidade.usuario_cadastrante.date_joined|date:"m/Y" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Informação para registros sem cadastrante -->
+                    <div class="user-details legacy-info">
+                        <h6>Informações do Sistema</h6>
+                        <div class="legacy-message">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <p><strong>Cadastro Legado:</strong> Esta unidade foi cadastrada antes da implementação do sistema de auditoria de usuários.</p>
+                                <p>A partir de agora, todos os novos cadastros registrarão automaticamente o usuário responsável.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ===== BREADCRUMB MODERNO ===== */
+    .breadcrumb-container {
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .breadcrumb-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b);
+    }
+
+    .breadcrumb-modern {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .breadcrumb-item-modern {
+        display: flex;
+        align-items: center;
+        position: relative;
+        animation: fadeInBreadcrumb 0.6s ease-out;
+    }
+
+    .breadcrumb-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #64748b;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .breadcrumb-link:hover {
+        color: #3b82f6;
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        border-color: #cbd5e1;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    }
+
+    .breadcrumb-link i {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        transition: color 0.3s ease;
+    }
+
+    .breadcrumb-link:hover i {
+        color: #3b82f6;
+    }
+
+    .breadcrumb-separator {
+        color: #cbd5e1;
+        font-size: 0.7rem;
+        margin: 0 0.5rem;
+        animation: pulse 2s infinite;
+    }
+
+    .breadcrumb-current-text {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+        position: relative;
+        overflow: hidden;
+        max-width: 250px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .breadcrumb-current-text::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    .breadcrumb-current-text i {
+        font-size: 0.9rem;
+        color: #dbeafe;
+        flex-shrink: 0;
+    }
+
+    /* ===== HEADER DA PÁGINA ===== */
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+    }
+
+    /* ===== STATUS BADGE ===== */
+    .status-badge .badge {
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .badge-info {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    }
+
+    .badge-primary {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    }
+
+    /* ===== CARDS DE INFORMAÇÃO ===== */
+    .info-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        border: 1px solid #f1f5f9;
+    }
+
+    .info-card:hover {
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .card-icon.bg-blue {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+
+    .card-icon.bg-green {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .card-icon.bg-orange {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .card-title-section h5 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .card-title-section p {
+        margin: 0.25rem 0 0 0;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .card-content {
+        padding: 2rem;
+    }
+
+    /* ===== INFO ITEMS ===== */
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        border-left: 4px solid #3b82f6;
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        background: #f1f5f9;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .info-content label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-content p {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #1f2937;
+    }
+
+    /* ===== QUICK ACTIONS ===== */
+    .quick-actions {
+        margin-bottom: 2rem;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+        margin-bottom: 0.75rem;
+    }
+
+    .action-btn:hover {
+        background: #f8fafc;
+        border-color: #3b82f6;
+        color: inherit;
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    }
+
+    .action-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+    }
+
+    .action-edit .action-icon {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    }
+
+    .action-back .action-icon {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    }
+
+    .action-text span {
+        display: block;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .action-text small {
+        display: block;
+        color: #6b7280;
+        font-size: 0.8rem;
+    }
+
+    /* ===== SYSTEM INFO ===== */
+    .system-info {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 1.5rem;
+    }
+
+    .system-info h6 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .system-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .system-item i {
+        color: #6b7280;
+        width: 16px;
+    }
+
+    .system-item label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        display: block;
+        margin: 0;
+    }
+
+    .system-item span {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #1f2937;
+    }
+
+    /* ===== CONTACT ITEMS ===== */
+    .contact-item {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border-left: 4px solid #f59e0b;
+    }
+
+    .contact-item:hover {
+        background: #f1f5f9;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+    }
+
+    .contact-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin: 0 auto 1rem auto;
+    }
+
+    .contact-content label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .contact-content p {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+
+    .contact-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .contact-action:hover {
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    /* ===== ANIMAÇÕES ===== */
+    @keyframes fadeInBreadcrumb {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+
+    /* ===== RESPONSIVIDADE ===== */
+    @media (max-width: 768px) {
+        .breadcrumb-container {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb-modern {
+            gap: 0.25rem;
+        }
+
+        .breadcrumb-link,
+        .breadcrumb-current-text {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb-link span,
+        .breadcrumb-current-text span {
+            display: none;
+        }
+
+        .breadcrumb-link i,
+        .breadcrumb-current-text i {
+            font-size: 1rem;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 0.25rem;
+            font-size: 0.6rem;
+        }
+
+        .page-header {
+            padding: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .info-item {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .header-actions {
+            margin-top: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .breadcrumb-container {
+            padding: 0.5rem 0.75rem;
+        }
+
+        .page-header {
+            padding: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+        }
+
+        .header-actions {
+            margin-top: 1rem;
+        }
+    }
+
+    /* ===== LOG DO CADASTRANTE ===== */
+    .log-card {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+        border: 2px solid #f59e0b !important;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .log-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f59e0b, #d97706, #b45309);
+        z-index: 1;
+    }
+
+    .log-header {
+        background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%) !important;
+        border-bottom: 2px solid #f59e0b !important;
+    }
+
+    .bg-log {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4) !important;
+    }
+
+    .log-header .card-title-section h5 {
+        color: #92400e !important;
+        font-weight: 800 !important;
+    }
+
+    .log-header .card-title-section p {
+        color: #a16207 !important;
+        font-weight: 500 !important;
+    }
+
+    .log-info-item {
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        border: 2px solid #fbbf24;
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .log-info-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        border-color: #f59e0b;
+    }
+
+    .log-info-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .log-info-content label {
+        color: #92400e;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .log-info-content p {
+        color: #451a03;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin: 0 0 1rem 0;
+    }
+
+    .log-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        animation: badgePulse 2s ease-in-out infinite;
+    }
+
+    .log-badge i {
+        font-size: 0.7rem;
+    }
+
+    .log-badge-system {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
+        animation: none !important;
+    }
+
+    @keyframes badgePulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    /* ===== DETALHES DO USUÁRIO ===== */
+    .user-details {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid #fbbf24;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border-left: 4px solid #f59e0b;
+    }
+
+    .user-details h6 {
+        color: #92400e;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .user-details h6::before {
+        content: '👤';
+        font-size: 1.2rem;
+    }
+
+    .user-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 1px solid #fbbf24;
+        transition: all 0.3s ease;
+    }
+
+    .user-detail-item:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+    }
+
+    .user-detail-item i {
+        color: #f59e0b;
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .user-detail-item label {
+        color: #92400e;
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin: 0;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .user-detail-item span {
+        color: #451a03;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    /* ===== INFORMAÇÕES LEGADAS ===== */
+    .legacy-info {
+        background: rgba(107, 114, 128, 0.1) !important;
+        border: 1px solid #9ca3af !important;
+        border-left: 4px solid #6b7280 !important;
+    }
+
+    .legacy-info h6 {
+        color: #374151 !important;
+    }
+
+    .legacy-info h6::before {
+        content: '⚙️';
+    }
+
+    .legacy-message {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+    }
+
+    .legacy-message i {
+        color: #6b7280;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        margin-top: 0.25rem;
+    }
+
+    .legacy-message p {
+        color: #374151;
+        margin: 0 0 0.5rem 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .legacy-message p:last-child {
+        margin-bottom: 0;
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    /* ===== ANIMAÇÃO ESPECIAL PARA A SEÇÃO DE LOG ===== */
+    .log-card {
+        animation: logGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes logGlow {
+        0%, 100% {
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+        }
+        50% {
+            box-shadow: 0 8px 35px rgba(245, 158, 11, 0.4);
+        }
+    }
+
+    /* Responsividade do log */
+    @media (max-width: 768px) {
+        .log-info-item {
+            padding: 1rem;
+        }
+
+        .log-info-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+        }
+
+        .user-details {
+            padding: 1rem;
+        }
+
+        .user-detail-item {
+            padding: 0.5rem;
+        }
+
+        .log-badge {
+            font-size: 0.7rem;
+            padding: 0.375rem 0.625rem;
+        }
+    }
+</style>
+
+<script>
+// Criar elemento visual melhorado para o telefone
+document.addEventListener('DOMContentLoaded', function() {
+    const telefoneContainer = document.getElementById('telefone-unidade');
+    
+    if (telefoneContainer && window.TelefoneUtils) {
+        const telefone = telefoneContainer.getAttribute('data-telefone');
+        
+        if (telefone) {
+            // Criar elemento visual usando TelefoneUtils
+            const elementoTelefone = window.TelefoneUtils.criarElementoVisual(telefone, {
+                clicavel: true,
+                copiavel: true,
+                tamanho: 'grande'
+            });
+            
+            // Adicionar classe personalizada para o contexto da unidade
+            elementoTelefone.classList.add('telefone-unidade-visual');
+            
+            // Substituir o container
+            telefoneContainer.replaceWith(elementoTelefone);
+        }
+    }
+});
+</script>
+
+{% endblock %} 

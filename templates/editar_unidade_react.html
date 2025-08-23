@@ -1,0 +1,1026 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="modern-container-editar">
+    <!-- Breadcrumb Moderno -->
+    <nav aria-label="breadcrumb" class="breadcrumb-container-react">
+        <ol class="breadcrumb-react">
+            <li class="breadcrumb-item-react">
+                <a href="{% url 'home' %}" class="breadcrumb-link-react">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator-react"></i>
+            </li>
+            <li class="breadcrumb-item-react">
+                <a href="{% url 'unidades_saude' %}" class="breadcrumb-link-react">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Unidades de Saúde</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator-react"></i>
+            </li>
+            <li class="breadcrumb-item-react">
+                <a href="{% url 'visualizar_unidade' unidade.id %}" class="breadcrumb-link-react">
+                    <i class="fas fa-eye"></i>
+                    <span>{{ unidade.nome|truncatechars:25 }}</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator-react"></i>
+            </li>
+            <li class="breadcrumb-item-react breadcrumb-current-react">
+                <span class="breadcrumb-current-text-react">
+                    <i class="fas fa-edit"></i>
+                    <span>Editar</span>
+                </span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Container do Componente React -->
+    <div id="editar-unidade-react-root">
+        <!-- Fallback HTML caso React falhe -->
+        <div class="fallback-container">
+            <!-- Header Premium -->
+            <div class="fallback-header">
+                <div class="header-background-pattern"></div>
+                <div class="header-content-fallback">
+                    <div class="header-info-fallback">
+                        <div class="header-icon-fallback">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="header-text-fallback">
+                            <h1 class="header-title-fallback">Editar Unidade de Saúde</h1>
+                            <p class="header-subtitle-fallback">{{ unidade.nome }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulário Premium -->
+            <div class="fallback-form-container">
+                <form method="post" class="fallback-form">
+                    {% csrf_token %}
+                    
+                    <!-- Seção: Informações Básicas -->
+                    <div class="form-section-fallback">
+                        <div class="section-header-fallback">
+                            <div class="section-icon-fallback">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <h3 class="section-title-fallback">Informações Básicas</h3>
+                        </div>
+                        <div class="section-content-fallback">
+                            <div class="form-grid-fallback">
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-hospital"></i>
+                                        Nome da Unidade
+                                        <span class="required-star">*</span>
+                                    </label>
+                                    <input type="text" name="nome" value="{{ unidade.nome }}" class="form-input-fallback" required>
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-tag"></i>
+                                        Tipo da Unidade
+                                    </label>
+                                    <select name="tipo" class="form-select-fallback">
+                                        <option value="UNIDADE_EXECUTANTE" {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}selected{% endif %}>
+                                            🏥 Executante
+                                        </option>
+                                        <option value="UNIDADE_SOLICITANTE" {% if unidade.tipo == 'UNIDADE_SOLICITANTE' %}selected{% endif %}>
+                                            📞 Solicitante
+                                        </option>
+                                        <option value="EXECUTANTE_SOLICITANTE" {% if unidade.tipo == 'EXECUTANTE_SOLICITANTE' %}selected{% endif %}>
+                                            🏥📞 Executante/Solicitante
+                                        </option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-id-card"></i>
+                                        CNES
+                                    </label>
+                                    <input type="text" name="cnes" value="{{ unidade.cnes }}" class="form-input-fallback" maxlength="7" placeholder="Ex: 1234567">
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-user-tie"></i>
+                                        Responsável
+                                    </label>
+                                    <input type="text" name="responsavel" value="{{ unidade.responsavel }}" class="form-input-fallback">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção: Localização -->
+                    <div class="form-section-fallback">
+                        <div class="section-header-fallback">
+                            <div class="section-icon-fallback">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3 class="section-title-fallback">Localização</h3>
+                        </div>
+                        <div class="section-content-fallback">
+                            <div class="form-grid-fallback">
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-city"></i>
+                                        Município
+                                    </label>
+                                    <input type="text" name="municipio" value="{{ unidade.municipio }}" class="form-input-fallback">
+                                </div>
+                                
+                                <div class="form-group-fallback full-width">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-map"></i>
+                                        Endereço Completo
+                                    </label>
+                                    <textarea name="endereco" rows="3" class="form-textarea-fallback">{{ unidade.endereco }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção: Contato -->
+                    <div class="form-section-fallback">
+                        <div class="section-header-fallback">
+                            <div class="section-icon-fallback">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <h3 class="section-title-fallback">Informações de Contato</h3>
+                        </div>
+                        <div class="section-content-fallback">
+                            <div class="form-grid-fallback">
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-phone"></i>
+                                        Telefone
+                                    </label>
+                                    <input type="text" name="telefone" value="{{ unidade.telefone }}" class="form-input-fallback" placeholder="(67) 99999-9999">
+                                </div>
+                                
+                                <div class="form-group-fallback">
+                                    <label class="form-label-fallback">
+                                        <i class="fas fa-envelope"></i>
+                                        E-mail
+                                    </label>
+                                    <input type="email" name="email" value="{{ unidade.email }}" class="form-input-fallback" placeholder="contato@unidade.com.br">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de Ação -->
+                    <div class="form-actions-fallback">
+                        <a href="{% url 'visualizar_unidade' unidade.id %}" class="btn-cancel-fallback">
+                            <i class="fas fa-times"></i>
+                            <span>Cancelar</span>
+                        </a>
+                        <button type="submit" class="btn-save-fallback">
+                            <i class="fas fa-save"></i>
+                            <span>Salvar Alterações</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===== CONTAINER PRINCIPAL ===== */
+.modern-container-editar {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-attachment: fixed;
+    padding: 2rem;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-container-react {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-react {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-item-react {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-link-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-link-react:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    text-decoration: none;
+}
+
+.breadcrumb-separator-react {
+    color: #cbd5e1;
+    font-size: 0.7rem;
+    margin: 0 0.5rem;
+}
+
+.breadcrumb-current-text-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* ===== COMPONENTE EDITAR ===== */
+.editar-unidade-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== HEADER ===== */
+.edit-header-react {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="0.5" fill="white" opacity="0.1"/><circle cx="80" cy="80" r="0.3" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.header-content-react {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.edit-icon-react {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.edit-title-react {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.edit-subtitle-react {
+    font-size: 1rem;
+    margin: 0.25rem 0 0 0;
+    opacity: 0.9;
+}
+
+.header-actions .action-btn-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.header-actions .action-btn-react:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* ===== FORMULÁRIO ===== */
+.edit-form-react {
+    padding: 0;
+}
+
+.form-section-react {
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.form-section-react:last-child {
+    border-bottom: none;
+}
+
+.section-header-react {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.section-icon-react {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.section-title-react {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.section-content-react {
+    padding: 2rem;
+}
+
+.form-grid-react {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group-react.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group-react {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label-react {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.form-input-react,
+.form-textarea-react {
+    padding: 0.875rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input-react:focus,
+.form-textarea-react:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input-react.error,
+.form-textarea-react.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-textarea-react {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.error-message-react {
+    color: #ef4444;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== RADIO BUTTONS ===== */
+.radio-group-react {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.radio-option-react {
+    position: relative;
+    cursor: pointer;
+}
+
+.radio-option-react input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.radio-custom-react {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.radio-option-react input[type="radio"]:checked + .radio-custom-react {
+    border-color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+}
+
+.radio-custom-react i {
+    font-size: 1.2rem;
+    color: #6b7280;
+    width: 20px;
+    text-align: center;
+}
+
+.radio-option-react input[type="radio"]:checked + .radio-custom-react i {
+    color: #667eea;
+}
+
+.radio-custom-react span {
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ===== CHECKBOX ===== */
+.checkbox-label-react {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.checkbox-label-react input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom-react {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.checkbox-label-react input[type="checkbox"]:checked + .checkbox-custom-react {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+}
+
+.checkbox-custom-react i {
+    color: white;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.checkbox-label-react input[type="checkbox"]:checked + .checkbox-custom-react i {
+    opacity: 1;
+}
+
+.checkbox-label-react span {
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ===== AUTOCOMPLETE ===== */
+.autocomplete-wrapper-react {
+    position: relative;
+}
+
+.autocomplete-loading {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+}
+
+.autocomplete-results-react {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-item-react {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.autocomplete-item-react:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.autocomplete-item-react:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item-react i {
+    color: #667eea;
+    width: 16px;
+}
+
+/* ===== BOTÕES DE AÇÃO ===== */
+.form-actions-react {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.btn-cancel-react,
+.btn-save-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-cancel-react {
+    background: white;
+    color: #6b7280;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-cancel-react:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.btn-save-react {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-save-react:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+.btn-save-react:disabled,
+.btn-cancel-react:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes animate-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: animate-fade-in 0.6s ease-out forwards;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .modern-container-editar {
+        padding: 1rem;
+    }
+    
+    .header-content-react {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .form-grid-react {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions-react {
+        flex-direction: column;
+    }
+    
+    .breadcrumb-react {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .breadcrumb-item-react {
+        width: 100%;
+    }
+    
+    .breadcrumb-link-react {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .edit-header-react {
+        padding: 1.5rem;
+    }
+    
+    .section-content-react {
+        padding: 1rem;
+    }
+    
+    .form-actions-react {
+        padding: 1rem;
+    }
+    
+    .breadcrumb-link-react span,
+    .breadcrumb-current-text-react span {
+        display: none;
+    }
+}
+
+/* ===== ESTILOS DO FALLBACK ===== */
+.fallback-container {
+    position: relative;
+    z-index: 1;
+}
+
+.fallback-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+}
+
+.header-background-pattern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 20s ease-in-out infinite;
+}
+
+.header-content-fallback {
+    position: relative;
+    z-index: 2;
+}
+
+.header-info-fallback {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-icon-fallback {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-text-fallback {
+    flex: 1;
+}
+
+.header-title-fallback {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle-fallback {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+}
+
+.fallback-form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.fallback-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.form-section-fallback {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+}
+
+.section-header-fallback {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.section-icon-fallback {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.section-title-fallback {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.form-grid-fallback {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group-fallback {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-fallback.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label-fallback {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.required-star {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.form-input-fallback,
+.form-select-fallback,
+.form-textarea-fallback {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-input-fallback:focus,
+.form-select-fallback:focus,
+.form-textarea-fallback:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-textarea-fallback {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions-fallback {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f1f5f9;
+}
+
+.btn-cancel-fallback,
+.btn-save-fallback {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-cancel-fallback {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-cancel-fallback:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(107, 114, 128, 0.3);
+}
+
+.btn-save-fallback {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-save-fallback:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Responsividade para Fallback */
+@media (max-width: 768px) {
+    .header-info-fallback {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .header-title-fallback {
+        font-size: 2rem;
+    }
+    
+    .fallback-form-container {
+        padding: 2rem;
+    }
+    
+    .form-grid-fallback {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions-fallback {
+        flex-direction: column;
+    }
+}
+</style>
+
+<script>
+// Dados para o componente React
+try {
+    window.editUnidadeData = {
+        unidade: {
+            id: {{ unidade.id|default:"null" }},
+            nome: "{{ unidade.nome|default:""|escapejs }}",
+            municipio: "{{ unidade.municipio|default:""|escapejs }}",
+            cnes: "{{ unidade.cnes|default:""|escapejs }}",
+            tipo: "{{ unidade.tipo|default:"UNIDADE_EXECUTANTE"|escapejs }}",
+            endereco: "{{ unidade.endereco|default:""|escapejs }}",
+            telefone: "{{ unidade.telefone|default:""|escapejs }}",
+            responsavel: "{{ unidade.responsavel|default:""|escapejs }}",
+            email: "{{ unidade.email|default:""|escapejs }}",
+            horario_funcionamento: "{{ unidade.horario_funcionamento|default:""|escapejs }}",
+            servicos_emergencia: {{ unidade.servicos_emergencia|yesno:"true,false" }}
+        }
+    };
+    console.log('✅ Dados para edição carregados:', window.editUnidadeData);
+} catch (error) {
+    console.error('❌ Erro ao carregar dados para edição:', error);
+    window.editUnidadeData = { unidade: null };
+}
+</script>
+
+<!-- Carregar componente React -->
+<script src="{% static 'js/components/EditarUnidadeReact.js' %}"></script>
+
+{% endblock %} 

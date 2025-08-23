@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Funcionando - Sistema de Registro de Chamadas{% endblock %}
+
+{% block content %}
+<div id="home-react-root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+            <h2>Carregando dashboard...</h2>
+            <p>Aguarde enquanto carregamos o sistema</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- React CDN -->
+<!-- Scripts removidos do CDN, agora React é carregado via include central ou arquivos locais -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando dashboard funcional...');
+    
+    // Verificar se React está disponível
+    if (!window.React || !window.ReactDOM) {
+        console.error('❌ React ou ReactDOM não estão disponíveis');
+        return;
+    }
+    
+    console.log('✅ React disponível - versão:', React.version);
+    
+    // Verificar se o container existe
+    var container = document.getElementById('home-react-root');
+    if (!container) {
+        console.error('❌ Container não encontrado');
+        return;
+    }
+    
+    console.log('✅ Container encontrado');
+    
+    // Criar componente React simples
+    function DashboardSimples(props) {
+        return React.createElement('div', {
+            style: {
+                minHeight: '100vh',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                padding: '20px',
+                fontFamily: 'Arial, sans-serif'
+            }
+        }, [
+            React.createElement('div', {
+                key: 'header',
+                style: {
+                    textAlign: 'center',
+                    marginBottom: '40px'
+                }
+            }, [
+                React.createElement('h1', { key: 'title' }, '🎉 Dashboard React Funcionando!'),
+                React.createElement('p', { key: 'subtitle' }, 'Sistema de Registro de Chamadas Médicas'),
+                React.createElement('p', { key: 'time' }, 'Carregado em: ' + new Date().toLocaleString())
+            ]),
+            
+            React.createElement('div', {
+                key: 'stats',
+                style: {
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gap: '20px',
+                    maxWidth: '1200px',
+                    margin: '0 auto'
+                }
+            }, [
+                React.createElement('div', {
+                    key: 'stat1',
+                    style: {
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        textAlign: 'center'
+                    }
+                }, [
+                    React.createElement('h3', { key: 'title' }, 'Total de Unidades'),
+                    React.createElement('div', { 
+                        key: 'number',
+                        style: { fontSize: '2em', fontWeight: 'bold' }
+                    }, props.estatisticas.total_unidades || 0)
+                ]),
+                
+                React.createElement('div', {
+                    key: 'stat2',
+                    style: {
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        textAlign: 'center'
+                    }
+                }, [
+                    React.createElement('h3', { key: 'title' }, 'Total de Chamadas'),
+                    React.createElement('div', { 
+                        key: 'number',
+                        style: { fontSize: '2em', fontWeight: 'bold' }
+                    }, props.estatisticas.total_chamadas || 0)
+                ]),
+                
+                React.createElement('div', {
+                    key: 'stat3',
+                    style: {
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        textAlign: 'center'
+                    }
+                }, [
+                    React.createElement('h3', { key: 'title' }, 'Chamadas Hoje'),
+                    React.createElement('div', { 
+                        key: 'number',
+                        style: { fontSize: '2em', fontWeight: 'bold' }
+                    }, props.estatisticas.chamadas_hoje || 0)
+                ])
+            ]),
+            
+            React.createElement('div', {
+                key: 'menu',
+                style: {
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '20px',
+                    maxWidth: '1200px',
+                    margin: '40px auto 0'
+                }
+            }, [
+                React.createElement('a', {
+                    key: 'unidades',
+                    href: '/accounts/unidades-saude/',
+                    style: {
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        padding: '30px',
+                        borderRadius: '10px',
+                        textDecoration: 'none',
+                        color: 'white',
+                        textAlign: 'center',
+                        transition: 'all 0.3s ease'
+                    }
+                }, [
+                    React.createElement('div', { 
+                        key: 'icon',
+                        style: { fontSize: '3em', marginBottom: '10px' }
+                    }, '🏥'),
+                    React.createElement('h3', { key: 'title' }, 'Unidades de Saúde'),
+                    React.createElement('p', { key: 'desc' }, 'Gerencie unidades de saúde')
+                ]),
+                
+                React.createElement('a', {
+                    key: 'registro',
+                    href: '/accounts/registro-chamada/',
+                    style: {
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        padding: '30px',
+                        borderRadius: '10px',
+                        textDecoration: 'none',
+                        color: 'white',
+                        textAlign: 'center',
+                        transition: 'all 0.3s ease'
+                    }
+                }, [
+                    React.createElement('div', { 
+                        key: 'icon',
+                        style: { fontSize: '3em', marginBottom: '10px' }
+                    }, '📞'),
+                    React.createElement('h3', { key: 'title' }, 'Registro de Chamadas'),
+                    React.createElement('p', { key: 'desc' }, 'Registre chamadas médicas')
+                ]),
+                
+                React.createElement('a', {
+                    key: 'historico',
+                    href: '/accounts/historico/',
+                    style: {
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        padding: '30px',
+                        borderRadius: '10px',
+                        textDecoration: 'none',
+                        color: 'white',
+                        textAlign: 'center',
+                        transition: 'all 0.3s ease'
+                    }
+                }, [
+                    React.createElement('div', { 
+                        key: 'icon',
+                        style: { fontSize: '3em', marginBottom: '10px' }
+                    }, '📋'),
+                    React.createElement('h3', { key: 'title' }, 'Histórico'),
+                    React.createElement('p', { key: 'desc' }, 'Visualize histórico de chamadas')
+                ])
+            ])
+        ]);
+    }
+    
+    // Dados para o componente
+    var data = {
+        estatisticas: {
+            total_unidades: {{ estatisticas.total_unidades|default:0 }},
+            total_chamadas: {{ estatisticas.total_chamadas|default:0 }},
+            chamadas_hoje: {{ estatisticas.chamadas_hoje|default:0 }},
+            chamadas_mes: {{ estatisticas.chamadas_mes|default:0 }},
+            executantes: {{ estatisticas.executantes|default:0 }},
+            solicitantes: {{ estatisticas.solicitantes|default:0 }},
+            executante_solicitante: {{ estatisticas.executante_solicitante|default:0 }}
+        },
+        usuario: {
+            first_name: "{{ user.first_name|default:'Usuário' }}",
+            username: "{{ user.username }}"
+        }
+    };
+    
+    console.log('📊 Dados preparados:', data);
+    
+    try {
+        // Renderizar o componente
+        if (window.ReactDOM.createRoot) {
+            var root = window.ReactDOM.createRoot(container);
+            root.render(React.createElement(DashboardSimples, data));
+        } else {
+            window.ReactDOM.render(React.createElement(DashboardSimples, data), container);
+        }
+        console.log('🎉 Dashboard carregado com sucesso!');
+    } catch (e) {
+        console.error('❌ Erro na renderização:', e);
+        container.innerHTML = '<div style="text-align: center; padding: 50px; color: white;"><h2>⚠️ Erro no Dashboard</h2><p>Ocorreu um erro ao carregar o dashboard React.</p><p>Erro: ' + e.message + '</p></div>';
+    }
+});
+</script>
+{% endblock %}

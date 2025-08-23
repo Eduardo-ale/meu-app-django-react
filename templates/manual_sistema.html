@@ -1,0 +1,832 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="manual-container">
+    <!-- Breadcrumb Navegação -->
+    <div class="breadcrumb-container">
+        <nav aria-label="Navegação estrutural">
+            <ol class="breadcrumb-modern">
+                <li class="breadcrumb-item-modern">
+                    <a href="{% url 'home' %}" class="breadcrumb-link" title="Voltar ao Dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </li>
+                <li class="breadcrumb-item-modern">
+                    <a href="{% url 'configuracoes' %}" class="breadcrumb-link" title="Voltar às Configurações">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+                <li class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </li>
+                <li class="breadcrumb-item-modern">
+                    <span class="breadcrumb-current">
+                        <i class="fas fa-book-open"></i>
+                        <span>Manual do Sistema</span>
+                    </span>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Header da Página -->
+    <div class="manual-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="header-text">
+                <h1>Manual do Sistema</h1>
+                <p>Guia completo de uso do Sistema de Registro de Chamadas</p>
+            </div>
+        </div>
+        <div class="header-stats">
+            <div class="stat-item">
+                <div class="stat-number">v1.0.0</div>
+                <div class="stat-label">Versão</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ estatisticas.total_unidades }}</div>
+                <div class="stat-label">Unidades</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ estatisticas.total_chamadas }}</div>
+                <div class="stat-label">Chamadas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Índice de Navegação -->
+    <div class="manual-nav">
+        <h3><i class="fas fa-list"></i> Índice</h3>
+        <ul class="nav-list">
+            <li><a href="#introducao" class="nav-link"><i class="fas fa-info-circle"></i> Introdução</a></li>
+            <li><a href="#primeiros-passos" class="nav-link"><i class="fas fa-play-circle"></i> Primeiros Passos</a></li>
+            <li><a href="#unidades-saude" class="nav-link"><i class="fas fa-hospital"></i> Unidades de Saúde</a></li>
+            <li><a href="#registro-chamadas" class="nav-link"><i class="fas fa-phone"></i> Registro de Chamadas</a></li>
+            <li><a href="#lista-telefonica" class="nav-link"><i class="fas fa-address-book"></i> Lista Telefônica</a></li>
+            <li><a href="#historico" class="nav-link"><i class="fas fa-history"></i> Histórico</a></li>
+            <li><a href="#configuracoes" class="nav-link"><i class="fas fa-cog"></i> Configurações</a></li>
+            <li><a href="#exportacao" class="nav-link"><i class="fas fa-download"></i> Exportação de Dados</a></li>
+            <li><a href="#dicas" class="nav-link"><i class="fas fa-lightbulb"></i> Dicas e Truques</a></li>
+            <li><a href="#faq" class="nav-link"><i class="fas fa-question-circle"></i> FAQ</a></li>
+        </ul>
+    </div>
+
+    <!-- Conteúdo do Manual -->
+    <div class="manual-content">
+        
+        <!-- Introdução -->
+        <section id="introducao" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-info-circle"></i> Introdução</h2>
+            </div>
+            <div class="section-content">
+                <p>Bem-vindo ao <strong>Sistema de Registro de Chamadas</strong> da Central de Regulação - MS. Este sistema foi desenvolvido para facilitar o gerenciamento de unidades de saúde e o registro de chamadas médicas de emergência.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <h4>Gerenciamento de Unidades</h4>
+                        <p>Cadastre e gerencie todas as unidades de saúde do sistema</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-phone-volume"></i>
+                        </div>
+                        <h4>Registro de Chamadas</h4>
+                        <p>Registre chamadas de emergência de forma rápida e eficiente</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Relatórios e Estatísticas</h4>
+                        <p>Acompanhe estatísticas e gere relatórios detalhados</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Primeiros Passos -->
+        <section id="primeiros-passos" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-play-circle"></i> Primeiros Passos</h2>
+            </div>
+            <div class="section-content">
+                <div class="step-guide">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Acesso ao Sistema</h4>
+                            <p>Faça login com suas credenciais fornecidas pelo administrador do sistema.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Dashboard Principal</h4>
+                            <p>Familiarize-se com o dashboard que mostra estatísticas gerais e acesso rápido às funcionalidades.</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Configurar Perfil</h4>
+                            <p>Acesse as configurações para personalizar seu perfil e preferências.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Unidades de Saúde -->
+        <section id="unidades-saude" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-hospital"></i> Unidades de Saúde</h2>
+            </div>
+            <div class="section-content">
+                <p>O módulo de Unidades de Saúde permite cadastrar, editar e gerenciar todas as unidades do sistema.</p>
+                
+                <div class="subsection">
+                    <h3><i class="fas fa-plus-circle"></i> Cadastrar Nova Unidade</h3>
+                    <ol class="instruction-list">
+                        <li>Acesse o menu "Unidades de Saúde"</li>
+                        <li>Clique em "Nova Unidade"</li>
+                        <li>Preencha os campos obrigatórios:
+                            <ul>
+                                <li>Nome da unidade</li>
+                                <li>Telefone</li>
+                                <li>Tipo (Executante, Solicitante ou Ambos)</li>
+                                <li>CNES (opcional - pode ser consultado automaticamente)</li>
+                            </ul>
+                        </li>
+                        <li>Clique em "Salvar"</li>
+                    </ol>
+                </div>
+
+                <div class="subsection">
+                    <h3><i class="fas fa-edit"></i> Editar Unidade</h3>
+                    <p>Para editar uma unidade existente, clique no botão "Editar" na listagem de unidades e modifique os campos necessários.</p>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="tip-content">
+                        <strong>Dica:</strong> Use a consulta automática de CNES para preencher automaticamente informações da unidade.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registro de Chamadas -->
+        <section id="registro-chamadas" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-phone"></i> Registro de Chamadas</h2>
+            </div>
+            <div class="section-content">
+                <p>O registro de chamadas é o coração do sistema, permitindo documentar todas as solicitações de atendimento médico.</p>
+                
+                <div class="subsection">
+                    <h3><i class="fas fa-phone-plus"></i> Registrar Nova Chamada</h3>
+                    <ol class="instruction-list">
+                        <li>Acesse "Registro de Chamadas"</li>
+                        <li>Preencha os dados do solicitante:
+                            <ul>
+                                <li>Nome do contato</li>
+                                <li>Telefone</li>
+                                <li>Unidade solicitante</li>
+                            </ul>
+                        </li>
+                        <li>Informe os dados do paciente:
+                            <ul>
+                                <li>Nome completo</li>
+                                <li>Idade</li>
+                                <li>Sexo</li>
+                            </ul>
+                        </li>
+                        <li>Descreva a situação médica</li>
+                        <li>Selecione a unidade executante</li>
+                        <li>Defina o tipo de chamada (Normal ou Emergência)</li>
+                        <li>Clique em "Registrar Chamada"</li>
+                    </ol>
+                </div>
+
+                <div class="alert-box warning">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="alert-content">
+                        <strong>Importante:</strong> Chamadas de emergência têm prioridade e devem ser registradas imediatamente.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista Telefônica -->
+        <section id="lista-telefonica" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-address-book"></i> Lista Telefônica</h2>
+            </div>
+            <div class="section-content">
+                <p>A lista telefônica oferece acesso rápido aos contatos de todas as unidades de saúde cadastradas.</p>
+                
+                <div class="subsection">
+                    <h3><i class="fas fa-search"></i> Buscar Contatos</h3>
+                    <ul class="instruction-list">
+                        <li>Use a barra de busca para encontrar unidades por nome, telefone ou responsável</li>
+                        <li>Filtre por tipo de unidade (Executante, Solicitante, Ambos)</li>
+                        <li>Filtre por município</li>
+                        <li>Alterne entre visualização em grid ou lista</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3><i class="fas fa-star"></i> Favoritos</h3>
+                    <p>Marque unidades como favoritas clicando na estrela para acesso rápido posterior.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Histórico -->
+        <section id="historico" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-history"></i> Histórico</h2>
+            </div>
+            <div class="section-content">
+                <p>O histórico permite visualizar e gerenciar todas as chamadas registradas no sistema.</p>
+                
+                <div class="subsection">
+                    <h3><i class="fas fa-filter"></i> Filtros Disponíveis</h3>
+                    <ul class="instruction-list">
+                        <li>Por período (data inicial e final)</li>
+                        <li>Por unidade solicitante</li>
+                        <li>Por unidade executante</li>
+                        <li>Por tipo de chamada</li>
+                        <li>Por status</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configurações -->
+        <section id="configuracoes" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-cog"></i> Configurações</h2>
+            </div>
+            <div class="section-content">
+                <p>Personalize o sistema de acordo com suas necessidades.</p>
+                
+                <div class="subsection">
+                    <h3><i class="fas fa-user-cog"></i> Configurações de Perfil</h3>
+                    <ul class="instruction-list">
+                        <li>Altere seus dados pessoais</li>
+                        <li>Atualize sua foto de perfil</li>
+                        <li>Modifique sua senha</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3><i class="fas fa-users-cog"></i> Gerenciamento de Usuários (Administradores)</h3>
+                    <ul class="instruction-list">
+                        <li>Criar novos usuários</li>
+                        <li>Editar permissões</li>
+                        <li>Desativar usuários</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exportação -->
+        <section id="exportacao" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-download"></i> Exportação de Dados</h2>
+            </div>
+            <div class="section-content">
+                <p>Exporte dados do sistema em diferentes formatos para análise externa.</p>
+                
+                <div class="format-grid">
+                    <div class="format-card">
+                        <div class="format-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h4>PDF</h4>
+                        <p>Relatórios formatados para impressão</p>
+                    </div>
+                    <div class="format-card">
+                        <div class="format-icon">
+                            <i class="fas fa-file-excel"></i>
+                        </div>
+                        <h4>Excel</h4>
+                        <p>Planilhas para análise de dados</p>
+                    </div>
+                    <div class="format-card">
+                        <div class="format-icon">
+                            <i class="fas fa-file-csv"></i>
+                        </div>
+                        <h4>CSV</h4>
+                        <p>Dados tabulares para importação</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dicas e Truques -->
+        <section id="dicas" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-lightbulb"></i> Dicas e Truques</h2>
+            </div>
+            <div class="section-content">
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <h4>Atalhos de Teclado</h4>
+                        <ul>
+                            <li><kbd>Ctrl</kbd> + <kbd>N</kbd> - Nova chamada</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>F</kbd> - Buscar</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>S</kbd> - Salvar</li>
+                        </ul>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Acesso Mobile</h4>
+                        <p>O sistema é responsivo e pode ser acessado em dispositivos móveis para consultas rápidas.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">
+                            <i class="fas fa-backup"></i>
+                        </div>
+                        <h4>Backup Regular</h4>
+                        <p>Faça backups regulares dos dados através do menu de configurações.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="manual-section">
+            <div class="section-header">
+                <h2><i class="fas fa-question-circle"></i> Perguntas Frequentes</h2>
+            </div>
+            <div class="section-content">
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-question"></i>
+                            <span>Como recuperar minha senha?</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Entre em contato com o administrador do sistema para redefinir sua senha.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-question"></i>
+                            <span>Posso editar uma chamada já registrada?</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Sim, chamadas podem ser editadas através do histórico, desde que você tenha as permissões necessárias.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fas fa-question"></i>
+                            <span>Como adicionar uma nova unidade de saúde?</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Acesse "Unidades de Saúde" e clique em "Nova Unidade". Preencha os campos obrigatórios e salve.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Botão Voltar -->
+    <div class="manual-footer">
+        <a href="{% url 'configuracoes' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i>
+            Voltar às Configurações
+        </a>
+    </div>
+
+</div>
+
+<style>
+.manual-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.manual-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(59,130,246,0.3);
+}
+
+.manual-header .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.manual-header .header-icon {
+    font-size: 3rem;
+    opacity: 0.9;
+}
+
+.manual-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.manual-header p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+}
+
+.header-stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.manual-nav {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.manual-nav h3 {
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.8rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #2563eb;
+    transform: translateX(4px);
+}
+
+.manual-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.manual-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.section-header {
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    color: #1e293b;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-content {
+    color: #374151;
+    line-height: 1.6;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+}
+
+.feature-card h4 {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.step-guide {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.step-number {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.step-content h4 {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.subsection {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.subsection h3 {
+    color: #1e293b;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.instruction-list {
+    padding-left: 1.5rem;
+}
+
+.instruction-list li {
+    margin-bottom: 0.8rem;
+    color: #374151;
+}
+
+.tip-box {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tip-icon {
+    font-size: 1.5rem;
+    color: #d97706;
+}
+
+.alert-box {
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alert-box.warning {
+    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+    border: 1px solid #ef4444;
+}
+
+.alert-icon {
+    font-size: 1.5rem;
+    color: #dc2626;
+}
+
+.format-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.format-card {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #0ea5e9;
+}
+
+.format-icon {
+    font-size: 2.5rem;
+    color: #0ea5e9;
+    margin-bottom: 1rem;
+}
+
+.format-card h4 {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.tip-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #22c55e;
+}
+
+.tip-card .tip-icon {
+    font-size: 2rem;
+    color: #16a34a;
+    margin-bottom: 1rem;
+}
+
+.tip-card h4 {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.tip-card kbd {
+    background: #374151;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.faq-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.faq-question {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.faq-answer {
+    padding: 1.5rem;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+}
+
+.manual-footer {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(107,114,128,0.3);
+}
+
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107,114,128,0.4);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .manual-header {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .header-stats {
+        justify-content: center;
+    }
+    
+    .nav-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-grid,
+    .format-grid,
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+{% endblock %} 

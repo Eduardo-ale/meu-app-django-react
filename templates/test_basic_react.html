@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Básico React</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #react-root {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .loading {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste Básico React</h1>
+        
+        <div id="react-root">
+            <div class="loading">⏳</div>
+            <h2>Carregando componente React...</h2>
+            <p>Se você ver esta mensagem, o React não carregou corretamente.</p>
+        </div>
+        
+        <div id="debug-info">
+            <h3>Informações de Debug:</h3>
+            <ul id="debug-list"></ul>
+        </div>
+    </div>
+
+    <!-- React CDN -->
+    <!-- Scripts removidos do CDN, agora React é carregado via arquivos locais -->
+
+    <script>
+        // Função para adicionar informações de debug
+        function addDebugInfo(message) {
+            const debugList = document.getElementById('debug-list');
+            const li = document.createElement('li');
+            li.textContent = message;
+            debugList.appendChild(li);
+            console.log(message);
+        }
+
+        // Verificar se React está disponível
+        document.addEventListener('DOMContentLoaded', function() {
+            addDebugInfo('DOM carregado');
+            
+            if (typeof React !== 'undefined') {
+                addDebugInfo('✅ React está disponível - versão: ' + React.version);
+            } else {
+                addDebugInfo('❌ React não está disponível');
+                return;
+            }
+            
+            if (typeof ReactDOM !== 'undefined') {
+                addDebugInfo('✅ ReactDOM está disponível');
+            } else {
+                addDebugInfo('❌ ReactDOM não está disponível');
+                return;
+            }
+            
+            // Criar um componente React super simples
+            function SimpleComponent() {
+                return React.createElement('div', null, [
+                    React.createElement('h2', { key: 'title' }, '🎉 React Funcionando!'),
+                    React.createElement('p', { key: 'message' }, 'Este é um componente React básico funcionando corretamente.'),
+                    React.createElement('p', { key: 'time' }, 'Carregado em: ' + new Date().toLocaleString())
+                ]);
+            }
+            
+            // Renderizar o componente
+            const container = document.getElementById('react-root');
+            if (container) {
+                addDebugInfo('✅ Container encontrado');
+                
+                try {
+                    if (ReactDOM.createRoot) {
+                        const root = ReactDOM.createRoot(container);
+                        root.render(React.createElement(SimpleComponent));
+                        addDebugInfo('✅ Componente renderizado com createRoot');
+                    } else {
+                        ReactDOM.render(React.createElement(SimpleComponent), container);
+                        addDebugInfo('✅ Componente renderizado com render');
+                    }
+                } catch (error) {
+                    addDebugInfo('❌ Erro ao renderizar: ' + error.message);
+                    console.error('Erro completo:', error);
+                }
+            } else {
+                addDebugInfo('❌ Container não encontrado');
+            }
+        });
+    </script>
+</body>
+</html>

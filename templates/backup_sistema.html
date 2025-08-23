@@ -1,0 +1,928 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Background Premium -->
+<div class="backup-background">
+    <div class="gradient-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="mesh-gradient"></div>
+</div>
+
+<div class="backup-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-premium">
+        <a href="{% url 'home' %}" class="breadcrumb-link">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <div class="breadcrumb-separator">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        <a href="{% url 'configuracoes' %}" class="breadcrumb-link">
+            <i class="fas fa-cog"></i>
+            <span>Configurações</span>
+        </a>
+        <div class="breadcrumb-separator">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        <span class="breadcrumb-current">
+            <i class="fas fa-database"></i>
+            <span>Backup do Sistema</span>
+        </span>
+    </nav>
+
+    <!-- Header -->
+    <div class="backup-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <i class="fas fa-database"></i>
+                <div class="pulse-ring"></div>
+            </div>
+            <div class="header-text">
+                <h1>Sistema de Backup</h1>
+                <p>Faça backup seguro dos dados do sistema</p>
+            </div>
+        </div>
+        <div class="security-badge">
+            <i class="fas fa-shield-alt"></i>
+            <span>Área Restrita</span>
+        </div>
+    </div>
+
+    <!-- Mensagens -->
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="message message-{{ message.tags|default:'info' }}">
+                    <div class="message-icon">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+                    </div>
+                    <div class="message-content">{{ message }}</div>
+                    <button class="message-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Estatísticas do Sistema -->
+    <div class="system-stats">
+        <div class="stats-header">
+            <h2>Dados Disponíveis para Backup</h2>
+            <div class="refresh-indicator">
+                <div class="refresh-dot"></div>
+                <span>Atualizado agora</span>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card users">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ stats.total_usuarios }}</div>
+                    <div class="stat-label">Usuários</div>
+                    <div class="stat-detail">{{ stats.usuarios_ativos }} ativos • {{ stats.usuarios_admins }} admins</div>
+                </div>
+                <div class="stat-size">{{ stats.tamanho_estimado.usuarios|floatformat:1 }} KB</div>
+            </div>
+            
+            <div class="stat-card units">
+                <div class="stat-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ stats.total_unidades }}</div>
+                    <div class="stat-label">Unidades de Saúde</div>
+                    <div class="stat-detail">{{ stats.unidades_tipos.executantes }} executantes • {{ stats.unidades_tipos.solicitantes }} solicitantes</div>
+                </div>
+                <div class="stat-size">{{ stats.tamanho_estimado.unidades|floatformat:1 }} KB</div>
+            </div>
+            
+            <div class="stat-card calls">
+                <div class="stat-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ stats.total_chamadas }}</div>
+                    <div class="stat-label">Registros de Chamadas</div>
+                    <div class="stat-detail">Todos os tipos de atendimento</div>
+                </div>
+                <div class="stat-size">{{ stats.tamanho_estimado.chamadas|floatformat:1 }} KB</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulário de Backup -->
+    <div class="backup-form-container">
+        <form method="post" class="backup-form">
+            {% csrf_token %}
+            
+            <div class="form-section">
+                <div class="section-header">
+                    <h3>Configurações do Backup</h3>
+                    <p>Selecione os dados que deseja incluir no backup</p>
+                </div>
+                
+                <div class="options-grid">
+                    <div class="option-card">
+                        <label class="option-label">
+                            <input type="checkbox" name="include_users" checked>
+                            <div class="option-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-icon users">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="option-text">
+                                    <h4>Usuários</h4>
+                                    <p>Dados de todos os usuários do sistema</p>
+                                    <div class="option-stats">
+                                        <span>{{ stats.total_usuarios }} registros</span>
+                                        <span>{{ stats.tamanho_estimado.usuarios|floatformat:1 }} KB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="option-card">
+                        <label class="option-label">
+                            <input type="checkbox" name="include_unidades" checked>
+                            <div class="option-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-icon units">
+                                    <i class="fas fa-hospital"></i>
+                                </div>
+                                <div class="option-text">
+                                    <h4>Unidades de Saúde</h4>
+                                    <p>Dados de todas as unidades cadastradas</p>
+                                    <div class="option-stats">
+                                        <span>{{ stats.total_unidades }} registros</span>
+                                        <span>{{ stats.tamanho_estimado.unidades|floatformat:1 }} KB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="option-card">
+                        <label class="option-label">
+                            <input type="checkbox" name="include_chamadas" checked>
+                            <div class="option-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="option-content">
+                                <div class="option-icon calls">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="option-text">
+                                    <h4>Chamadas</h4>
+                                    <p>Histórico completo de atendimentos</p>
+                                    <div class="option-stats">
+                                        <span>{{ stats.total_chamadas }} registros</span>
+                                        <span>{{ stats.tamanho_estimado.chamadas|floatformat:1 }} KB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="section-header">
+                    <h3>Formato do Arquivo</h3>
+                    <p>Escolha o formato de exportação dos dados</p>
+                </div>
+                
+                <div class="format-options">
+                    <label class="format-label">
+                        <input type="radio" name="format_type" value="json" checked>
+                        <div class="format-card">
+                            <div class="format-icon json">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="format-text">
+                                <h4>JSON</h4>
+                                <p>Estruturado e legível</p>
+                                <div class="format-features">
+                                    <span class="feature">Preserva hierarquia</span>
+                                    <span class="feature">Fácil de importar</span>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="format-label">
+                        <input type="radio" name="format_type" value="csv">
+                        <div class="format-card">
+                            <div class="format-icon csv">
+                                <i class="fas fa-table"></i>
+                            </div>
+                            <div class="format-text">
+                                <h4>CSV</h4>
+                                <p>Compatível com Excel</p>
+                                <div class="format-features">
+                                    <span class="feature">Fácil visualização</span>
+                                    <span class="feature">Menor tamanho</span>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="backup-summary">
+                <div class="summary-info">
+                    <div class="summary-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="summary-text">
+                        <strong>Tamanho estimado:</strong> <span id="estimatedSize">{{ estimated_backup_size|floatformat:1 }} KB</span><br>
+                        <strong>Espaço disponível:</strong> {{ disk_space_free }} GB
+                    </div>
+                </div>
+                <button type="submit" class="backup-button">
+                    <div class="button-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <span class="button-text">Gerar Backup</span>
+                    <div class="button-glow"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Variáveis CSS */
+:root {
+    --primary: #3b82f6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-900: #111827;
+}
+
+/* Background */
+.backup-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+.gradient-orbs .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+    animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+    top: 10%;
+    left: 10%;
+}
+
+.orb-2 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(45deg, #10b981, #059669);
+    bottom: 20%;
+    right: 10%;
+    animation-delay: 10s;
+}
+
+.orb-3 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+    top: 50%;
+    right: 30%;
+    animation-delay: 5s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.mesh-gradient {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+}
+
+/* Container */
+.backup-container {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Breadcrumb */
+.breadcrumb-premium {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.breadcrumb-separator {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem;
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 8px;
+}
+
+/* Header */
+.backup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.header-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    position: relative;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+
+.header-text h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+}
+
+.header-text p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+}
+
+.security-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border-radius: 12px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    font-weight: 600;
+}
+
+/* Mensagens */
+.messages-container {
+    margin-bottom: 2rem;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.message-success {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+}
+
+.message-error {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+.message-close {
+    background: none;
+    border: none;
+    color: currentColor;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.message-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Estatísticas */
+.system-stats {
+    margin-bottom: 3rem;
+}
+
+.stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.stats-header h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.refresh-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.refresh-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-card .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.stat-card.users .stat-icon {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+}
+
+.stat-card.units .stat-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.stat-card.calls .stat-icon {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.stat-detail {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.stat-size {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+/* Formulário */
+.backup-form-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+}
+
+.form-section {
+    margin-bottom: 3rem;
+}
+
+.section-header {
+    margin-bottom: 1.5rem;
+}
+
+.section-header h3 {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+}
+
+.section-header p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.option-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.option-label {
+    display: block;
+    cursor: pointer;
+}
+
+.option-label input[type="checkbox"] {
+    display: none;
+}
+
+.option-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.option-label input:checked + .option-check + .option-content {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+.option-check {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.option-label input:checked + .option-check {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+.option-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.option-icon.users { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.option-icon.units { background: linear-gradient(135deg, #10b981, #059669); }
+.option-icon.calls { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+.option-text h4 {
+    color: white;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+}
+
+.option-text p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+}
+
+.option-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Formatos */
+.format-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.format-label {
+    display: block;
+    cursor: pointer;
+}
+
+.format-label input[type="radio"] {
+    display: none;
+}
+
+.format-card {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.format-label input:checked + .format-card {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+.format-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.format-icon.json { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.format-icon.csv { background: linear-gradient(135deg, #10b981, #059669); }
+
+.format-text h4 {
+    color: white;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+}
+
+.format-text p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+}
+
+.format-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.feature {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Resumo do Backup */
+.backup-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.summary-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(59, 130, 246, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #60a5fa;
+}
+
+/* Botão de Backup */
+.backup-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.backup-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.button-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.backup-button:hover .button-glow {
+    left: 100%;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .backup-container {
+        padding: 1rem;
+    }
+    
+    .backup-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .format-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .backup-summary {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+// Atualizar tamanho estimado
+function updateEstimatedSize() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const sizes = {
+        'include_users': {{ stats.tamanho_estimado.usuarios }},
+        'include_unidades': {{ stats.tamanho_estimado.unidades }},
+        'include_chamadas': {{ stats.tamanho_estimado.chamadas }}
+    };
+    
+    let totalSize = 0;
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked && sizes[checkbox.name]) {
+            totalSize += sizes[checkbox.name];
+        }
+    });
+    
+    document.getElementById('estimatedSize').textContent = totalSize.toFixed(1) + ' KB';
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateEstimatedSize);
+    });
+    
+    // Animação de entrada
+    const cards = document.querySelectorAll('.stat-card, .option-card, .format-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,1253 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Background Premium -->
+<div class="user-details-background">
+    <div class="gradient-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="mesh-gradient"></div>
+    <div class="dark-overlay"></div>
+</div>
+
+<!-- Container Principal -->
+<div class="user-details-container">
+    <!-- Header -->
+    <header class="details-header-premium">
+        <div class="header-glass">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb-premium">
+                <a href="{% url 'home' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <div class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <a href="{% url 'gerenciar_usuarios' %}" class="breadcrumb-link">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Gerenciar Usuários</span>
+                </a>
+                <div class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <span class="breadcrumb-current">
+                    <i class="fas fa-user"></i>
+                    <span>Detalhes do Usuário</span>
+                </span>
+            </nav>
+
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="user-hero-card">
+                    <div class="user-avatar-large">
+                        {% if usuario_detalhes.get_full_name %}
+                            <span class="avatar-text-large">
+                                {{ usuario_detalhes.get_full_name|slice:":2"|upper }}
+                            </span>
+                        {% else %}
+                            <span class="avatar-text-large">
+                                {{ usuario_detalhes.username|slice:":2"|upper }}
+                            </span>
+                        {% endif %}
+                        {% if usuario_detalhes.is_active %}
+                            <div class="status-indicator-large online"></div>
+                        {% else %}
+                            <div class="status-indicator-large offline"></div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="user-hero-info">
+                        <h1 class="user-hero-name">
+                            {{ usuario_detalhes.get_full_name|default:usuario_detalhes.username }}
+                        </h1>
+                        <p class="user-hero-username">@{{ usuario_detalhes.username }}</p>
+                        <div class="user-hero-badges">
+                            {% if usuario_detalhes.is_staff %}
+                                <span class="badge-hero admin">
+                                    <i class="fas fa-crown"></i>
+                                    Administrador
+                                </span>
+                            {% else %}
+                                <span class="badge-hero user">
+                                    <i class="fas fa-user"></i>
+                                    Usuário
+                                </span>
+                            {% endif %}
+                            
+                            {% if usuario_detalhes.is_active %}
+                                <span class="badge-hero active">
+                                    <i class="fas fa-check-circle"></i>
+                                    Ativo
+                                </span>
+                            {% else %}
+                                <span class="badge-hero inactive">
+                                    <i class="fas fa-times-circle"></i>
+                                    Inativo
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="user-hero-actions">
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'editar_usuario' usuario_detalhes.id %}" class="action-btn-hero primary">
+                                <i class="fas fa-edit"></i>
+                                <span>Editar</span>
+                            </a>
+                            
+                            {% if usuario_detalhes != request.user %}
+                                <a href="{% url 'desativar_usuario' usuario_detalhes.id %}" 
+                                   class="action-btn-hero {% if usuario_detalhes.is_active %}danger{% else %}success{% endif %}"
+                                   onclick="return confirm('Tem certeza que deseja {% if usuario_detalhes.is_active %}desativar{% else %}ativar{% endif %} este usuário?')">
+                                    <i class="fas {% if usuario_detalhes.is_active %}fa-user-slash{% else %}fa-user-check{% endif %}"></i>
+                                    <span>{% if usuario_detalhes.is_active %}Desativar{% else %}Ativar{% endif %}</span>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <button onclick="window.history.back()" class="action-btn-hero ghost">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Voltar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content-details">
+        <div class="content-wrapper">
+            <!-- Toast Notifications -->
+            {% if messages %}
+                <div class="notifications-premium">
+                    {% for message in messages %}
+                        <div class="notification-toast {{ message.tags|default:'info' }}" role="alert">
+                            <div class="toast-icon">
+                                {% if message.tags == 'success' %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% elif message.tags == 'error' %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                {% elif message.tags == 'warning' %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                {% else %}
+                                    <i class="fas fa-info-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="toast-content">{{ message }}</div>
+                            <button type="button" class="toast-close" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Grid de Informações -->
+            <div class="details-grid">
+                <!-- Informações Pessoais -->
+                <div class="info-card-premium">
+                    <div class="card-header-info">
+                        <div class="card-title">
+                            <i class="fas fa-id-card"></i>
+                            <span>Informações Pessoais</span>
+                        </div>
+                    </div>
+                    <div class="card-body-info">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Nome Completo</span>
+                                    <span class="info-value">
+                                        {{ usuario_detalhes.get_full_name|default:"Não informado" }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-at"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Nome de Usuário</span>
+                                    <span class="info-value">{{ usuario_detalhes.username }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Email</span>
+                                    <span class="info-value">
+                                        {{ usuario_detalhes.email|default:"Não informado" }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Data de Cadastro</span>
+                                    <span class="info-value">
+                                        {{ usuario_detalhes.date_joined|date:"d/m/Y H:i" }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Último Acesso</span>
+                                    <span class="info-value">
+                                        {% if usuario_detalhes.last_login %}
+                                            {{ usuario_detalhes.last_login|date:"d/m/Y H:i" }}
+                                        {% else %}
+                                            Nunca fez login
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-history"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Última Atividade</span>
+                                    <span class="info-value">
+                                        {% if ultima_atividade %}
+                                            {{ ultima_atividade|timesince }} atrás
+                                        {% else %}
+                                            Nenhuma atividade registrada
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="stats-card-premium">
+                    <div class="card-header-info">
+                        <div class="card-title">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Estatísticas de Atividade</span>
+                        </div>
+                    </div>
+                    <div class="card-body-info">
+                        <div class="stats-grid-details">
+                            <div class="stat-item-details">
+                                <div class="stat-icon-details primary">
+                                    <i class="fas fa-hospital"></i>
+                                </div>
+                                <div class="stat-content-details">
+                                    <div class="stat-number-details">{{ estatisticas.total_unidades }}</div>
+                                    <div class="stat-label-details">Unidades Cadastradas</div>
+                                    <div class="stat-subtitle">{{ estatisticas.unidades_mes }} este mês</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item-details">
+                                <div class="stat-icon-details success">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="stat-content-details">
+                                    <div class="stat-number-details">{{ estatisticas.total_chamadas }}</div>
+                                    <div class="stat-label-details">Chamadas Registradas</div>
+                                    <div class="stat-subtitle">{{ estatisticas.chamadas_mes }} este mês</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item-details">
+                                <div class="stat-icon-details warning">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                                <div class="stat-content-details">
+                                    <div class="stat-number-details">{{ estatisticas.chamadas_hoje }}</div>
+                                    <div class="stat-label-details">Chamadas Hoje</div>
+                                    <div class="stat-subtitle">Atividade diária</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-item-details">
+                                <div class="stat-icon-details info">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="stat-content-details">
+                                    <div class="stat-number-details">{{ estatisticas.chamadas_ano }}</div>
+                                    <div class="stat-label-details">Chamadas Este Ano</div>
+                                    <div class="stat-subtitle">Performance anual</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atividades Recentes -->
+                <div class="activity-card-premium">
+                    <div class="card-header-info">
+                        <div class="card-title">
+                            <i class="fas fa-history"></i>
+                            <span>Atividades Recentes</span>
+                        </div>
+                    </div>
+                    <div class="card-body-info">
+                        {% if atividades_recentes %}
+                            <div class="activity-timeline">
+                                {% for atividade in atividades_recentes %}
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon {{ atividade.cor }}">
+                                            <i class="{{ atividade.icone }}"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-header">
+                                                <span class="timeline-action">{{ atividade.acao }}</span>
+                                                <span class="timeline-date">{{ atividade.data|timesince }} atrás</span>
+                                            </div>
+                                            <div class="timeline-description">
+                                                {{ atividade.descricao }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-activity">
+                                <i class="fas fa-clock"></i>
+                                <p>Nenhuma atividade registrada ainda.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Unidades Cadastradas -->
+                {% if unidades_cadastradas %}
+                    <div class="units-card-premium">
+                        <div class="card-header-info">
+                            <div class="card-title">
+                                <i class="fas fa-hospital-alt"></i>
+                                <span>Últimas Unidades Cadastradas</span>
+                            </div>
+                        </div>
+                        <div class="card-body-info">
+                            <div class="units-list">
+                                {% for unidade in unidades_cadastradas %}
+                                    <div class="unit-item">
+                                        <div class="unit-icon">
+                                            <i class="fas fa-hospital"></i>
+                                        </div>
+                                        <div class="unit-info">
+                                            <div class="unit-name">{{ unidade.nome }}</div>
+                                            <div class="unit-meta">
+                                                <span class="unit-type">{{ unidade.get_tipo_display }}</span>
+                                                <span class="unit-date">{{ unidade.created_at|date:"d/m/Y" }}</span>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'visualizar_unidade' unidade.id %}" class="unit-action">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Chamadas Registradas -->
+                {% if chamadas_registradas %}
+                    <div class="calls-card-premium">
+                        <div class="card-header-info">
+                            <div class="card-title">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>Últimas Chamadas Registradas</span>
+                            </div>
+                        </div>
+                        <div class="card-body-info">
+                            <div class="calls-list">
+                                {% for chamada in chamadas_registradas %}
+                                    <div class="call-item">
+                                        <div class="call-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="call-info">
+                                            <div class="call-route">
+                                                {{ chamada.unidade_solicitante.nome }} → {{ chamada.unidade_executante.nome }}
+                                            </div>
+                                            <div class="call-meta">
+                                                <span class="call-date">{{ chamada.data_criacao|date:"d/m/Y H:i" }}</span>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'visualizar_detalhes_chamada' chamada.id %}" class="call-action">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- CSS Premium -->
+<style>
+/* ===== VARIÁVEIS CSS ===== */
+:root {
+    --primary: #4f46e5;
+    --secondary: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --info: #3b82f6;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.7);
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ===== BACKGROUND ===== */
+.user-details-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 70%, #475569 100%);
+    overflow: hidden;
+}
+
+.gradient-orbs {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    animation: float 20s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+    top: 10%;
+    left: 10%;
+}
+
+.orb-2 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(45deg, #06b6d4, #0891b2);
+    top: 60%;
+    right: 20%;
+    animation-delay: 5s;
+}
+
+.orb-3 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+    bottom: 20%;
+    left: 30%;
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-20px) translateX(10px); }
+    50% { transform: translateY(0px) translateX(20px); }
+    75% { transform: translateY(10px) translateX(-10px); }
+}
+
+.mesh-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+}
+
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.user-details-container {
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== HEADER ===== */
+.details-header-premium {
+    margin-bottom: 2rem;
+}
+
+.header-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    margin: 2rem;
+    box-shadow: var(--shadow-large);
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-premium {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.breadcrumb-link:hover {
+    background: rgba(255, 255, 255, 0.45);
+    transform: translateY(-1px);
+    color: white;
+}
+
+.breadcrumb-separator {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    padding: 2rem 0;
+}
+
+.user-hero-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.user-avatar-large {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+}
+
+.avatar-text-large {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.status-indicator-large {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.9);
+}
+
+.status-indicator-large.online {
+    background: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+.status-indicator-large.offline {
+    background: #ef4444;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.user-hero-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-hero-name {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.user-hero-username {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.25rem;
+    margin: 0 0 1rem 0;
+}
+
+.user-hero-badges {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.badge-hero {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.badge-hero.admin {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
+
+.badge-hero.user {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+.badge-hero.active {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+}
+
+.badge-hero.inactive {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.user-hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.action-btn-hero {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn-hero.primary {
+    background: rgba(79, 70, 229, 0.3);
+    color: white;
+}
+
+.action-btn-hero.danger {
+    background: rgba(239, 68, 68, 0.3);
+    color: white;
+}
+
+.action-btn-hero.success {
+    background: rgba(16, 185, 129, 0.3);
+    color: white;
+}
+
+.action-btn-hero.ghost {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.action-btn-hero:hover {
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content-details {
+    padding: 0 2rem;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ===== NOTIFICATIONS ===== */
+.notifications-premium {
+    margin-bottom: 2rem;
+}
+
+.notification-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-medium);
+    animation: slideInDown 0.3s ease-out;
+}
+
+.notification-toast.success {
+    border-left: 4px solid var(--success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.notification-toast.error {
+    border-left: 4px solid var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.toast-content {
+    flex: 1;
+    color: white;
+    font-weight: 500;
+}
+
+.toast-close {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== GRID DE DETALHES ===== */
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* ===== CARDS PREMIUM ===== */
+.info-card-premium,
+.stats-card-premium,
+.activity-card-premium,
+.units-card-premium,
+.calls-card-premium {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-large);
+    transition: all 0.3s ease;
+}
+
+.info-card-premium:hover,
+.stats-card-premium:hover,
+.activity-card-premium:hover,
+.units-card-premium:hover,
+.calls-card-premium:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.card-header-info {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(248, 250, 252, 0.8);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.card-body-info {
+    padding: 1.5rem;
+}
+
+/* ===== INFO GRID ===== */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem;
+    background: rgba(248, 250, 252, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.info-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.info-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    display: block;
+    color: #1f2937;
+    font-size: 0.875rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ===== STATS GRID ===== */
+.stats-grid-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-item-details {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(248, 250, 252, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(226, 232, 240, 0.3);
+    transition: all 0.3s ease;
+}
+
+.stat-item-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon-details {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.stat-icon-details.primary {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+}
+
+.stat-icon-details.success {
+    background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.stat-icon-details.warning {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.stat-icon-details.info {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+}
+
+.stat-number-details {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1f2937;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label-details {
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.stat-subtitle {
+    color: #6b7280;
+    font-size: 0.75rem;
+}
+
+/* ===== TIMELINE ===== */
+.activity-timeline {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.timeline-item:last-child {
+    border-bottom: none;
+}
+
+.timeline-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.timeline-icon.primary {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+}
+
+.timeline-icon.success {
+    background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.timeline-content {
+    flex: 1;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-action {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.timeline-date {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.timeline-description {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.empty-activity {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+}
+
+.empty-activity i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* ===== LISTS ===== */
+.units-list,
+.calls-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.unit-item,
+.call-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+    transition: all 0.2s ease;
+}
+
+.unit-item:hover,
+.call-item:hover {
+    background: rgba(248, 250, 252, 0.8);
+}
+
+.unit-item:last-child,
+.call-item:last-child {
+    border-bottom: none;
+}
+
+.unit-icon,
+.call-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.unit-info,
+.call-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.unit-name,
+.call-route {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.unit-meta,
+.call-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.unit-action,
+.call-action {
+    width: 36px;
+    height: 36px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.unit-action:hover,
+.call-action:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1200px) {
+    .details-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .header-glass {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .user-hero-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .user-hero-name {
+        font-size: 2rem;
+    }
+    
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .user-hero-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-avatar-large {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+    
+    .user-hero-name {
+        font-size: 1.5rem;
+    }
+    
+    .stats-grid-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-body-info {
+        padding: 1rem;
+    }
+}
+</style>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Página de detalhes do usuário carregada!');
+    
+    // Animação de entrada para os cards
+    const cards = document.querySelectorAll('.info-card-premium, .stats-card-premium, .activity-card-premium, .units-card-premium, .calls-card-premium');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+    
+    // Animação para números das estatísticas
+    const statNumbers = document.querySelectorAll('.stat-number-details');
+    statNumbers.forEach(number => {
+        const finalValue = parseInt(number.textContent);
+        let currentValue = 0;
+        const increment = finalValue / 30;
+        
+        const counter = setInterval(() => {
+            currentValue += increment;
+            if (currentValue >= finalValue) {
+                number.textContent = finalValue;
+                clearInterval(counter);
+            } else {
+                number.textContent = Math.floor(currentValue);
+            }
+        }, 50);
+    });
+    
+    // Auto-dismiss para toasts
+    setTimeout(() => {
+        const toasts = document.querySelectorAll('.notification-toast');
+        toasts.forEach(toast => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        });
+    }, 5000);
+});
+</script>
+{% endblock %}
+

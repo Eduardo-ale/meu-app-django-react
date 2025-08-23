@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Carregamento React</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+
+        .success {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .error {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #ef6c00;
+        }
+
+        .info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #1976d2;
+        }
+
+        #test-results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Carregamento React</h1>
+
+        <div class="info status">
+            <strong>📋 Instruções:</strong><br>
+            1. Certifique-se de que o ambiente virtual está ativo<br>
+            2. Execute: <code>python manage.py collectstatic --noinput</code><br>
+            3. Inicie o servidor: <code>python manage.py runserver</code><br>
+            4. Clique nos botões abaixo para testar
+        </div>
+
+        <div>
+            <button onclick="testStaticFiles()">🔍 Testar Arquivos Estáticos</button>
+            <button onclick="testReactComponents()">⚛️ Testar Componentes React</button>
+            <button onclick="testBundleLoading()">📦 Testar Bundles</button>
+            <button onclick="clearResults()">🗑️ Limpar Resultados</button>
+        </div>
+
+        <div id="test-results"></div>
+    </div>
+
+    <!-- React CDN para testes -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Carregar serviços React -->
+    <script src="/static/js/dist/react-services.bundle.js"></script>
+    
+    <!-- Carregar componentes React -->
+    <script src="/static/js/dist/home.bundle.js"></script>
+    <script src="/static/js/dist/criar-unidade.bundle.js"></script>
+    <script src="/static/js/dist/registro-chamada.bundle.js"></script>
+
+    <script>
+        const resultsDiv = document.getElementById('test-results');
+
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+
+        async function testStaticFiles() {
+            addResult('🔍 Testando arquivos estáticos...', 'info');
+
+            const staticFiles = [
+                '/static/js/dist/home.bundle.js',
+                '/static/js/dist/criar-unidade.bundle.js',
+                '/static/js/dist/registro-chamada.bundle.js'
+            ];
+
+            let successCount = 0;
+            let failCount = 0;
+
+            for (const file of staticFiles) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        const content = await response.text();
+                        if (content.includes('<!DOCTYPE html') || content.includes('<html')) {
+                            addResult(`❌ ${file} - Retornando HTML em vez de JavaScript`, 'error');
+                            failCount++;
+                        } else {
+                            addResult(`✅ ${file} - OK`, 'success');
+                            successCount++;
+                        }
+                    } else {
+                        addResult(`❌ ${file} - Status: ${response.status}`, 'error');
+                        failCount++;
+                    }
+                } catch (error) {
+                    addResult(`❌ ${file} - Erro: ${error.message}`, 'error');
+                    failCount++;
+                }
+            }
+
+            addResult(`📊 Resultado: ${successCount} sucessos, ${failCount} falhas`,
+                failCount > 0 ? 'warning' : 'success');
+        }
+
+        function testReactComponents() {
+            addResult('⚛️ Testando componentes React...', 'info');
+
+            // Verificar se React está disponível
+            if (typeof React !== 'undefined') {
+                addResult('✅ React carregado', 'success');
+            } else {
+                addResult('❌ React não encontrado', 'error');
+            }
+
+            if (typeof ReactDOM !== 'undefined') {
+                addResult('✅ ReactDOM carregado', 'success');
+            } else {
+                addResult('❌ ReactDOM não encontrado', 'error');
+            }
+
+            // Verificar componentes customizados
+            const components = [
+                'CriarUnidadeReact',
+                'RegistroChamadaReact',
+                'HomeReact',
+                'SafeComponentLoader',
+                'ReactErrorBoundary'
+            ];
+
+            let foundComponents = 0;
+            components.forEach(comp => {
+                if (window[comp]) {
+                    addResult(`✅ ${comp} encontrado`, 'success');
+                    foundComponents++;
+                } else {
+                    addResult(`❌ ${comp} não encontrado`, 'warning');
+                }
+            });
+
+            addResult(`📊 Componentes encontrados: ${foundComponents}/${components.length}`,
+                foundComponents > 0 ? 'success' : 'warning');
+        }
+
+        async function testBundleLoading() {
+            addResult('📦 Testando carregamento de bundles...', 'info');
+
+            const bundles = [
+                'home.bundle.js',
+                'criar-unidade.bundle.js',
+                'registro-chamada.bundle.js'
+            ];
+
+            for (const bundle of bundles) {
+                try {
+                    const script = document.createElement('script');
+                    script.src = `/static/js/dist/${bundle}`;
+
+                    const loadPromise = new Promise((resolve, reject) => {
+                        script.onload = () => resolve(bundle);
+                        script.onerror = () => reject(new Error('Falha ao carregar'));
+                        setTimeout(() => reject(new Error('Timeout')), 5000);
+                    });
+
+                    document.head.appendChild(script);
+                    await loadPromise;
+                    addResult(`✅ ${bundle} carregado`, 'success');
+
+                } catch (error) {
+                    addResult(`❌ ${bundle} - ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // Teste automático ao carregar a página
+        window.addEventListener('load', () => {
+            addResult('🚀 Página carregada. Execute os testes acima.', 'info');
+        });
+    </script>
+</body>
+
+</html>

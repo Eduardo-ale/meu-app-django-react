@@ -1,0 +1,548 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Correções React - Sistema de Registro</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .test-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .test-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .test-header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .test-section {
+            padding: 30px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .test-section:last-child {
+            border-bottom: none;
+        }
+
+        .test-section h2 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .test-card {
+            background: #f8fafc;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .test-card h3 {
+            color: #374151;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-result {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        .test-result.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .test-result.error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .test-result.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .test-result.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-test {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-test:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .console-output {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-indicator.success { background: #10b981; }
+        .status-indicator.error { background: #ef4444; }
+        .status-indicator.warning { background: #f59e0b; }
+        .status-indicator.info { background: #3b82f6; }
+
+        .component-test-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            background: #f8fafc;
+            margin: 20px 0;
+        }
+
+        .fallback-container {
+            display: none;
+            background: #fef2f2;
+            border: 2px solid #fecaca;
+            border-radius: 8px;
+            padding: 20px;
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- Header -->
+        <div class="test-header">
+            <h1><i class="fas fa-vial"></i> Teste de Correções React</h1>
+            <p>Validação das correções implementadas para problemas de carregamento de componentes</p>
+        </div>
+
+        <!-- Seção 1: Status das Dependências -->
+        <div class="test-section">
+            <h2><i class="fas fa-puzzle-piece"></i> Status das Dependências</h2>
+            <div class="test-grid">
+                <div class="test-card">
+                    <h3><i class="fab fa-react"></i> React</h3>
+                    <div id="react-status">Verificando...</div>
+                </div>
+                <div class="test-card">
+                    <h3><i class="fab fa-react"></i> ReactDOM</h3>
+                    <div id="reactdom-status">Verificando...</div>
+                </div>
+                <div class="test-card">
+                    <h3><i class="fas fa-cogs"></i> UniversalReactInitializer</h3>
+                    <div id="initializer-status">Verificando...</div>
+                </div>
+                <div class="test-card">
+                    <h3><i class="fas fa-shield-alt"></i> ReactErrorBoundary</h3>
+                    <div id="errorboundary-status">Verificando...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 2: Teste de Componentes -->
+        <div class="test-section">
+            <h2><i class="fas fa-cube"></i> Teste de Componentes</h2>
+            <div class="test-grid">
+                <div class="test-card">
+                    <h3><i class="fas fa-plus-circle"></i> CriarUnidadeReact</h3>
+                    <div id="criar-unidade-status">Não testado</div>
+                    <button class="btn-test" onclick="testComponent('CriarUnidadeReact', 'criar-unidade-test')">
+                        <i class="fas fa-play"></i> Testar Componente
+                    </button>
+                    <div class="component-test-area" id="criar-unidade-test">
+                        <div class="fallback-container">
+                            <h4>Fallback HTML - Criar Unidade</h4>
+                            <p>Este é o conteúdo de fallback que deve aparecer se o componente React falhar.</p>
+                        </div>
+                        <p>Área de teste para CriarUnidadeReact</p>
+                    </div>
+                </div>
+                <div class="test-card">
+                    <h3><i class="fas fa-phone"></i> RegistroChamadaReact</h3>
+                    <div id="registro-chamada-status">Não testado</div>
+                    <button class="btn-test" onclick="testComponent('RegistroChamadaReact', 'registro-chamada-test')">
+                        <i class="fas fa-play"></i> Testar Componente
+                    </button>
+                    <div class="component-test-area" id="registro-chamada-test">
+                        <div class="fallback-container">
+                            <h4>Fallback HTML - Registro Chamada</h4>
+                            <p>Este é o conteúdo de fallback que deve aparecer se o componente React falhar.</p>
+                        </div>
+                        <p>Área de teste para RegistroChamadaReact</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 3: Teste de Fallback -->
+        <div class="test-section">
+            <h2><i class="fas fa-life-ring"></i> Teste de Sistema de Fallback</h2>
+            <div class="test-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Componente Inexistente</h3>
+                <p>Teste para verificar se o sistema de fallback funciona corretamente quando um componente não existe.</p>
+                <button class="btn-test" onclick="testFallback()">
+                    <i class="fas fa-bug"></i> Testar Fallback
+                </button>
+                <div class="component-test-area" id="fallback-test">
+                    <div class="fallback-container">
+                        <h4>Fallback HTML - Componente Inexistente</h4>
+                        <p>Este fallback deve ser exibido quando o componente não existe.</p>
+                    </div>
+                    <p>Área de teste para componente inexistente</p>
+                </div>
+                <div id="fallback-result"></div>
+            </div>
+        </div>
+
+        <!-- Seção 4: Validação Automática -->
+        <div class="test-section">
+            <h2><i class="fas fa-robot"></i> Validação Automática</h2>
+            <div class="test-card">
+                <h3><i class="fas fa-check-double"></i> Executar Todos os Testes</h3>
+                <p>Execute a suíte completa de testes de validação das correções React.</p>
+                <button class="btn-test" onclick="runFullValidation()" id="validation-btn">
+                    <i class="fas fa-play-circle"></i> Executar Validação Completa
+                </button>
+                <div id="validation-results"></div>
+            </div>
+        </div>
+
+        <!-- Seção 5: Console de Debug -->
+        <div class="test-section">
+            <h2><i class="fas fa-terminal"></i> Console de Debug</h2>
+            <div class="test-card">
+                <h3><i class="fas fa-bug"></i> Saída do Console</h3>
+                <button class="btn-test" onclick="clearConsole()">
+                    <i class="fas fa-trash"></i> Limpar Console
+                </button>
+                <button class="btn-test" onclick="runDiagnosis()">
+                    <i class="fas fa-stethoscope"></i> Executar Diagnóstico
+                </button>
+                <div class="console-output" id="console-output">
+                    <div>Console de debug inicializado...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts React via CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Scripts do Sistema React -->
+    <script src="{% static 'js/services/ReactDebugger.js' %}"></script>
+    <script src="{% static 'js/components/ReactErrorBoundary.js' %}"></script>
+    <script src="{% static 'js/services/SafeComponentLoader.js' %}"></script>
+    <script src="{% static 'js/services/ReactDependencyChecker.js' %}"></script>
+    <script src="{% static 'js/services/ReactInitializer.js' %}"></script>
+    <script src="{% static 'js/services/UniversalReactInitializer.js' %}"></script>
+
+    <!-- Componentes React -->
+    <script src="{% static 'js/components/CriarUnidadeReact.js' %}"></script>
+    <script src="{% static 'js/components/RegistroChamadaReact.js' %}"></script>
+
+    <!-- Script de Validação -->
+    <script src="{% url 'home' %}validate_react_fixes.js"></script>
+
+    <script>
+        // Interceptar console.log para exibir no console de debug
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+
+        function addToDebugConsole(message, type = 'log') {
+            const consoleOutput = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.style.marginBottom = '5px';
+            div.style.color = type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#10b981';
+            div.innerHTML = `[${timestamp}] ${message}`;
+            consoleOutput.appendChild(div);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            addToDebugConsole(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            addToDebugConsole(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalConsoleWarn.apply(console, args);
+            addToDebugConsole(args.join(' '), 'warn');
+        };
+
+        // Função para verificar status das dependências
+        function checkDependencyStatus() {
+            // React
+            const reactStatus = document.getElementById('react-status');
+            if (typeof React !== 'undefined') {
+                reactStatus.innerHTML = `<div class="test-result success"><span class="status-indicator success"></span>✅ Carregado (v${React.version || 'desconhecida'})</div>`;
+            } else {
+                reactStatus.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Não carregado</div>`;
+            }
+
+            // ReactDOM
+            const reactDOMStatus = document.getElementById('reactdom-status');
+            if (typeof ReactDOM !== 'undefined') {
+                reactDOMStatus.innerHTML = `<div class="test-result success"><span class="status-indicator success"></span>✅ Carregado</div>`;
+            } else {
+                reactDOMStatus.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Não carregado</div>`;
+            }
+
+            // UniversalReactInitializer
+            const initializerStatus = document.getElementById('initializer-status');
+            if (typeof window.UniversalReactInitializer !== 'undefined') {
+                initializerStatus.innerHTML = `<div class="test-result success"><span class="status-indicator success"></span>✅ Carregado</div>`;
+            } else {
+                initializerStatus.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Não carregado</div>`;
+            }
+
+            // ReactErrorBoundary
+            const errorBoundaryStatus = document.getElementById('errorboundary-status');
+            if (typeof window.ReactErrorBoundary !== 'undefined') {
+                errorBoundaryStatus.innerHTML = `<div class="test-result success"><span class="status-indicator success"></span>✅ Carregado</div>`;
+            } else {
+                errorBoundaryStatus.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Não carregado</div>`;
+            }
+        }
+
+        // Função para testar componente específico
+        async function testComponent(componentName, containerId) {
+            const statusElement = document.getElementById(componentName.toLowerCase().replace('react', '') + '-status');
+            
+            try {
+                statusElement.innerHTML = `<div class="test-result info"><span class="status-indicator info"></span>🔄 Testando...</div>`;
+                
+                if (window.UniversalReactInitializer) {
+                    const result = await window.UniversalReactInitializer.initComponent(
+                        componentName,
+                        containerId,
+                        {
+                            // Props de teste
+                            dadosPreenchimento: {},
+                            usuario: { id: 1, username: 'teste', full_name: 'Usuário Teste' }
+                        },
+                        {
+                            onSuccess: (name, container) => {
+                                statusElement.innerHTML = `<div class="test-result success"><span class="status-indicator success"></span>✅ Componente carregado com sucesso</div>`;
+                                console.log(`✅ ${name} carregado com sucesso`);
+                            },
+                            onError: (error, name, container) => {
+                                statusElement.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Erro: ${error.message}</div>`;
+                                console.error(`❌ Erro em ${name}:`, error);
+                            },
+                            onFallback: (name, container) => {
+                                statusElement.innerHTML = `<div class="test-result warning"><span class="status-indicator warning"></span>⚠️ Fallback ativado</div>`;
+                                console.warn(`⚠️ Fallback ativado para ${name}`);
+                            }
+                        }
+                    );
+                } else {
+                    throw new Error('UniversalReactInitializer não disponível');
+                }
+            } catch (error) {
+                statusElement.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Erro: ${error.message}</div>`;
+                console.error(`❌ Erro ao testar ${componentName}:`, error);
+            }
+        }
+
+        // Função para testar fallback
+        async function testFallback() {
+            const resultElement = document.getElementById('fallback-result');
+            
+            try {
+                resultElement.innerHTML = `<div class="test-result info"><span class="status-indicator info"></span>🔄 Testando fallback...</div>`;
+                
+                if (window.UniversalReactInitializer) {
+                    const result = await window.UniversalReactInitializer.initComponent(
+                        'ComponenteInexistente',
+                        'fallback-test',
+                        {},
+                        {
+                            onFallback: (name, container) => {
+                                resultElement.innerHTML = `<div class="test-result success"><span class="status-indicator success"></span>✅ Sistema de fallback funcionando corretamente</div>`;
+                                console.log('✅ Sistema de fallback testado com sucesso');
+                            },
+                            onError: (error, name, container) => {
+                                resultElement.innerHTML = `<div class="test-result warning"><span class="status-indicator warning"></span>⚠️ Fallback ativado devido a erro: ${error.message}</div>`;
+                            }
+                        }
+                    );
+                } else {
+                    throw new Error('UniversalReactInitializer não disponível');
+                }
+            } catch (error) {
+                resultElement.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Erro no teste de fallback: ${error.message}</div>`;
+                console.error('❌ Erro no teste de fallback:', error);
+            }
+        }
+
+        // Função para executar validação completa
+        async function runFullValidation() {
+            const btn = document.getElementById('validation-btn');
+            const resultsElement = document.getElementById('validation-results');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executando...';
+            
+            try {
+                if (window.ReactFixValidator) {
+                    resultsElement.innerHTML = `<div class="test-result info"><span class="status-indicator info"></span>🔄 Executando validação completa...</div>`;
+                    
+                    const results = await window.ReactFixValidator.runAllTests();
+                    
+                    let resultHtml = '';
+                    if (results.overall === 'SUCESSO') {
+                        resultHtml = `<div class="test-result success"><span class="status-indicator success"></span>✅ Todas as correções validadas com sucesso!</div>`;
+                    } else {
+                        resultHtml = `<div class="test-result warning"><span class="status-indicator warning"></span>⚠️ Algumas correções precisam de atenção</div>`;
+                    }
+                    
+                    resultsElement.innerHTML = resultHtml;
+                } else {
+                    throw new Error('ReactFixValidator não disponível');
+                }
+            } catch (error) {
+                resultsElement.innerHTML = `<div class="test-result error"><span class="status-indicator error"></span>❌ Erro na validação: ${error.message}</div>`;
+                console.error('❌ Erro na validação:', error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-play-circle"></i> Executar Validação Completa';
+            }
+        }
+
+        // Função para executar diagnóstico
+        function runDiagnosis() {
+            console.log('🔍 Executando diagnóstico do sistema...');
+            
+            if (window.ReactFixValidator) {
+                window.ReactFixValidator.runDiagnosis();
+            }
+            
+            if (window.UniversalReactInitializer) {
+                window.UniversalReactInitializer.diagnose();
+            }
+            
+            if (window.ReactDependencyChecker) {
+                window.ReactDependencyChecker.checkAllDependencies();
+            }
+        }
+
+        // Função para limpar console
+        function clearConsole() {
+            const consoleOutput = document.getElementById('console-output');
+            consoleOutput.innerHTML = '<div>Console limpo...</div>';
+        }
+
+        // Inicialização da página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Página de teste de correções React carregada');
+            
+            // Verificar status das dependências
+            setTimeout(checkDependencyStatus, 500);
+            
+            // Executar diagnóstico inicial
+            setTimeout(() => {
+                console.log('📊 Executando verificação inicial...');
+                runDiagnosis();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

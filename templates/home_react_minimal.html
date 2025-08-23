@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Sistema de Registro de Chamadas{% endblock %}
+
+{% block content %}
+<div id="home-react-root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+            <h2>Carregando dashboard...</h2>
+            <p>Aguarde enquanto carregamos o sistema</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- React CDN -->
+<!-- Scripts removidos do CDN, agora React é carregado via include central ou arquivos locais -->
+
+<!-- Carregar serviços React primeiro -->
+<script src="{% static 'js/dist/react-services.bundle.js' %}"></script>
+
+<!-- Bundle do Componente -->
+<script src="{% static 'js/dist/home.bundle.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando dashboard minimalista...');
+    
+    // Verificar se React está disponível
+    if (!window.React || !window.ReactDOM) {
+        console.error('❌ React ou ReactDOM não estão disponíveis');
+        return;
+    }
+    
+    // Verificar se o componente está disponível
+    if (!window.HomeReact) {
+        console.error('❌ HomeReact não está disponível');
+        return;
+    }
+    
+    // Verificar se o container existe
+    var container = document.getElementById('home-react-root');
+    if (!container) {
+        console.error('❌ Container não encontrado');
+        return;
+    }
+    
+    // Dados mínimos para o componente
+    var data = {
+        estatisticas: {
+            total_unidades: 0,
+            total_chamadas: 0,
+            chamadas_hoje: 0,
+            chamadas_mes: 0,
+            executantes: 0,
+            solicitantes: 0,
+            executante_solicitante: 0
+        },
+        usuario: {
+            first_name: "Usuário",
+            username: "usuario"
+        },
+        ultimas_unidades: [],
+        ultimas_chamadas: []
+    };
+    
+    try {
+        // Renderizar o componente
+        if (window.ReactDOM.createRoot) {
+            var root = window.ReactDOM.createRoot(container);
+            root.render(window.React.createElement(window.HomeReact, data));
+        } else {
+            window.ReactDOM.render(window.React.createElement(window.HomeReact, data), container);
+        }
+        console.log('🎉 Dashboard carregado com sucesso!');
+    } catch (e) {
+        console.error('❌ Erro na renderização:', e);
+        container.innerHTML = '<div style="text-align: center; padding: 50px; color: white;"><h2>⚠️ Erro no Dashboard</h2><p>Ocorreu um erro ao carregar o dashboard React.</p><p>Erro: ' + e.message + '</p><button onclick="location.reload()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔄 Recarregar</button></div>';
+    }
+});
+</script>
+{% endblock %}

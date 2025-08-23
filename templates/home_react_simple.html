@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Sistema de Registro de Chamadas{% endblock %}
+
+{% block content %}
+<div id="home-react-root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+            <h2>Carregando dashboard...</h2>
+            <p>Aguarde enquanto carregamos o sistema</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- React CDN -->
+<!-- Scripts removidos do CDN, agora React é carregado via include central ou arquivos locais -->
+
+<!-- Carregar serviços React primeiro -->
+<script src="{% static 'js/dist/react-services.bundle.js' %}"></script>
+
+<!-- Bundle do Componente -->
+<script src="{% static 'js/dist/home.bundle.js' %}"></script>
+
+<script>
+// Versão super simples que funciona
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando dashboard...');
+    
+    // Função para verificar se os componentes estão carregados
+    function initializeReact() {
+        if (window.React && window.ReactDOM && window.HomeReact) {
+            console.log('✅ Componentes encontrados');
+            
+            var container = document.getElementById('home-react-root');
+            if (container) {
+                console.log('✅ Container encontrado');
+                
+                var data = {
+                    estatisticas: {
+                        total_unidades: {{ estatisticas.total_unidades|default:0 }},
+                        total_chamadas: {{ estatisticas.total_chamadas|default:0 }},
+                        chamadas_hoje: {{ estatisticas.chamadas_hoje|default:0 }},
+                        chamadas_mes: {{ estatisticas.chamadas_mes|default:0 }},
+                        executantes: {{ estatisticas.executantes|default:0 }},
+                        solicitantes: {{ estatisticas.solicitantes|default:0 }},
+                        executante_solicitante: {{ estatisticas.executante_solicitante|default:0 }}
+                    },
+                    usuario: {
+                        first_name: "{{ user.first_name|default:'Usuário' }}",
+                        username: "{{ user.username }}",
+                        avatar_url: "{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% endif %}"
+                    },
+                    ultimas_unidades: [],
+                    ultimas_chamadas: []
+                };
+                
+                console.log('📊 Dados preparados:', data);
+                
+                try {
+                    if (window.ReactDOM.createRoot) {
+                        var root = window.ReactDOM.createRoot(container);
+                        root.render(window.React.createElement(window.HomeReact, data));
+                    } else {
+                        window.ReactDOM.render(window.React.createElement(window.HomeReact, data), container);
+                    }
+                    console.log('🎉 Dashboard carregado com sucesso!');
+                } catch (e) {
+                    console.error('❌ Erro na renderização:', e);
+                    container.innerHTML = '<div style="text-align: center; padding: 50px; color: white;"><h2>⚠️ Erro no Dashboard</h2><p>Ocorreu um erro ao carregar o dashboard React.</p><button onclick="location.reload()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔄 Recarregar</button></div>';
+                }
+            } else {
+                console.error('❌ Container não encontrado');
+            }
+            
+            return true;
+        } else {
+            console.log('⏳ Componentes ainda não carregados, tentando novamente...');
+            return false;
+        }
+    }
+    
+    // Tentar inicializar imediatamente
+    if (!initializeReact()) {
+        // Se falhar, tentar novamente após um tempo
+        var attempts = 0;
+        var maxAttempts = 10;
+        
+        var interval = setInterval(function() {
+            attempts++;
+            
+            if (initializeReact() || attempts >= maxAttempts) {
+                clearInterval(interval);
+                
+                if (attempts >= maxAttempts) {
+                    console.error('❌ Falha ao carregar componentes após ' + maxAttempts + ' tentativas');
+                    var container = document.getElementById('home-react-root');
+                    if (container) {
+                        container.innerHTML = '<div style="text-align: center; padding: 50px; color: white;"><h2>⚠️ Erro no Dashboard</h2><p>Não foi possível carregar os componentes React.</p><p>Verifique o console para mais detalhes.</p><button onclick="location.reload()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔄 Recarregar</button></div>';
+                    }
+                }
+            }
+        }, 1000);
+    }
+});
+</script>
+{% endblock %}

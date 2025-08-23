@@ -1,0 +1,970 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="configuracoes-container">
+    <!-- Breadcrumb Navegação -->
+    <div class="breadcrumb-container">
+        <nav aria-label="Navegação estrutural">
+            <ol class="breadcrumb-modern">
+                <li class="breadcrumb-item-modern">
+                    <a href="{% url 'home' %}" class="breadcrumb-link" title="Voltar ao Dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </li>
+                <li class="breadcrumb-item-modern">
+                    <span class="breadcrumb-current">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </span>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Header da Página -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-info">
+                <div class="header-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Configurações do Sistema</h1>
+                    <p>Gerencie configurações e preferências do usuário</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number">{{ usuario.first_name|default:usuario.username }}</div>
+                    <div class="stat-label">Usuário</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ data_atual|date:"d/m/Y" }}</div>
+                    <div class="stat-label">Data</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    {% if messages %}
+        <div class="toast-container">
+            {% for message in messages %}
+                <div class="toast toast-{{ message.tags|default:'info' }}" role="alert">
+                    <div class="toast-icon">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+                    </div>
+                    <div class="toast-content">
+                        <div class="toast-title">
+                            {% if message.tags == 'success' %}Sucesso!{% elif message.tags == 'error' %}Erro!{% elif message.tags == 'warning' %}Atenção!{% else %}Informação{% endif %}
+                        </div>
+                        <div class="toast-message">{{ message }}</div>
+                    </div>
+                    <button class="toast-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Menu de Configurações -->
+    <div class="config-grid">
+        <!-- Seção do Sistema -->
+        <div class="config-section">
+            <div class="section-header">
+                <h2><i class="fas fa-server"></i> Sistema</h2>
+                <p>Configurações gerais do sistema</p>
+            </div>
+            <div class="config-cards">
+                <div class="config-card">
+                    <div class="config-icon system">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Backup</h3>
+                        <p>Faça backup dos dados do sistema</p>
+                        <div class="config-stats">
+                            <span class="stat">{{ estatisticas.total_unidades }} unidades</span>
+                            <span class="stat">{{ estatisticas.total_chamadas }} chamadas</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'backup_sistema' %}" class="btn-config primary">
+                            <i class="fas fa-download"></i>
+                            Fazer Backup
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon system">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Segurança</h3>
+                        <p>Configurações de segurança e acesso</p>
+                        <div class="config-stats">
+                            <span class="stat">Login ativo</span>
+                            <span class="stat">Sessão segura</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <button class="btn-config disabled" disabled>
+                            <i class="fas fa-lock"></i>
+                            Em Breve
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon system">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Relatórios</h3>
+                        <p>Configurar geração de relatórios</p>
+                        <div class="config-stats">
+                            <span class="stat">Automático</span>
+                            <span class="stat">Mensal</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'relatorios_sistema' %}" class="btn-config primary">
+                            <i class="fas fa-file-alt"></i>
+                            Ver Relatórios
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção do Usuário -->
+        <div class="config-section">
+            <div class="section-header">
+                <h2><i class="fas fa-user"></i> Usuário</h2>
+                <p>Configurações pessoais e preferências</p>
+            </div>
+            <div class="config-cards">
+                <div class="config-card">
+                    <div class="config-icon user">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Perfil</h3>
+                        <p>Editar informações pessoais</p>
+                        <div class="config-stats">
+                            <span class="stat">{{ usuario.username }}</span>
+                            <span class="stat">{{ usuario.email|default:"Sem email" }}</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'editar_perfil' %}" class="btn-config primary">
+                            <i class="fas fa-edit"></i>
+                            Editar Perfil
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon user">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Senha</h3>
+                        <p>Alterar senha de acesso</p>
+                        <div class="config-stats">
+                            <span class="stat">Segurança</span>
+                            <span class="stat">Protegido</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'alterar_senha' %}" class="btn-config primary">
+                            <i class="fas fa-key"></i>
+                            Alterar Senha
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon user">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Notificações</h3>
+                        <p>Configurar alertas e notificações</p>
+                        <div class="config-stats">
+                            <span class="stat">Email</span>
+                            <span class="stat">Sistema</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'notificacoes' %}" class="btn-config primary">
+                            <i class="fas fa-bell"></i>
+                            Configurar
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon user">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Criar Usuário</h3>
+                        <p>Adicionar novos usuários ao sistema</p>
+                        <div class="config-stats">
+                            <span class="stat">Novo</span>
+                            <span class="stat">Cadastro</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'criar_usuario' %}" class="btn-config primary">
+                            <i class="fas fa-user-plus"></i>
+                            Criar Novo
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon user">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Gerenciar Usuários</h3>
+                        <p>Visualizar e gerenciar usuários existentes</p>
+                        <div class="config-stats">
+                            <span class="stat">{{ total_usuarios }} usuários</span>
+                            <span class="stat">Ativos</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'gerenciar_usuarios' %}" class="btn-config primary">
+                            <i class="fas fa-users-cog"></i>
+                            Gerenciar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Dados -->
+        <div class="config-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Dados</h2>
+                <p>Estatísticas e informações do sistema</p>
+            </div>
+            <div class="config-cards">
+                <div class="config-card stats-card">
+                    <div class="config-icon data">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Minhas Unidades</h3>
+                        <p>Unidades cadastradas por você</p>
+                        <div class="config-stats">
+                            <span class="stat-big">{{ estatisticas.unidades_usuario }}</span>
+                            <span class="stat-label">Cadastradas</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'unidades_saude' %}" class="btn-config primary">
+                            <i class="fas fa-eye"></i>
+                            Ver Todas
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card stats-card">
+                    <div class="config-icon data">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Minhas Chamadas</h3>
+                        <p>Chamadas registradas por você</p>
+                        <div class="config-stats">
+                            <span class="stat-big">{{ estatisticas.chamadas_usuario }}</span>
+                            <span class="stat-label">Registradas</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'historico_chamadas' %}" class="btn-config primary">
+                            <i class="fas fa-history"></i>
+                            Ver Histórico
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card stats-card">
+                    <div class="config-icon data">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Exportações</h3>
+                        <p>Exportar dados para relatórios</p>
+                        <div class="config-stats">
+                            <span class="stat">PDF</span>
+                            <span class="stat">Excel</span>
+                            <span class="stat">CSV</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <button class="btn-config disabled" disabled>
+                            <i class="fas fa-file-export"></i>
+                            Em Breve
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Ajuda -->
+        <div class="config-section">
+            <div class="section-header">
+                <h2><i class="fas fa-question-circle"></i> Ajuda</h2>
+                <p>Suporte e informações do sistema</p>
+            </div>
+            <div class="config-cards">
+                <div class="config-card">
+                    <div class="config-icon help">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Manual</h3>
+                        <p>Guia completo de uso do sistema</p>
+                        <div class="config-stats">
+                            <span class="stat">Documentação</span>
+                            <span class="stat">Tutoriais</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <a href="{% url 'manual_sistema' %}" class="btn-config primary">
+                            <i class="fas fa-book-open"></i>
+                            Acessar Manual
+                        </a>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon help">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Suporte</h3>
+                        <p>Entre em contato com o suporte técnico</p>
+                        <div class="config-stats">
+                            <span class="stat">Chat</span>
+                            <span class="stat">Email</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <button class="btn-config disabled" disabled>
+                            <i class="fas fa-comments"></i>
+                            Em Breve
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-icon help">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="config-content">
+                        <h3>Sobre</h3>
+                        <p>Informações sobre o sistema</p>
+                        <div class="config-stats">
+                            <span class="stat">Versão 1.0</span>
+                            <span class="stat">2024</span>
+                        </div>
+                    </div>
+                    <div class="config-actions">
+                        <button class="btn-config disabled" disabled>
+                            <i class="fas fa-info"></i>
+                            Em Breve
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===== CONTAINER PRINCIPAL ===== */
+.configuracoes-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.breadcrumb-modern {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 0.5rem;
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6366f1;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+    background: #f1f5f9;
+    color: #4338ca;
+}
+
+.breadcrumb-separator {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #1e293b;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
+/* ===== HEADER DA PÁGINA ===== */
+.page-header {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: white;
+    box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.header-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.header-text h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-text p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+}
+
+.header-stats {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 100px;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+    word-break: break-word;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== GRID DE CONFIGURAÇÕES ===== */
+.config-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.config-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f1f5f9;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.section-header h2 {
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.section-header p {
+    color: #64748b;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.config-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.config-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.config-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+.config-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.config-icon.system {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.config-icon.user {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.config-icon.data {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.config-icon.help {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.config-content {
+    flex: 1;
+}
+
+.config-content h3 {
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.config-content p {
+    color: #64748b;
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.config-stats {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.config-stats .stat {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.config-stats .stat-big {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.config-stats .stat-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.config-actions {
+    flex-shrink: 0;
+}
+
+.btn-config {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-config.primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+}
+
+.btn-config.primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-config.disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-config.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* ===== CARDS DE ESTATÍSTICAS ===== */
+.stats-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #e2e8f0;
+}
+
+.stats-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .configuracoes-container {
+        padding: 1rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .header-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .config-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .config-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .config-stats {
+        justify-content: center;
+    }
+
+    .header-text h1 {
+        font-size: 2rem;
+    }
+
+    .header-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-text h1 {
+        font-size: 1.5rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .config-section {
+        padding: 1.5rem;
+    }
+
+    .config-card {
+        padding: 1rem;
+    }
+
+    .stat-item {
+        min-width: 80px;
+        padding: 0.75rem 1rem;
+    }
+
+    .stat-number {
+        font-size: 1.25rem;
+    }
+}
+
+/* ===== TOAST NOTIFICATIONS ===== */
+.toast-container {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+.toast-success {
+    border-left: 4px solid #10b981;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+}
+
+.toast-error {
+    border-left: 4px solid #ef4444;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.toast-warning {
+    border-left: 4px solid #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.toast-info {
+    border-left: 4px solid #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.toast-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+    color: #10b981;
+}
+
+.toast-error .toast-icon {
+    color: #ef4444;
+}
+
+.toast-warning .toast-icon {
+    color: #f59e0b;
+}
+
+.toast-info .toast-icon {
+    color: #3b82f6;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.toast-message {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    background: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+}
+
+/* Animações das toast notifications */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Responsividade das toast notifications */
+@media (max-width: 768px) {
+    .toast-container {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+    }
+}
+</style>
+
+<script>
+// Adicionar funcionalidades futuras aqui
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Página de configurações carregada');
+    
+    // Animação nos cards
+    const cards = document.querySelectorAll('.config-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('fade-in');
+    });
+
+    // Auto-remoção das toast notifications
+    const toasts = document.querySelectorAll('.toast');
+    toasts.forEach(toast => {
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000); // Remove após 5 segundos
+    });
+});
+
+// Estilos para animação
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %} 

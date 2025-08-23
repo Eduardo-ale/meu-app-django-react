@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Correção de Z-Index</title>
+    <style>
+        /* Simulação do problema de z-index */
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 999999999;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-radius: 4px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        /* Solução de z-index */
+        .dropdown-content {
+            z-index: 999999999 !important;
+            position: absolute !important;
+            isolation: isolate !important;
+            will-change: transform !important;
+            backface-visibility: hidden !important;
+            contain: layout style paint !important;
+            transform: translateZ(999999999px) !important;
+        }
+        
+        .card {
+            z-index: 1 !important;
+            position: relative !important;
+            isolation: auto !important;
+            will-change: auto !important;
+            backface-visibility: visible !important;
+            contain: none !important;
+            transform: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste de Correção de Z-Index</h1>
+    <p>Este arquivo testa se a solução de z-index está funcionando corretamente.</p>
+    
+    <div class="dropdown">
+        <button class="btn">Exportar ▼</button>
+        <div class="dropdown-content">
+            <a href="#">Exportar PDF</a>
+            <a href="#">Exportar Excel</a>
+            <a href="#">Exportar CSV</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>Card de Unidade de Saúde 1</h3>
+        <p>Este card deve ficar atrás do dropdown quando ele estiver aberto.</p>
+        <p>Z-index: 1</p>
+    </div>
+    
+    <div class="card">
+        <h3>Card de Unidade de Saúde 2</h3>
+        <p>Este card também deve ficar atrás do dropdown.</p>
+        <p>Z-index: 1</p>
+    </div>
+    
+    <div class="card">
+        <h3>Card de Unidade de Saúde 3</h3>
+        <p>Este card deve ficar atrás do dropdown.</p>
+        <p>Z-index: 1</p>
+    </div>
+    
+    <script>
+        // Teste de z-index
+        console.log('Testando z-index...');
+        
+        const dropdown = document.querySelector('.dropdown-content');
+        const cards = document.querySelectorAll('.card');
+        
+        console.log('Dropdown z-index:', window.getComputedStyle(dropdown).zIndex);
+        console.log('Cards z-index:', Array.from(cards).map(card => window.getComputedStyle(card).zIndex));
+        
+        // Verificar se o dropdown está por cima
+        if (parseInt(window.getComputedStyle(dropdown).zIndex) > parseInt(window.getComputedStyle(cards[0]).zIndex)) {
+            console.log('✅ Z-index correto: Dropdown está por cima dos cards');
+        } else {
+            console.log('❌ Z-index incorreto: Dropdown não está por cima dos cards');
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configurações do Sistema{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    
+    .container-fluid {
+        padding: 0 !important;
+    }
+    
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-top: 5px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+        color: white;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .error-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .error-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        text-align: center;
+        max-width: 500px;
+    }
+
+    .error-card h4 {
+        color: #ffc107;
+        margin-bottom: 1rem;
+    }
+
+    .error-card .btn {
+        margin-top: 1rem;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .error-card .btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div id="configuracoes-react-root">
+        <div class="loading-container">
+            <div>
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Carregando configurações...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'react_scripts_base.html' %}
+
+<!-- Carregar serviços React primeiro -->
+<script src="{% static 'js/dist/react-services.bundle.js' %}"></script>
+
+<!-- Bundle do Componente -->
+<script src="{% static 'js/dist/configuracoes.bundle.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando carregamento do React...');
+    
+    // Aguardar um pouco para garantir que todos os scripts carregaram
+    setTimeout(function() {
+        // Verificar se React está carregado
+        if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+            console.error('❌ React não foi carregado');
+            showError('React não foi carregado', 'Erro ao carregar a biblioteca React. Verifique sua conexão com a internet.');
+            return;
+        }
+        
+        console.log('✅ React carregado com sucesso');
+        
+        // Verificar se o componente foi carregado
+        if (typeof ConfiguracoesReact === 'undefined') {
+            console.error('❌ Componente ConfiguracoesReact não encontrado');
+            showError('Componente não encontrado', 'O componente React não foi carregado corretamente.');
+            return;
+        }
+        
+        console.log('✅ Componente ConfiguracoesReact encontrado');
+        
+        try {
+            const root = ReactDOM.createRoot(document.getElementById('configuracoes-react-root'));
+            
+            // Dados do Django para o React
+            const configData = {
+                usuario: {
+                    first_name: "{{ usuario.first_name|default:'' }}",
+                    username: "{{ usuario.username|default:'' }}"
+                },
+                dataAtual: "{{ data_atual|date:'d/m/Y' }}",
+                estatisticas: {
+                    total_unidades: {{ estatisticas.total_unidades|default:0 }},
+                    total_chamadas: {{ estatisticas.total_chamadas|default:0 }}
+                },
+                totalUsuarios: {{ total_usuarios|default:0 }},
+                isStaff: {{ user.is_staff|yesno:"true,false" }},
+                messages: [
+                    {% for message in messages %}
+                    {
+                        message: "{{ message|escapejs }}",
+                        tags: "{{ message.tags }}"
+                    }{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ]
+            };
+            
+            console.log('📊 Dados do componente:', configData);
+            
+            // Renderizar o componente React
+            root.render(React.createElement(ConfiguracoesReact, configData));
+            
+            console.log('🎉 Componente renderizado com sucesso!');
+            
+        } catch (error) {
+            console.error('❌ Erro ao renderizar:', error);
+            showError('Erro de renderização', error.message);
+        }
+    }, 100);
+    
+    function showError(title, message) {
+        const container = document.getElementById('configuracoes-react-root');
+        container.innerHTML = `
+            <div class="error-container">
+                <div class="error-card">
+                    <h4><i class="fas fa-exclamation-triangle"></i> ${title}</h4>
+                    <p>${message}</p>
+                    <a href="{% url 'home' %}" class="btn">
+                        <i class="fas fa-arrow-left"></i> Voltar ao Dashboard
+                    </a>
+                    <button onclick="location.reload()" class="btn">
+                        <i class="fas fa-redo"></i> Tentar Novamente
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+});
+</script>
+{% endblock %} 

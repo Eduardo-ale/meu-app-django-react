@@ -1,0 +1,703 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Validação React - Diagnóstico de Erros</title>
+    
+    <!-- CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .diagnostic-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .diagnostic-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .diagnostic-title {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .log-container {
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 1rem;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-success { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        .status-info { background-color: #17a2b8; }
+        
+        .component-test-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnostic-container">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-bug text-primary"></i>
+            Diagnóstico de Erros React
+        </h1>
+        
+        <!-- Seção de Status Geral -->
+        <div class="diagnostic-section">
+            <h3 class="diagnostic-title">
+                <i class="fas fa-heartbeat"></i>
+                Status Geral do Sistema
+            </h3>
+            <div id="general-status" class="log-container">
+                Carregando diagnóstico...
+            </div>
+            <button class="test-button" onclick="runGeneralDiagnostic()">
+                <i class="fas fa-play"></i> Executar Diagnóstico Geral
+            </button>
+        </div>
+        
+        <!-- Seção de Teste de Bundles -->
+        <div class="diagnostic-section">
+            <h3 class="diagnostic-title">
+                <i class="fas fa-cube"></i>
+                Teste de Carregamento de Bundles
+            </h3>
+            <div id="bundle-status" class="log-container">
+                Aguardando teste...
+            </div>
+            <button class="test-button" onclick="testAllBundles()">
+                <i class="fas fa-download"></i> Testar Bundles
+            </button>
+        </div>
+        
+        <!-- Seção de Teste de Componentes -->
+        <div class="diagnostic-section">
+            <h3 class="diagnostic-title">
+                <i class="fas fa-puzzle-piece"></i>
+                Teste de Componentes React
+            </h3>
+            <div id="component-status" class="log-container">
+                Aguardando teste...
+            </div>
+            <div class="component-test-area" id="component-test-area">
+                <div style="color: #6c757d;">
+                    <i class="fas fa-flask fa-2x mb-2"></i>
+                    <p>Área de teste de componentes</p>
+                </div>
+            </div>
+            <button class="test-button" onclick="testReactComponents()">
+                <i class="fas fa-cogs"></i> Testar Componentes
+            </button>
+            <button class="test-button" onclick="testComponentRendering()">
+                <i class="fas fa-paint-brush"></i> Testar Renderização
+            </button>
+        </div>
+        
+        <!-- Seção de Log de Erros -->
+        <div class="diagnostic-section">
+            <h3 class="diagnostic-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                Log de Erros Capturados
+            </h3>
+            <div id="error-log" class="log-container">
+                Nenhum erro capturado ainda...
+            </div>
+            <button class="test-button" onclick="generateErrorReport()">
+                <i class="fas fa-file-alt"></i> Gerar Relatório
+            </button>
+            <button class="test-button" onclick="clearErrorLog()">
+                <i class="fas fa-trash"></i> Limpar Log
+            </button>
+        </div>
+        
+        <!-- Seção de Testes Específicos -->
+        <div class="diagnostic-section">
+            <h3 class="diagnostic-title">
+                <i class="fas fa-tools"></i>
+                Testes Específicos
+            </h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="test-button w-100 mb-2" onclick="testCriarUnidadeComponent()">
+                        <i class="fas fa-hospital"></i> Testar CriarUnidadeReact
+                    </button>
+                    <button class="test-button w-100 mb-2" onclick="testRegistroChamadaComponent()">
+                        <i class="fas fa-phone"></i> Testar RegistroChamadaReact
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button class="test-button w-100 mb-2" onclick="testStaticFiles()">
+                        <i class="fas fa-folder"></i> Testar Arquivos Estáticos
+                    </button>
+                    <button class="test-button w-100 mb-2" onclick="testNetworkRequests()">
+                        <i class="fas fa-network-wired"></i> Testar Requisições de Rede
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <button class="test-button w-100 mb-2" onclick="runRenderingDiagnostic()">
+                        <i class="fas fa-bug"></i> Diagnóstico de Renderização
+                    </button>
+                    <button class="test-button w-100 mb-2" onclick="testManualRender()">
+                        <i class="fas fa-play-circle"></i> Teste Manual de Renderização
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button class="test-button w-100 mb-2" onclick="testBundleLoading()">
+                        <i class="fas fa-download"></i> Teste Avançado de Bundles
+                    </button>
+                    <button class="test-button w-100 mb-2" onclick="fixRenderingIssues()">
+                        <i class="fas fa-wrench"></i> Corrigir Problemas de Renderização
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Container para notificações -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Scripts de diagnóstico -->
+    <script src="/debug_current_errors.js"></script>
+    <script src="/test_bundle_loading.js"></script>
+    <script src="/fix_rendering_errors.js"></script>
+
+    <!-- Carregar serviços React -->
+    <script src="{% static 'js/dist/react-services.bundle.js' %}" 
+            onerror="logError('Erro ao carregar react-services.bundle.js')"></script>
+
+    <!-- Scripts de teste -->
+    <script>
+        // Variáveis globais para logging
+        let errorCount = 0;
+        let warningCount = 0;
+        
+        // Função para logging no console visual
+        function logToConsole(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                success: '#00ff00',
+                error: '#ff4444',
+                warning: '#ffaa00',
+                info: '#00aaff'
+            };
+            
+            const color = colors[type] || colors.info;
+            const icon = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            }[type] || 'ℹ️';
+            
+            container.innerHTML += `<div style="color: ${color};">[${timestamp}] ${icon} ${message}</div>`;
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // Função para mostrar notificação
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                warning: '#ffc107',
+                info: '#17a2b8'
+            };
+            
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                background: ${colors[type]};
+                color: white;
+                padding: 1rem;
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideInRight 0.3s ease-out;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; margin-left: auto; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // Diagnóstico geral
+        function runGeneralDiagnostic() {
+            const container = document.getElementById('general-status');
+            container.innerHTML = '';
+            
+            logToConsole('general-status', 'Iniciando diagnóstico geral...', 'info');
+            
+            // Verificar React
+            if (typeof React !== 'undefined') {
+                logToConsole('general-status', `React carregado (versão: ${React.version})`, 'success');
+            } else {
+                logToConsole('general-status', 'React não encontrado', 'error');
+                errorCount++;
+            }
+            
+            // Verificar ReactDOM
+            if (typeof ReactDOM !== 'undefined') {
+                logToConsole('general-status', 'ReactDOM carregado', 'success');
+            } else {
+                logToConsole('general-status', 'ReactDOM não encontrado', 'error');
+                errorCount++;
+            }
+            
+            // Verificar URL atual
+            logToConsole('general-status', `Página atual: ${window.location.pathname}`, 'info');
+            logToConsole('general-status', `Base URL: ${window.location.origin}`, 'info');
+            
+            // Verificar se há erros JavaScript
+            if (window.DiagnosticTools) {
+                const errors = window.DiagnosticTools.getCapturedErrors();
+                const warnings = window.DiagnosticTools.getCapturedWarnings();
+                
+                if (errors.length > 0) {
+                    logToConsole('general-status', `${errors.length} erros JavaScript capturados`, 'error');
+                } else {
+                    logToConsole('general-status', 'Nenhum erro JavaScript capturado', 'success');
+                }
+                
+                if (warnings.length > 0) {
+                    logToConsole('general-status', `${warnings.length} avisos capturados`, 'warning');
+                }
+            }
+            
+            logToConsole('general-status', 'Diagnóstico geral concluído', 'info');
+            showNotification('Diagnóstico geral executado', 'success');
+        }
+        
+        // Testar todos os bundles
+        function testAllBundles() {
+            const container = document.getElementById('bundle-status');
+            container.innerHTML = '';
+            
+            logToConsole('bundle-status', 'Testando carregamento de bundles...', 'info');
+            
+            const bundles = [
+                '/static/js/dist/react-services.bundle.js',
+                '/static/js/dist/criar-unidade.bundle.js',
+                '/static/js/dist/registro-chamada.bundle.js',
+                '/static/js/dist/home.bundle.js',
+                '/static/js/dist/unidades-saude.bundle.js'
+            ];
+            
+            let testedCount = 0;
+            
+            bundles.forEach(bundlePath => {
+                fetch(bundlePath)
+                    .then(response => {
+                        testedCount++;
+                        if (response.ok) {
+                            logToConsole('bundle-status', `Bundle acessível: ${bundlePath}`, 'success');
+                        } else {
+                            logToConsole('bundle-status', `Bundle com erro ${response.status}: ${bundlePath}`, 'error');
+                            errorCount++;
+                        }
+                        
+                        if (testedCount === bundles.length) {
+                            logToConsole('bundle-status', 'Teste de bundles concluído', 'info');
+                            showNotification('Teste de bundles concluído', 'success');
+                        }
+                    })
+                    .catch(error => {
+                        testedCount++;
+                        logToConsole('bundle-status', `Erro ao carregar ${bundlePath}: ${error.message}`, 'error');
+                        errorCount++;
+                        
+                        if (testedCount === bundles.length) {
+                            logToConsole('bundle-status', 'Teste de bundles concluído', 'info');
+                            showNotification('Teste de bundles concluído com erros', 'warning');
+                        }
+                    });
+            });
+        }
+        
+        // Testar componentes React
+        function testReactComponents() {
+            const container = document.getElementById('component-status');
+            container.innerHTML = '';
+            
+            logToConsole('component-status', 'Testando componentes React...', 'info');
+            
+            const expectedComponents = [
+                'CriarUnidadeReact',
+                'RegistroChamadaReact',
+                'HomeReact',
+                'UnidadesSaudeReact'
+            ];
+            
+            expectedComponents.forEach(componentName => {
+                if (window[componentName]) {
+                    logToConsole('component-status', `Componente ${componentName} encontrado`, 'success');
+                } else {
+                    logToConsole('component-status', `Componente ${componentName} não encontrado`, 'warning');
+                    warningCount++;
+                }
+            });
+            
+            // Testar serviços
+            const expectedServices = [
+                'ReactErrorHandling',
+                'SafeComponentLoader',
+                'ReactDebugger',
+                'ReactInitializer'
+            ];
+            
+            expectedServices.forEach(serviceName => {
+                if (window[serviceName]) {
+                    logToConsole('component-status', `Serviço ${serviceName} encontrado`, 'success');
+                } else {
+                    logToConsole('component-status', `Serviço ${serviceName} não encontrado`, 'warning');
+                    warningCount++;
+                }
+            });
+            
+            logToConsole('component-status', 'Teste de componentes concluído', 'info');
+            showNotification('Teste de componentes concluído', 'success');
+        }
+        
+        // Testar renderização de componente
+        function testComponentRendering() {
+            const testArea = document.getElementById('component-test-area');
+            
+            if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+                testArea.innerHTML = `
+                    <div style="color: #dc3545;">
+                        <i class="fas fa-times-circle fa-2x mb-2"></i>
+                        <p>React ou ReactDOM não estão disponíveis</p>
+                    </div>
+                `;
+                showNotification('React não disponível para teste', 'error');
+                return;
+            }
+            
+            try {
+                // Criar componente de teste simples
+                const TestComponent = React.createElement('div', {
+                    style: { 
+                        padding: '20px', 
+                        background: '#d4edda', 
+                        color: '#155724',
+                        borderRadius: '8px',
+                        border: '1px solid #c3e6cb'
+                    }
+                }, 
+                    React.createElement('h4', null, '🎉 React está funcionando!'),
+                    React.createElement('p', null, 'Componente de teste renderizado com sucesso.'),
+                    React.createElement('small', null, `React versão: ${React.version}`)
+                );
+                
+                // Renderizar
+                if (ReactDOM.createRoot) {
+                    const root = ReactDOM.createRoot(testArea);
+                    root.render(TestComponent);
+                } else {
+                    ReactDOM.render(TestComponent, testArea);
+                }
+                
+                logToConsole('component-status', 'Teste de renderização bem-sucedido', 'success');
+                showNotification('Componente de teste renderizado com sucesso', 'success');
+            } catch (error) {
+                testArea.innerHTML = `
+                    <div style="color: #721c24; background: #f8d7da; padding: 15px; border-radius: 4px;">
+                        <strong>❌ Erro no teste de React:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+                logToConsole('component-status', `Erro no teste de renderização: ${error.message}`, 'error');
+                showNotification('Erro no teste de renderização', 'error');
+                errorCount++;
+            }
+        }
+        
+        // Testar componente específico CriarUnidadeReact
+        function testCriarUnidadeComponent() {
+            if (window.CriarUnidadeReact) {
+                logToConsole('component-status', 'CriarUnidadeReact encontrado e funcional', 'success');
+                showNotification('CriarUnidadeReact está disponível', 'success');
+            } else {
+                logToConsole('component-status', 'CriarUnidadeReact não encontrado', 'error');
+                showNotification('CriarUnidadeReact não está disponível', 'error');
+                errorCount++;
+            }
+        }
+        
+        // Testar componente específico RegistroChamadaReact
+        function testRegistroChamadaComponent() {
+            if (window.RegistroChamadaReact) {
+                logToConsole('component-status', 'RegistroChamadaReact encontrado e funcional', 'success');
+                showNotification('RegistroChamadaReact está disponível', 'success');
+            } else {
+                logToConsole('component-status', 'RegistroChamadaReact não encontrado', 'error');
+                showNotification('RegistroChamadaReact não está disponível', 'error');
+                errorCount++;
+            }
+        }
+        
+        // Testar arquivos estáticos
+        function testStaticFiles() {
+            logToConsole('error-log', 'Testando acesso a arquivos estáticos...', 'info');
+            
+            const staticFiles = [
+                '/static/js/services/ReactDebugger.js',
+                '/static/js/components/ReactErrorBoundary.js',
+                '/static/js/services/SafeComponentLoader.js'
+            ];
+            
+            staticFiles.forEach(filePath => {
+                fetch(filePath)
+                    .then(response => {
+                        if (response.ok) {
+                            logToConsole('error-log', `Arquivo estático acessível: ${filePath}`, 'success');
+                        } else {
+                            logToConsole('error-log', `Arquivo estático com erro ${response.status}: ${filePath}`, 'error');
+                            errorCount++;
+                        }
+                    })
+                    .catch(error => {
+                        logToConsole('error-log', `Erro ao acessar ${filePath}: ${error.message}`, 'error');
+                        errorCount++;
+                    });
+            });
+        }
+        
+        // Testar requisições de rede
+        function testNetworkRequests() {
+            logToConsole('error-log', 'Testando requisições de rede...', 'info');
+            
+            // Testar endpoint de CNES (se existir)
+            fetch('/accounts/api/cnes/1234567/')
+                .then(response => {
+                    logToConsole('error-log', `Endpoint CNES respondeu com status: ${response.status}`, 'info');
+                })
+                .catch(error => {
+                    logToConsole('error-log', `Erro ao testar endpoint CNES: ${error.message}`, 'warning');
+                });
+        }
+        
+        // Gerar relatório de erros
+        function generateErrorReport() {
+            const container = document.getElementById('error-log');
+            container.innerHTML = '';
+            
+            logToConsole('error-log', '📊 Gerando relatório de erros...', 'info');
+            
+            if (window.DiagnosticTools) {
+                const errors = window.DiagnosticTools.getCapturedErrors();
+                const warnings = window.DiagnosticTools.getCapturedWarnings();
+                
+                logToConsole('error-log', `Total de erros capturados: ${errors.length}`, errors.length > 0 ? 'error' : 'success');
+                logToConsole('error-log', `Total de avisos capturados: ${warnings.length}`, warnings.length > 0 ? 'warning' : 'success');
+                
+                errors.forEach((error, index) => {
+                    logToConsole('error-log', `Erro ${index + 1}: ${error.message}`, 'error');
+                });
+                
+                warnings.forEach((warning, index) => {
+                    logToConsole('error-log', `Aviso ${index + 1}: ${warning.message}`, 'warning');
+                });
+            }
+            
+            logToConsole('error-log', `Erros encontrados nesta sessão: ${errorCount}`, errorCount > 0 ? 'error' : 'success');
+            logToConsole('error-log', `Avisos encontrados nesta sessão: ${warningCount}`, warningCount > 0 ? 'warning' : 'success');
+            
+            showNotification('Relatório de erros gerado', 'info');
+        }
+        
+        // Limpar log de erros
+        function clearErrorLog() {
+            document.getElementById('error-log').innerHTML = 'Log limpo...';
+            errorCount = 0;
+            warningCount = 0;
+            showNotification('Log de erros limpo', 'info');
+        }
+        
+        // Funções para testes avançados
+        function runRenderingDiagnostic() {
+            if (window.RenderingFixTools) {
+                window.RenderingFixTools.runFullDiagnostic();
+                showNotification('Diagnóstico de renderização executado', 'info');
+            } else {
+                showNotification('Ferramentas de diagnóstico não disponíveis', 'error');
+            }
+        }
+        
+        function testManualRender() {
+            if (window.RenderingFixTools) {
+                const success = window.RenderingFixTools.testManualRendering();
+                showNotification(success ? 'Teste manual bem-sucedido' : 'Teste manual falhou', success ? 'success' : 'error');
+            } else {
+                showNotification('Ferramentas de renderização não disponíveis', 'error');
+            }
+        }
+        
+        function testBundleLoading() {
+            if (window.BundleTestTools) {
+                window.BundleTestTools.runBundleDiagnostic();
+                showNotification('Teste avançado de bundles executado', 'info');
+            } else {
+                showNotification('Ferramentas de teste de bundle não disponíveis', 'error');
+            }
+        }
+        
+        function fixRenderingIssues() {
+            logToConsole('error-log', 'Tentando corrigir problemas de renderização...', 'info');
+            
+            // Verificar e tentar corrigir problemas comuns
+            if (typeof React === 'undefined') {
+                logToConsole('error-log', 'Tentando carregar React...', 'warning');
+                const reactScript = document.createElement('script');
+                reactScript.src = 'https://unpkg.com/react@18/umd/react.development.js';
+                reactScript.onload = () => {
+                    logToConsole('error-log', 'React carregado com sucesso', 'success');
+                    
+                    const reactDOMScript = document.createElement('script');
+                    reactDOMScript.src = 'https://unpkg.com/react-dom@18/umd/react-dom.development.js';
+                    reactDOMScript.onload = () => {
+                        logToConsole('error-log', 'ReactDOM carregado com sucesso', 'success');
+                        showNotification('React e ReactDOM carregados', 'success');
+                    };
+                    document.head.appendChild(reactDOMScript);
+                };
+                document.head.appendChild(reactScript);
+            } else {
+                logToConsole('error-log', 'React já está disponível', 'success');
+            }
+            
+            // Tentar recarregar bundles problemáticos
+            const problematicBundles = [
+                '/static/js/dist/react-services.bundle.js',
+                '/static/js/dist/criar-unidade.bundle.js'
+            ];
+            
+            problematicBundles.forEach(bundlePath => {
+                const script = document.createElement('script');
+                script.src = bundlePath + '?v=' + Date.now(); // Cache busting
+                script.onload = () => {
+                    logToConsole('error-log', `Bundle recarregado: ${bundlePath}`, 'success');
+                };
+                script.onerror = () => {
+                    logToConsole('error-log', `Erro ao recarregar: ${bundlePath}`, 'error');
+                };
+                document.head.appendChild(script);
+            });
+            
+            showNotification('Tentativa de correção executada', 'info');
+        }
+        
+        // Executar diagnóstico inicial quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                runGeneralDiagnostic();
+            }, 1000);
+        });
+    </script>
+    
+    <style>
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "name": "registro-chamados",
+  "version": "1.0.0",
+  "description": "Sistema de Registro de Chamadas Médicas",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "watch": "webpack --mode development --watch --progress",
+    "start": "webpack serve --mode development",
+    "clean": "rmdir /s /q static\\js\\dist 2>nul || echo Diretório limpo",
+    "build:all": "npm run clean && npm run build:prod",
+    "dev:watch": "webpack --mode development --watch --progress --color",
+    "analyze": "webpack --mode production --analyze",
+    "collectstatic": "python manage.py collectstatic --noinput"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "@babel/preset-react": "^7.22.0",
+    "babel-loader": "^9.1.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "keywords": [
+    "django",
+    "react",
+    "medical",
+    "emergency"
+  ],
+  "author": "Sistema de Registro de Chamadas",
+  "license": "MIT"
+}

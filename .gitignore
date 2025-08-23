@@ -1,0 +1,13 @@
+# Ignorar arquivos e pastas de variáveis de ambiente
+.env
+
+# Ignorar o banco de dados local do SQLite
+db.sqlite3
+
+# Ignorar pastas de cache e ambiente virtual
+__pycache__/
+venv/
+env/
+
+# Ignorar arquivos de mídia (opcional)
+media/

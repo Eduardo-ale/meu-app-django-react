@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if editando_outro %}Editar Usuário: {{ usuario_editado.username }}{% else %}Editar Perfil{% endif %}{% endblock %}
+
+{% block content %}
+<div id="perfil-react-root">
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; flex-direction: column;">
+        <div style="width: 60px; height: 60px; border: 4px solid rgba(255, 255, 255, 0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1.5rem;"></div>
+        <h2 style="margin: 0 0 0.5rem; font-weight: 600;">🚀 Carregando Perfil React Moderno</h2>
+        <p style="margin: 0; opacity: 0.9;">Preparando interface moderna...</p>
+    </div>
+</div>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<!-- React Dependencies -->
+<script src="{% static 'js/vendor/react.development.js' %}"></script>
+<script src="{% static 'js/vendor/react-dom.development.js' %}"></script>
+
+<!-- CSRF Token e Props -->
+<script>
+    window.csrfToken = '{{ csrf_token }}';
+    
+    window.perfilProps = {
+        usuario: {
+            id: {{ user.id|default:'null' }},
+            username: '{{ user.username|default:"" }}',
+            full_name: '{{ user.get_full_name|default:user.username }}',
+            email: '{{ user.email|default:"" }}',
+            first_name: '{{ user.first_name|default:"" }}',
+            last_name: '{{ user.last_name|default:"" }}'
+        },
+        usuario_editado: {
+            id: {{ usuario_editado.id|default:'null' }},
+            username: '{{ usuario_editado.username|default:"" }}',
+            full_name: '{{ usuario_editado.get_full_name|default:usuario_editado.username }}',
+            email: '{{ usuario_editado.email|default:"" }}',
+            first_name: '{{ usuario_editado.first_name|default:"" }}',
+            last_name: '{{ usuario_editado.last_name|default:"" }}'
+        },
+        editando_outro: {% if editando_outro %}true{% else %}false{% endif %},
+        data_atual: '{{ data_atual|date:"c" }}'
+    };
+    
+    console.log('🎨 Props para Perfil Moderno:', window.perfilProps);
+</script>
+
+<!-- Bundle React Moderno -->
+<script src="{% static 'js/dist/perfil-moderno.bundle.js' %}"></script>
+
+{% endblock %}
+
+
+
+
+
+
+
+

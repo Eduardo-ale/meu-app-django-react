@@ -1,0 +1,741 @@
+{% extends 'base.html' %}
+{% load static %}
+{% include 'react_scripts_base.html' %}
+
+{% block title %}Relatórios do Sistema{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    
+    .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        flex-direction: column;
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-top: 5px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .error-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .error-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        text-align: center;
+        max-width: 500px;
+    }
+
+    .error-card h4 {
+        color: #ffc107;
+        margin-bottom: 1rem;
+    }
+
+    .error-card .btn {
+        margin: 0.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .error-card .btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* ===== ESTILOS DO COMPONENTE REACT ===== */
+    .relatorios-react {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* ===== BREADCRUMB STYLES ===== */
+    .breadcrumb-container {
+        margin-bottom: 1.5rem;
+        padding: 0.75rem 0;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 0.75rem 1.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: slideInDown 0.6s ease-out;
+    }
+
+    .breadcrumb-item {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .breadcrumb-item:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.15);
+        font-weight: 600;
+        pointer-events: none;
+    }
+
+    .breadcrumb-separator {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.8rem;
+        margin: 0 0.25rem;
+    }
+
+    /* ===== HEADER IMPROVEMENTS ===== */
+    .header-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .header-icon {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 1rem;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-text h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ffffff 0%, #e8e8e8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .header-text p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+    }
+
+    .header-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: flex-end;
+        min-width: 300px;
+    }
+
+    /* ===== PERIOD INFO ===== */
+    .period-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .period-badge {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .period-badge i {
+        color: #ffeb3b;
+    }
+
+    /* ===== EXPORT SECTION ===== */
+    .export-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+    }
+
+    .export-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 0.5rem;
+    }
+
+    .export-label i {
+        color: #4caf50;
+        font-size: 1rem;
+    }
+
+    .export-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    /* ===== IMPROVED EXPORT BUTTONS ===== */
+    .export-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        min-width: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .export-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .export-btn:hover::before {
+        left: 100%;
+    }
+
+    .export-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .export-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-content i {
+        font-size: 1.2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .btn-text {
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-description {
+        font-size: 0.7rem;
+        opacity: 0.8;
+        font-weight: 400;
+    }
+
+    /* Cores específicas para cada botão - Harmonizadas */
+    .excel-btn {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(34, 197, 94, 0.15) 100%);
+        border-color: rgba(16, 185, 129, 0.5);
+        color: #10b981;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .excel-btn:hover {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(34, 197, 94, 0.25) 100%);
+        border-color: #10b981;
+        color: #34d399;
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    }
+
+    .csv-btn {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(147, 197, 253, 0.15) 100%);
+        border-color: rgba(59, 130, 246, 0.5);
+        color: #3b82f6;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    }
+
+    .csv-btn:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(147, 197, 253, 0.25) 100%);
+        border-color: #3b82f6;
+        color: #60a5fa;
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .pdf-btn {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(252, 165, 165, 0.15) 100%);
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #ef4444;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+    }
+
+    .pdf-btn:hover {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.35) 0%, rgba(252, 165, 165, 0.25) 100%);
+        border-color: #ef4444;
+        color: #f87171;
+        box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Efeito de glow adicional */
+    .export-btn:hover {
+        filter: brightness(1.1);
+        backdrop-filter: blur(15px);
+    }
+
+    .export-btn:active {
+        transform: translateY(-1px) scale(0.98);
+        filter: brightness(0.95);
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 768px) {
+        .main-container {
+            padding: 1rem;
+        }
+
+        .breadcrumb {
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .breadcrumb-item {
+            font-size: 0.8rem;
+        }
+
+        .header-content {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1.5rem;
+        }
+
+        .header-controls {
+            align-items: stretch;
+        }
+
+        .export-section {
+            align-items: stretch;
+        }
+
+        .export-buttons {
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn {
+            min-width: 70px;
+            padding: 0.6rem 0.8rem;
+        }
+
+        .btn-content i {
+            font-size: 1rem;
+        }
+
+        .btn-text {
+            font-size: 0.75rem;
+        }
+
+        .btn-description {
+            font-size: 0.65rem;
+        }
+
+        .header-text h1 {
+            font-size: 1.5rem;
+        }
+
+        .header-text p {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .breadcrumb-item {
+            padding: 0.2rem 0.4rem;
+        }
+
+        .breadcrumb-item span:not(.breadcrumb-separator) {
+            display: none;
+        }
+
+        .header-section {
+            padding: 1.5rem;
+        }
+
+        .export-buttons {
+            flex-direction: column;
+        }
+
+        .export-btn {
+            width: 100%;
+            min-width: unset;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'react_scripts_base.html' %}
+<div id="relatorios-react-root">
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <div>Carregando relatórios...</div>
+        <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+            Buscando dados reais do sistema...
+        </div>
+    </div>
+</div>
+
+<!-- Bloco JSON para graficos_data -->
+<script id="graficos-data" type="application/json">{{ graficos_data|default:"{}"|safe }}</script>
+<!-- React CDN -->
+<!-- Scripts removidos do CDN, agora React é carregado via include central ou arquivos locais -->
+
+<!-- Componente React -->
+<script src="{% static 'js/components/RelatoriosReact.js' %}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando Relatórios com dados reais do sistema...');
+    
+    function showError(title, message, showDebug = false) {
+        const container = document.getElementById('relatorios-react-root');
+        const debugInfo = showDebug ? `
+            <div style="margin-top: 1rem; text-align: left; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px; font-family: monospace; font-size: 0.8rem;">
+                <strong>Debug Info:</strong><br>
+                React: ${typeof React !== 'undefined' ? '✅ Carregado (v' + React.version + ')' : '❌ Não carregado'}<br>
+                ReactDOM: ${typeof ReactDOM !== 'undefined' ? '✅ Carregado' : '❌ Não carregado'}<br>
+                RelatoriosReact: ${typeof RelatoriosReact !== 'undefined' ? '✅ Carregado' : '❌ Não carregado'}<br>
+                Timestamp: ${new Date().toLocaleString()}
+            </div>
+        ` : '';
+        
+        container.innerHTML = `
+            <div class="error-container">
+                <div class="error-card">
+                    <h4><i class="fas fa-exclamation-triangle"></i> ${title}</h4>
+                    <p>${message}</p>
+                    <a href="/accounts/configuracoes/" class="btn">
+                        <i class="fas fa-arrow-left"></i> Voltar às Configurações
+                    </a>
+                    <button onclick="location.reload()" class="btn">
+                        <i class="fas fa-redo"></i> Tentar Novamente
+                    </button>
+                    ${debugInfo}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Aguardar carregamento com timeout
+    let attempts = 0;
+    const maxAttempts = 50; // 5 segundos
+    
+    function checkAndRender() {
+        attempts++;
+        
+        console.log(`Tentativa ${attempts}/${maxAttempts}: Verificando dependências...`);
+        
+        // Verificar se React está carregado
+        if (typeof React === 'undefined') {
+            console.log('⏳ React ainda não carregou...');
+            if (attempts < maxAttempts) {
+                setTimeout(checkAndRender, 100);
+                return;
+            } else {
+                console.error('❌ Timeout: React não carregou');
+                showError('React não carregou', 'O React não foi carregado após 5 segundos. Verifique sua conexão com a internet.', true);
+                return;
+            }
+        }
+        
+        // Verificar se ReactDOM está carregado
+        if (typeof ReactDOM === 'undefined') {
+            console.log('⏳ ReactDOM ainda não carregou...');
+            if (attempts < maxAttempts) {
+                setTimeout(checkAndRender, 100);
+                return;
+            } else {
+                console.error('❌ Timeout: ReactDOM não carregou');
+                showError('ReactDOM não carregou', 'O ReactDOM não foi carregado após 5 segundos. Verifique sua conexão com a internet.', true);
+                return;
+            }
+        }
+        
+        // Verificar se o componente está carregado
+        if (typeof RelatoriosReact === 'undefined') {
+            console.log('⏳ Componente RelatoriosReact ainda não carregou...');
+            if (attempts < maxAttempts) {
+                setTimeout(checkAndRender, 100);
+                return;
+            } else {
+                console.error('❌ Timeout: Componente RelatoriosReact não carregou');
+                showError('Componente não encontrado', 'O componente React dos Relatórios não foi carregado. Pode haver um erro no arquivo JavaScript.', true);
+                return;
+            }
+        }
+        
+        console.log('✅ Todas as dependências carregadas! Renderizando componente...');
+        
+        try {
+            const root = ReactDOM.createRoot(document.getElementById('relatorios-react-root'));
+            
+            /* Dados REAIS do Django para o React */
+            const relatoriosData = {
+                usuario: {
+                    first_name: "{{ user.first_name|default:'Usuário'|escapejs }}",
+                    username: "{{ user.username|default:'admin'|escapejs }}"
+                },
+                dataAtual: "{{ data_atual|date:'d/m/Y'|default:'Hoje' }}",
+                statsGerais: {
+                    total_usuarios: {{ stats_gerais.total_usuarios|default:0 }},
+                    usuarios_ativos: {{ stats_gerais.usuarios_ativos|default:0 }},
+                    usuarios_admins: {{ stats_gerais.usuarios_admins|default:0 }},
+                    total_unidades: {{ stats_gerais.total_unidades|default:0 }},
+                    total_chamadas: {{ stats_gerais.total_chamadas|default:0 }}
+                },
+                usuariosStats: {
+                    por_tipo: {
+                        usuarios_comuns: {{ usuarios_stats.por_tipo.usuarios_comuns|default:0 }},
+                        administradores: {{ usuarios_stats.por_tipo.administradores|default:0 }}
+                    },
+                    usuarios_mes_atual: {{ usuarios_stats.usuarios_mes_atual|default:0 }},
+                    top_usuarios: [
+                        {% for user_stat in usuarios_stats.top_usuarios %}
+                        {
+                            usuario: {
+                                full_name: "{% if user_stat.usuario.get_full_name %}{{ user_stat.usuario.get_full_name|escapejs }}{% else %}{{ user_stat.usuario.username|escapejs }}{% endif %}",
+                                username: "{{ user_stat.usuario.username|escapejs }}",
+                                is_staff: {{ user_stat.usuario.is_staff|yesno:"true,false" }}
+                            },
+                            total_chamadas: {{ user_stat.total_chamadas|default:0 }},
+                            chamadas_resolvidas: {{ user_stat.chamadas_resolvidas|default:0 }},
+                            taxa_resolucao: {{ user_stat.taxa_resolucao|floatformat:"2"|default:"0.0"|cut:"," }},
+                            nivel: "{{ user_stat.nivel|default:'Iniciante'|escapejs }}",
+                            cor_nivel: "{{ user_stat.cor_nivel|default:'blue'|escapejs }}",
+                            atividade_recente: {{ user_stat.atividade_recente|default:0 }}
+                        }{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                        {
+                            usuario: {
+                                full_name: "Nenhum dado",
+                                username: "sem_dados",
+                                is_staff: false
+                            },
+                            total_chamadas: 0,
+                            chamadas_resolvidas: 0,
+                            taxa_resolucao: 0,
+                            nivel: "Iniciante",
+                            cor_nivel: "gray",
+                            atividade_recente: 0
+                        }
+                        {% endfor %}
+                    ]
+                },
+                unidadesStats: {
+                    por_tipo: {
+                        {% for tipo, count in unidades_stats.por_tipo.items %}
+                        "{{ tipo|default:''|escapejs }}": {{ count|default:0 }}{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                        "Sem dados": 0
+                        {% endfor %}
+                    },
+                    por_municipio: {
+                        {% for municipio, count in unidades_stats.por_municipio.items %}
+                        "{{ municipio|default:''|escapejs }}": {{ count|default:0 }}{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                        "Sem dados": 0
+                        {% endfor %}
+                    }
+                },
+                chamadasStats: {
+                    por_status: {
+                        {% for status, count in chamadas_stats.por_status.items %}
+                        "{{ status|default:''|escapejs }}": {{ count|default:0 }}{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                        "Sem dados": 0
+                        {% endfor %}
+                    },
+                    por_tipo: {
+                        {% for tipo, count in chamadas_stats.por_tipo.items %}
+                        "{{ tipo|default:''|escapejs }}": {{ count|default:0 }}{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                        "Sem dados": 0
+                        {% endfor %}
+                    },
+                    por_usuario: {
+                        {% for usuario, count in chamadas_stats.por_usuario.items %}
+                        "{{ usuario|default:''|escapejs }}": {{ count|default:0 }}{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                        "Sem dados": 0
+                        {% endfor %}
+                    },
+                    total_chamadas_usuario_atual: {{ chamadas_stats.total_chamadas_usuario_atual|default:0 }},
+                    total_usuarios_com_chamadas: {{ chamadas_stats.total_usuarios_com_chamadas|default:0 }},
+                    usuario_eh_admin: {{ user.is_staff|yesno:"true,false" }}
+                },
+                analises: {
+                    insights: [
+                        {% for insight in analises.insights %}
+                        {
+                            tipo: "{{ insight.tipo|default:''|escapejs }}",
+                            titulo: "{{ insight.titulo|default:''|escapejs }}",
+                            descricao: "{{ insight.descricao|default:''|escapejs }}"
+                        }{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                        {
+                            tipo: "info",
+                            titulo: "Sistema Novo",
+                            descricao: "Dados insuficientes para análise. Continue usando o sistema para gerar insights."
+                        }
+                        {% endfor %}
+                    ]
+                },
+                /* URLs para exportação */
+                exportUrls: {
+                    usuarios_excel: "{% url 'export_relatorio_usuarios_mes_excel' %}",
+                    usuarios_csv: "{% url 'export_relatorio_usuarios_mes_csv' %}",
+                    usuarios_pdf: "{% url 'export_relatorio_usuarios_mes_pdf' %}",
+                    geral_excel: "{% url 'export_relatorio_geral_excel' %}",
+                    geral_csv: "{% url 'export_relatorio_geral_csv' %}",
+                    geral_pdf: "{% url 'export_relatorio_geral_pdf' %}"
+                }
+            };
+            relatoriosData.graficosData = JSON.parse(document.getElementById('graficos-data').textContent);
+            
+            console.log('📊 Dados REAIS dos relatórios carregados:', relatoriosData);
+            
+            // Renderizar o componente com dados reais
+            root.render(React.createElement(RelatoriosReact, relatoriosData));
+            
+            console.log('🎉 Componente de Relatórios renderizado com dados reais!');
+            
+        } catch (error) {
+            console.error('❌ Erro ao renderizar componente:', error);
+            console.error('Stack trace:', error.stack);
+            showError('Erro de Renderização', `Erro ao renderizar o componente: ${error.message}`, true);
+        }
+    }
+    
+    // Iniciar verificação
+    setTimeout(checkAndRender, 100);
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,1713 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Breadcrumb Moderno -->
+    <div class="breadcrumb-container">
+        <nav>
+            <ol class="breadcrumb-modern">
+                <li class="breadcrumb-item-modern">
+                    <span class="breadcrumb-current-text">
+                        <i class="fas fa-home"></i>
+                        <span class="breadcrumb-text">Dashboard</span>
+                    </span>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Header Principal -->
+    <div class="dashboard-header">
+        <div class="header-content" style="flex-direction: column; align-items: center; text-align: center;">
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <!-- Imagem removida aqui -->
+            </div>
+            <div class="welcome-text">
+                <h1>Bem-vindo, {{ usuario.first_name|default:usuario.username }}!</h1>
+                <p class="welcome-subtitle">Sistema de Registro de Chamadas Médicas</p>
+                <div class="welcome-time">
+                    <i class="fas fa-clock"></i>
+                    <span id="currentDateTime"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas Principais -->
+    <div class="stats-dashboard">
+        <h2 class="section-title">
+            <img src="{% static 'images/estatisticas.gif' %}?v={{ timestamp|default:'3' }}" alt="Estatísticas" style="width: 1.5rem; height: 1.5rem; object-fit: contain; margin-right: 0.5rem; display: inline-block !important;" />
+            Estatísticas do Sistema
+        </h2>
+        <div class="stats-grid-main">
+            <div class="stat-card-main primary">
+                <div class="stat-icon-main">
+                    <i class="fas fa-hospital-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ estatisticas.total_unidades }}</div>
+                    <div class="stat-label">Total de Unidades</div>
+                    <div class="stat-growth">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Cadastradas no sistema</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card-main success">
+                <div class="stat-icon-main">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ estatisticas.total_chamadas }}</div>
+                    <div class="stat-label">Total de Chamadas</div>
+                    <div class="stat-growth">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Registradas no sistema</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card-main warning">
+                <div class="stat-icon-main">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ estatisticas.chamadas_hoje }}</div>
+                    <div class="stat-label">Chamadas Hoje</div>
+                    <div class="stat-growth">
+                        <i class="fas fa-clock"></i>
+                        <span>Registradas hoje</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card-main info">
+                <div class="stat-icon-main">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ estatisticas.chamadas_mes }}</div>
+                    <div class="stat-label">Chamadas Este Mês</div>
+                    <div class="stat-growth">
+                        <i class="fas fa-calendar"></i>
+                        <span>Neste mês</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas Detalhadas -->
+        <div class="detailed-stats">
+            <h3 class="subsection-title">Distribuição de Unidades por Tipo</h3>
+            <div class="mini-stats-grid">
+                <div class="mini-stat-card executante">
+                    <div class="mini-stat-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div class="mini-stat-info">
+                        <div class="mini-stat-number">{{ estatisticas.executantes }}</div>
+                        <div class="mini-stat-label">Executantes</div>
+                    </div>
+                </div>
+                <div class="mini-stat-card solicitante">
+                    <div class="mini-stat-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="mini-stat-info">
+                        <div class="mini-stat-number">{{ estatisticas.solicitantes }}</div>
+                        <div class="mini-stat-label">Solicitantes</div>
+                    </div>
+                </div>
+                <div class="mini-stat-card mista">
+                    <div class="mini-stat-icon">
+                        <i class="fas fa-hospital-user"></i>
+                    </div>
+                    <div class="mini-stat-info">
+                        <div class="mini-stat-number">{{ estatisticas.executante_solicitante }}</div>
+                        <div class="mini-stat-label">Executante/Solicitante</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Principal -->
+    <div class="main-menu-section">
+        <h2 class="section-title">
+            <i class="fas fa-th-large"></i>
+            Acesso Rápido
+        </h2>
+        <div class="menu-grid">
+            <a href="{% url 'unidades_saude' %}" class="menu-card unidades">
+                <div class="menu-card-header">
+                    <div class="menu-icon">
+                        <i class="fas fa-hospital-alt"></i>
+                    </div>
+                    <div class="menu-badge">{{ estatisticas.total_unidades }}</div>
+                </div>
+                <div class="menu-content">
+                    <h3>Unidades de Saúde</h3>
+                    <p>Gerencie e visualize todas as unidades de saúde cadastradas no sistema</p>
+                    <div class="menu-features">
+                        <span class="feature-tag">Visualizar</span>
+                        <span class="feature-tag">Editar</span>
+                        <span class="feature-tag">Exportar</span>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'registro_chamada' %}" class="menu-card chamadas">
+                <div class="menu-card-header">
+                    <div class="menu-icon">
+                        <i class="fas fa-phone-volume"></i>
+                    </div>
+                    <div class="menu-badge urgent">{{ estatisticas.chamadas_hoje }}</div>
+                </div>
+                <div class="menu-content">
+                    <h3>Registro de Chamadas</h3>
+                    <p>Registre suas chamadas e ligações</p>
+                    <div class="menu-features">
+                        <span class="feature-tag emergency">Emergência</span>
+                        <span class="feature-tag">Registro</span>
+                        <span class="feature-tag">Histórico</span>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'lista_telefonica' %}" class="menu-card telefonica">
+                <div class="menu-card-header">
+                    <div class="menu-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div class="menu-badge available">Ativo</div>
+                </div>
+                <div class="menu-content">
+                    <h3>Lista Telefônica</h3>
+                    <p>Consulte contatos importantes e números de emergência das unidades</p>
+                    <div class="menu-features">
+                        <span class="feature-tag">Contatos</span>
+                        <span class="feature-tag">Emergência</span>
+                        <span class="feature-tag">Busca</span>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{% url 'historico_chamadas' %}" class="menu-card historico">
+                <div class="menu-card-header">
+                    <div class="menu-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="menu-badge available">Ativo</div>
+                </div>
+                <div class="menu-content">
+                    <h3>Histórico</h3>
+                    <p>Visualize o histórico completo de chamados e atendimentos realizados</p>
+                    <div class="menu-features">
+                        <span class="feature-tag">Histórico</span>
+                        <span class="feature-tag">Filtros</span>
+                        <span class="feature-tag">Relatórios</span>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <div class="menu-card relatorios disabled">
+                <div class="menu-card-header">
+                    <div class="menu-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="menu-badge coming-soon">Em Breve</div>
+                </div>
+                <div class="menu-content">
+                    <h3>Relatórios</h3>
+                    <p>Acesse relatórios detalhados e estatísticas dos atendimentos</p>
+                    <div class="menu-features">
+                        <span class="feature-tag disabled">Gráficos</span>
+                        <span class="feature-tag disabled">Estatísticas</span>
+                        <span class="feature-tag disabled">Exportar</span>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+
+            <a href="{% url 'configuracoes' %}" class="menu-card configuracoes">
+                <div class="menu-card-header">
+                    <div class="menu-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="menu-badge available">Ativo</div>
+                </div>
+                <div class="menu-content">
+                    <h3>Configurações</h3>
+                    <p>Gerencie configurações do sistema e preferências do usuário</p>
+                    <div class="menu-features">
+                        <span class="feature-tag">Sistema</span>
+                        <span class="feature-tag">Usuários</span>
+                        <span class="feature-tag">Backup</span>
+                    </div>
+                </div>
+                <div class="menu-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Atividades Recentes -->
+    <div class="recent-activities">
+        <div class="activities-grid">
+            <!-- Últimas Unidades -->
+            <div class="activity-section">
+                <div class="activity-header">
+                    <h3>
+                        <i class="fas fa-hospital-alt"></i>
+                        Unidades Recentes
+                    </h3>
+                    <a href="{% url 'unidades_saude' %}" class="view-all-btn">
+                        Ver todas <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="activity-list">
+                    {% for unidade in ultimas_unidades %}
+                    <div class="activity-item">
+                        <div class="activity-icon {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}executante{% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}solicitante{% else %}mista{% endif %}">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ unidade.nome }}</div>
+                            <div class="activity-meta">
+                                <span class="activity-type">{{ unidade.get_tipo_display }}</span>
+                                <span class="activity-date">{{ unidade.created_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+                        <a href="{% url 'visualizar_unidade' unidade.id %}" class="activity-action">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                    {% empty %}
+                    <div class="empty-activity">
+                        <i class="fas fa-inbox"></i>
+                        <span>Nenhuma unidade cadastrada ainda</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Últimas Chamadas -->
+            <div class="activity-section">
+                <div class="activity-header">
+                    <h3>
+                        <i class="fas fa-phone-volume"></i>
+                        Chamadas Recentes
+                    </h3>
+                    <a href="{% url 'historico_chamadas' %}" class="view-all-btn">
+                        Ver todas <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="activity-list">
+                    {% for chamada in ultimas_chamadas %}
+                    <div class="activity-item">
+                        <div class="activity-icon chamada {% if chamada.tipo_chamada == 'EMERGENCIA' %}emergency{% else %}normal{% endif %}">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ chamada.nome_contato }}</div>
+                            <div class="activity-meta">
+                                <span class="activity-type">{{ chamada.get_tipo_chamada_display }}</span>
+                                <span class="activity-date">{{ chamada.data_criacao|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+                        <div class="activity-status">
+                            <span class="status-badge {% if chamada.status == 'CONCLUIDO' %}success{% elif chamada.status == 'EM_ANDAMENTO' %}warning{% else %}info{% endif %}">
+                                {{ chamada.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-activity">
+                        <i class="fas fa-phone-slash"></i>
+                        <span>Nenhuma chamada registrada ainda</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensagens de Feedback -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-floating" role="alert">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Modal para Upload de Avatar -->
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="avatarModalLabel">
+                    <i class="fas fa-camera"></i>
+                    Foto do Perfil
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="avatarForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="avatar-upload-section">
+                        <div class="current-avatar">
+                            {% if user.profile.avatar %}
+                                <img src="{{ user.profile.avatar.url }}" alt="Foto atual" class="current-avatar-img">
+                            {% else %}
+                                <div class="no-avatar-placeholder">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Nenhuma foto</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="upload-controls">
+                            <label for="avatarFile" class="upload-btn">
+                                <i class="fas fa-upload"></i>
+                                Escolher Foto
+                            </label>
+                            <input type="file" id="avatarFile" name="avatar" accept="image/*" style="display: none;">
+                            <div class="upload-info">
+                                <small>Formatos: JPG, PNG • Tamanho máximo: 2MB</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-preview" id="imagePreview" style="display: none;">
+                        <img id="previewImg" src="" alt="Prévia da imagem">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                {% if user.profile.avatar %}
+                    <button type="button" class="btn btn-danger" onclick="removeAvatar()">
+                        <i class="fas fa-trash"></i>
+                        Remover Foto
+                    </button>
+                {% endif %}
+                <button type="button" class="btn btn-primary" onclick="uploadAvatar()">
+                    <i class="fas fa-save"></i>
+                    Salvar Foto
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ===== CONTAINER PRINCIPAL ===== */
+    .dashboard-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        background: #f8fafc;
+        min-height: 100vh;
+    }
+
+    /* ===== BREADCRUMB MODERNO ===== */
+    .breadcrumb-container {
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .breadcrumb-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b);
+    }
+
+    .breadcrumb-modern {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .breadcrumb-item-modern {
+        display: flex;
+        align-items: center;
+    }
+
+    .breadcrumb-current-text {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    }
+
+    /* ===== HEADER PRINCIPAL ===== */
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .dashboard-header::before {
+        display: none;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+        position: relative;
+        z-index: 2;
+        background: none;
+    }
+
+    .welcome-section {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex: 1;
+        background: none;
+    }
+
+    /* ===== SEÇÃO DE PERFIL DO USUÁRIO ===== */
+    .user-profile-section {
+        position: relative;
+        z-index: 2;
+        background: none;
+    }
+
+    .user-avatar-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .user-avatar-img:hover {
+        border-color: rgba(255, 255, 255, 0.6);
+        transform: translateY(-2px);
+    }
+
+    .user-avatar-placeholder {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .user-avatar-placeholder:hover {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.6);
+        transform: scale(1.05);
+    }
+
+    .user-avatar-placeholder i {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .avatar-text {
+        font-size: 0.7rem;
+        text-align: center;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+
+    /* ===== MODAL DE AVATAR ===== */
+    .avatar-upload-section {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .current-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+        height: 120px;
+        border-radius: 16px;
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+    }
+
+    .current-avatar-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+
+    .no-avatar-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b;
+    }
+
+    .no-avatar-placeholder i {
+        font-size: 3rem;
+    }
+
+    .upload-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .upload-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .upload-btn:hover {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        color: white;
+    }
+
+    .upload-info {
+        color: #64748b;
+        font-size: 0.8rem;
+    }
+
+    .image-preview {
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .image-preview img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-text h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.2rem;
+        margin: 0.5rem 0;
+        opacity: 0.9;
+        font-weight: 400;
+    }
+
+    .welcome-time {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-top: 0.75rem;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .quick-action-btn {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quick-action-btn.emergency {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+        animation: pulse-emergency 2s infinite;
+    }
+
+    .quick-action-btn.primary {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+
+    .quick-action-btn:hover {
+        transform: translateY(-3px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .quick-action-btn.emergency:hover {
+        box-shadow: 0 8px 30px rgba(239, 68, 68, 0.6);
+    }
+
+    .quick-action-btn.primary:hover {
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+    }
+
+    /* ===== ESTATÍSTICAS PRINCIPAIS ===== */
+    .stats-dashboard {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-title i {
+        color: #3b82f6;
+    }
+
+    .stats-grid-main {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card-main {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 1px solid #f1f5f9;
+    }
+
+    .stat-card-main::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--card-gradient);
+    }
+
+    .stat-card-main.primary {
+        --card-gradient: linear-gradient(90deg, #3b82f6, #2563eb);
+    }
+
+    .stat-card-main.success {
+        --card-gradient: linear-gradient(90deg, #10b981, #059669);
+    }
+
+    .stat-card-main.warning {
+        --card-gradient: linear-gradient(90deg, #f59e0b, #d97706);
+    }
+
+    .stat-card-main.info {
+        --card-gradient: linear-gradient(90deg, #06b6d4, #0891b2);
+    }
+
+    .stat-card-main:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon-main {
+        width: 70px;
+        height: 70px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        background: var(--card-gradient);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #1e293b;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-growth {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.8rem;
+        color: #10b981;
+        font-weight: 500;
+    }
+
+    /* ===== ESTATÍSTICAS DETALHADAS ===== */
+    .detailed-stats {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f1f5f9;
+    }
+
+    .subsection-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .mini-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .mini-stat-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .mini-stat-card.executante {
+        border-left: 4px solid #10b981;
+    }
+
+    .mini-stat-card.solicitante {
+        border-left: 4px solid #3b82f6;
+    }
+
+    .mini-stat-card.mista {
+        border-left: 4px solid #8b5cf6;
+    }
+
+    .mini-stat-card:hover {
+        background: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .mini-stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    .mini-stat-card.executante .mini-stat-icon {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .mini-stat-card.solicitante .mini-stat-icon {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .mini-stat-card.mista .mini-stat-icon {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .mini-stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1;
+    }
+
+    .mini-stat-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    /* ===== MENU PRINCIPAL ===== */
+    .main-menu-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .menu-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f1f5f9;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .menu-card:not(.disabled):hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .menu-card.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: #f8fafc;
+    }
+
+    .menu-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .menu-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-card.unidades .menu-icon {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    .menu-card.chamadas .menu-icon {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .menu-card.historico .menu-icon {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    }
+
+    .menu-card.telefonica .menu-icon,
+    .menu-card.relatorios .menu-icon,
+    .menu-card.configuracoes .menu-icon {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    }
+
+    .menu-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #f1f5f9;
+        color: #374151;
+    }
+
+    .menu-badge.urgent {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        animation: pulse-badge 2s infinite;
+    }
+
+    .menu-badge.coming-soon {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+    }
+
+    .menu-badge.available {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        animation: pulse-available 2s infinite;
+    }
+
+    .menu-content h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .menu-content p {
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0 0 1rem 0;
+        font-size: 0.95rem;
+    }
+
+    .menu-features {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .feature-tag {
+        padding: 0.25rem 0.75rem;
+        background: #f1f5f9;
+        color: #374151;
+        border-radius: 16px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .feature-tag.emergency {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+    .feature-tag.disabled {
+        background: #e5e7eb;
+        color: #9ca3af;
+    }
+
+    .menu-arrow {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        width: 40px;
+        height: 40px;
+        background: #f8fafc;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        transition: all 0.3s ease;
+    }
+
+    .menu-card:not(.disabled):hover .menu-arrow {
+        background: #3b82f6;
+        color: white;
+        transform: translateX(5px);
+    }
+
+    /* ===== ATIVIDADES RECENTES ===== */
+    .recent-activities {
+        margin-bottom: 2rem;
+    }
+
+    .activities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+    }
+
+    .activity-section {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f1f5f9;
+    }
+
+    .activity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .activity-header h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .view-all-btn {
+        color: #3b82f6;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .view-all-btn:hover {
+        color: #2563eb;
+        text-decoration: none;
+        gap: 0.5rem;
+    }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+    }
+
+    .activity-item:hover {
+        background: #f1f5f9;
+        transform: translateX(5px);
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .activity-icon.executante {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .activity-icon.solicitante {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .activity-icon.mista {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .activity-icon.chamada {
+        background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+
+    .activity-icon.emergency {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        animation: pulse-emergency 2s infinite;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 0.95rem;
+        line-height: 1.2;
+    }
+
+    .activity-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.25rem;
+    }
+
+    .activity-type,
+    .activity-date {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    .activity-action {
+        width: 32px;
+        height: 32px;
+        background: #e2e8f0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .activity-action:hover {
+        background: #3b82f6;
+        color: white;
+        text-decoration: none;
+    }
+
+    .activity-status {
+        flex-shrink: 0;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 16px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-badge.success {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-badge.warning {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-badge.info {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .empty-activity {
+        text-align: center;
+        padding: 2rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .empty-activity i {
+        font-size: 2rem;
+        opacity: 0.5;
+    }
+
+    /* ===== MENSAGENS DE FEEDBACK ===== */
+    .alert-floating {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        z-index: 1060;
+        min-width: 300px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border: none;
+        border-radius: 12px;
+        animation: slideInRight 0.3s ease-out;
+    }
+
+    /* ===== ANIMAÇÕES ===== */
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    @keyframes pulse-emergency {
+        0%, 100% {
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+        }
+        50% {
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.8);
+        }
+    }
+
+    @keyframes pulse-badge {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    @keyframes pulse-available {
+        0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* ===== RESPONSIVIDADE ===== */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 1rem;
+        }
+
+        .dashboard-header {
+            padding: 1.5rem;
+        }
+
+        .header-content {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .welcome-section {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .welcome-text h1 {
+            font-size: 2rem;
+        }
+
+        .header-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .stats-grid-main {
+            grid-template-columns: 1fr;
+        }
+
+        .menu-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .activities-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .mini-stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .alert-floating {
+            top: 1rem;
+            right: 1rem;
+            left: 1rem;
+            min-width: auto;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .breadcrumb-text {
+            display: none;
+        }
+        
+        .welcome-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .activity-meta {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+    }
+
+    /* --- CORREÇÃO DEFINITIVA PARA MODAL DE FOTO DE PERFIL --- */
+
+    /* Garantir que o modal tenha z-index máximo */
+    #imagePreviewModal {
+        z-index: 9999 !important;
+    }
+
+    /* Backdrop com z-index menor que o modal */
+    .modal-backdrop {
+        z-index: 9998 !important;
+    }
+
+    /* Garantir que o conteúdo do modal seja totalmente interativo */
+    #imagePreviewModal .modal-dialog {
+        z-index: 10000 !important;
+        position: relative !important;
+    }
+
+    #imagePreviewModal .modal-content {
+        z-index: 10001 !important;
+        position: relative !important;
+        pointer-events: auto !important;
+    }
+
+    /* Forçar interatividade em todos os botões do modal */
+    #imagePreviewModal .btn,
+    #imagePreviewModal .btn-close {
+        z-index: 10002 !important;
+        position: relative !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+
+    /* Garantir que outros overlays não interfiram */
+    body.modal-open .sidebar-overlay,
+    body.modal-open .period-modal-overlay,
+    body.modal-open .dark-overlay,
+    body.modal-open .assistant-modal-overlay {
+        display: none !important;
+        z-index: 1 !important;
+    }
+
+    /* Garantir que o modal seja sempre visível */
+    #imagePreviewModal.show {
+        display: block !important;
+    }
+</style>
+
+<script>
+    // ===== FUNCIONALIDADES DO AVATAR - VERSÃO CORRIGIDA =====
+    
+    let currentImageModal = null;
+    let currentAvatarModal = null;
+
+    function openAvatarModal() {
+        // Fechar modal de imagem se estiver aberto
+        if (currentImageModal) {
+            currentImageModal.hide();
+            currentImageModal = null;
+        }
+        
+        // Abrir modal de avatar
+        const modalElement = document.getElementById('avatarModal');
+        if (modalElement) {
+            currentAvatarModal = new bootstrap.Modal(modalElement, {
+                backdrop: true,
+                keyboard: true,
+                focus: true
+            });
+            currentAvatarModal.show();
+        }
+    }
+
+    function openImagePreviewModal(imageSrc) {
+        // Limpar qualquer modal anterior
+        if (currentImageModal) {
+            currentImageModal.hide();
+            currentImageModal = null;
+        }
+        
+        // Definir a imagem
+        const previewImage = document.getElementById('previewModalImage');
+        if (previewImage) {
+            previewImage.src = imageSrc;
+        }
+        
+        // Criar nova instância do modal
+        const modalElement = document.getElementById('imagePreviewModal');
+        if (modalElement) {
+            // Garantir que outros overlays sejam escondidos
+            hideAllOverlays();
+            
+            currentImageModal = new bootstrap.Modal(modalElement, {
+                backdrop: true,
+                keyboard: false, // Não fechar com ESC
+                focus: true
+            });
+            
+            // Adicionar event listeners para limpeza
+            modalElement.addEventListener('hidden.bs.modal', function() {
+                currentImageModal = null;
+                restoreOverlays();
+            }, { once: true });
+            
+            currentImageModal.show();
+        }
+    }
+
+    function closeImageModal() {
+        if (currentImageModal) {
+            currentImageModal.hide();
+            currentImageModal = null;
+        }
+    }
+
+    function hideAllOverlays() {
+        const overlays = document.querySelectorAll('.sidebar-overlay, .period-modal-overlay, .dark-overlay, .assistant-modal-overlay');
+        overlays.forEach(overlay => {
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+    }
+
+    function restoreOverlays() {
+        const overlays = document.querySelectorAll('.sidebar-overlay, .period-modal-overlay, .dark-overlay, .assistant-modal-overlay');
+        overlays.forEach(overlay => {
+            if (overlay) {
+                overlay.style.display = '';
+            }
+        });
+    }
+
+    // Prévia da imagem selecionada
+    document.getElementById('avatarFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validar tipo de arquivo
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                alert('Por favor, selecione um arquivo JPG ou PNG.');
+                return;
+            }
+
+            // Validar tamanho (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('O arquivo deve ter no máximo 2MB.');
+                return;
+            }
+
+            // Mostrar prévia
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('imagePreview');
+                const previewImg = document.getElementById('previewImg');
+                previewImg.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Upload do avatar
+    function uploadAvatar() {
+        const fileInput = document.getElementById('avatarFile');
+        const file = fileInput.files[0];
+        
+        if (!file) {
+            alert('Por favor, selecione uma imagem.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+        const uploadBtn = document.querySelector('.modal-footer .btn-primary');
+        uploadBtn.disabled = true;
+        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+        fetch('/accounts/upload-avatar/', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Atualizar a imagem na página
+                location.reload();
+            } else {
+                alert('Erro ao enviar imagem: ' + (data.error || 'Erro desconhecido'));
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao enviar imagem.');
+        })
+        .finally(() => {
+            uploadBtn.disabled = false;
+            uploadBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Foto';
+        });
+    }
+
+    // Remover avatar
+    function removeAvatar() {
+        if (!confirm('Tem certeza que deseja remover sua foto?')) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+        fetch('/accounts/remove-avatar/', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erro ao remover imagem: ' + (data.error || 'Erro desconhecido'));
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao remover imagem.');
+        });
+    }
+
+    // Atualizar data e hora em tempo real
+    function updateDateTime() {
+        const now = new Date();
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        document.getElementById('currentDateTime').textContent = 
+            now.toLocaleDateString('pt-BR', options);
+    }
+
+    // Atualizar a cada segundo
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+
+    // Auto-dismiss de mensagens
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert-floating');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                if (alert) {
+                    alert.style.animation = 'slideInRight 0.3s ease-out reverse';
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        });
+    });
+
+    // Garantir que ESC sempre funcione para fechar modais
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            if (currentImageModal) {
+                currentImageModal.hide();
+            }
+            if (currentAvatarModal) {
+                currentAvatarModal.hide();
+            }
+        }
+    });
+
+    // Limpeza quando a página for fechada
+    window.addEventListener('beforeunload', function() {
+        if (currentImageModal) {
+            currentImageModal.hide();
+        }
+        if (currentAvatarModal) {
+            currentAvatarModal.hide();
+        }
+    });
+</script>
+{% endblock %} 

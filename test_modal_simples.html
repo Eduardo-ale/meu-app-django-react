@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Modal de Exportação</title>
+    <style>
+        /* Estilos básicos para teste */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .test-card {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Estilos do modal */
+        .export-modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            z-index: 999999999 !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            display: none !important;
+            backdrop-filter: blur(5px) !important;
+            isolation: isolate !important;
+            will-change: transform !important;
+            backface-visibility: hidden !important;
+            contain: layout style paint !important;
+            transform: translateZ(999999999px) !important;
+        }
+
+        .export-modal-overlay.show {
+            display: block !important;
+            z-index: 999999999 !important;
+        }
+
+        .export-modal-content {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) translateZ(999999999px) !important;
+            z-index: 999999999 !important;
+            background: white !important;
+            border-radius: 20px !important;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+            padding: 2rem !important;
+            min-width: 350px !important;
+            max-width: 90vw !important;
+            max-height: 90vh !important;
+            overflow: auto !important;
+            border: none !important;
+            isolation: isolate !important;
+            will-change: transform !important;
+            backface-visibility: hidden !important;
+            contain: layout style paint !important;
+            pointer-events: auto !important;
+        }
+        
+        .export-modal-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin-bottom: 1.5rem !important;
+            padding-bottom: 1rem !important;
+            border-bottom: 2px solid #f3f4f6 !important;
+        }
+
+        .export-modal-title {
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+            margin: 0 !important;
+        }
+
+        .export-modal-close {
+            background: none !important;
+            border: none !important;
+            font-size: 1.5rem !important;
+            color: #6b7280 !important;
+            cursor: pointer !important;
+            padding: 0.5rem !important;
+            border-radius: 50% !important;
+            transition: all 0.3s ease !important;
+            width: 40px !important;
+            height: 40px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .export-modal-items {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1rem !important;
+        }
+
+        .export-modal-item {
+            display: flex !important;
+            align-items: center !important;
+            gap: 1rem !important;
+            padding: 1.25rem !important;
+            border-radius: 16px !important;
+            text-decoration: none !important;
+            border: 2px solid transparent !important;
+            transition: all 0.3s ease !important;
+            color: #1f2937 !important;
+            background: #f9fafb !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste do Modal de Exportação</h1>
+    <p>Este arquivo testa se o modal está funcionando corretamente.</p>
+    
+    <button class="test-button" onclick="abrirModal()">🔓 Abrir Modal</button>
+    <button class="test-button" onclick="fecharModal()">🔒 Fechar Modal</button>
+    <button class="test-button" onclick="verificarZIndex()">🔍 Verificar Z-Index</button>
+    
+    <div class="test-card">
+        <h3>Card de Teste 1</h3>
+        <p>Este card deve ficar atrás do modal quando ele estiver aberto.</p>
+        <p>Z-index: 1</p>
+    </div>
+    
+    <div class="test-card">
+        <h3>Card de Teste 2</h3>
+        <p>Este card também deve ficar atrás do modal.</p>
+        <p>Z-index: 1</p>
+    </div>
+    
+    <div class="test-card">
+        <h3>Card de Teste 3</h3>
+        <p>Este card deve ficar atrás do modal.</p>
+        <p>Z-index: 1</p>
+    </div>
+    
+    <!-- Modal de Exportação -->
+    <div class="export-modal-overlay" id="exportModalOverlay">
+        <div class="export-modal-content">
+            <div class="export-modal-header">
+                <h3 class="export-modal-title">Exportar Dados</h3>
+                <button class="export-modal-close" onclick="fecharModal()">
+                    <i>✕</i>
+                </button>
+            </div>
+            <div class="export-modal-items">
+                <a class="export-modal-item" href="#">
+                    <span>📄 Exportar PDF</span>
+                </a>
+                <a class="export-modal-item" href="#">
+                    <span>📊 Exportar Excel</span>
+                </a>
+                <a class="export-modal-item" href="#">
+                    <span>📋 Exportar CSV</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        console.log('🧪 Página de teste carregada');
+        
+        function abrirModal() {
+            console.log('🔓 Abrindo modal...');
+            const modal = document.getElementById('exportModalOverlay');
+            if (modal) {
+                modal.classList.add('show');
+                console.log('✅ Modal aberto');
+                verificarZIndex();
+            } else {
+                console.error('❌ Modal não encontrado!');
+            }
+        }
+        
+        function fecharModal() {
+            console.log('🔒 Fechando modal...');
+            const modal = document.getElementById('exportModalOverlay');
+            if (modal) {
+                modal.classList.remove('show');
+                console.log('✅ Modal fechado');
+            }
+        }
+        
+        function verificarZIndex() {
+            console.log('🔍 Verificando z-index...');
+            const modal = document.getElementById('exportModalOverlay');
+            const cards = document.querySelectorAll('.test-card');
+            
+            if (modal) {
+                const modalZIndex = window.getComputedStyle(modal).zIndex;
+                console.log('🔍 Modal z-index:', modalZIndex);
+                
+                cards.forEach((card, index) => {
+                    const cardZIndex = window.getComputedStyle(card).zIndex;
+                    console.log(`🔍 Card ${index + 1} z-index:`, cardZIndex);
+                });
+                
+                // Verificar se o modal está por cima
+                if (parseInt(modalZIndex) > parseInt(window.getComputedStyle(cards[0]).zIndex)) {
+                    console.log('✅ Z-index correto: Modal está por cima dos cards');
+                } else {
+                    console.log('❌ Z-index incorreto: Modal não está por cima dos cards');
+                }
+            }
+        }
+        
+        // Fechar modal ao clicar fora
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('exportModalOverlay');
+            if (e.target === modal) {
+                fecharModal();
+            }
+        });
+        
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                fecharModal();
+            }
+        });
+        
+        console.log('🧪 Funções de teste carregadas');
+    </script>
+</body>
+</html>
+

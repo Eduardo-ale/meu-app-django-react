@@ -1,0 +1,717 @@
+// CriarUnidadeReact.js - Componente React para criar unidade
+class CriarUnidadeReact extends React.Component {
+    constructor(props) {
+        super(props);
+        
+        // Pré-preenchimento vindo dos parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        this.state = {
+            formData: {
+                nome: urlParams.get('nome') || '',
+                tipo: 'UNIDADE_EXECUTANTE',
+                municipio: urlParams.get('municipio') || '',
+                endereco: urlParams.get('endereco') || '',
+                telefone: '',
+                cnes: urlParams.get('cnes') || '',
+                responsavel: '',
+                contato_telefonico: urlParams.get('contato_telefonico') || '',
+                email: '',
+                horario_funcionamento: '',
+                servicos_emergencia: false
+            },
+            loading: false,
+            errors: {},
+            touched: {},
+            municipios: [],
+            searchingMunicipios: false,
+            cnesData: null,
+            loadingCnes: false,
+            showPreenchimento: !!urlParams.get('nome')
+        };
+    }
+
+    componentDidMount() {
+        this.initializeAnimations();
+        this.loadMunicipios();
+        
+        // Se há CNES, carregar dados automaticamente
+        if (this.state.formData.cnes) {
+            this.searchCnes(this.state.formData.cnes);
+        }
+        
+        // Mostrar notificação de pré-preenchimento
+        if (this.state.showPreenchimento) {
+            setTimeout(() => {
+                this.setState({ showPreenchimento: false });
+            }, 5000);
+        }
+    }
+
+    initializeAnimations = () => {
+        const sections = document.querySelectorAll('.form-section-react');
+        sections.forEach((section, index) => {
+            section.style.animationDelay = `${index * 0.1}s`;
+            section.classList.add('animate-fade-in');
+        });
+    }
+
+    loadMunicipios = async () => {
+        try {
+            const response = await fetch('/api/municipios/');
+            if (response.ok) {
+                const data = await response.json();
+                this.setState({ municipios: data });
+            }
+        } catch (error) {
+            console.error('Erro ao carregar municípios:', error);
+        }
+    }
+
+    searchMunicipios = async (query) => {
+        if (!query || query.length < 2) {
+            this.setState({ municipios: [] });
+            return;
+        }
+
+        this.setState({ searchingMunicipios: true });
+        try {
+            const response = await fetch(`/api/municipios/autocomplete/?q=${encodeURIComponent(query)}`);
+            if (response.ok) {
+                const data = await response.json();
+                this.setState({ municipios: data });
+            }
+        } catch (error) {
+            console.error('Erro ao buscar municípios:', error);
+        } finally {
+            this.setState({ searchingMunicipios: false });
+        }
+    }
+
+    searchCnes = async (cnes) => {
+        if (!cnes || cnes.length !== 7) {
+            this.setState({ cnesData: null });
+            return;
+        }
+
+        this.setState({ loadingCnes: true, cnesData: null });
+        try {
+            const response = await fetch(`/accounts/api/cnes/${cnes}/`);
+            if (response.ok) {
+                const data = await response.json();
+                this.setState({ 
+                    cnesData: data,
+                    formData: {
+                        ...this.state.formData,
+                        nome: data.nome || this.state.formData.nome,
+                        endereco: data.endereco || this.state.formData.endereco
+                    }
+                });
+            } else {
+                this.setState({ cnesData: { error: 'CNES não encontrado' } });
+            }
+        } catch (error) {
+            console.error('Erro ao buscar CNES:', error);
+            this.setState({ cnesData: { error: 'Erro ao consultar CNES' } });
+        } finally {
+            this.setState({ loadingCnes: false });
+        }
+    }
+
+    handleInputChange = (field, value) => {
+        this.setState(prevState => ({
+            formData: {
+                ...prevState.formData,
+                [field]: value
+            },
+            touched: {
+                ...prevState.touched,
+                [field]: true
+            }
+        }));
+
+        // Buscar municípios em tempo real
+        if (field === 'municipio') {
+            this.searchMunicipios(value);
+        }
+
+        // Buscar dados do CNES
+        if (field === 'cnes') {
+            this.searchCnes(value);
+        }
+    }
+
+    validateForm = () => {
+        const { formData } = this.state;
+        const errors = {};
+
+        if (!formData.nome.trim()) {
+            errors.nome = 'Nome é obrigatório';
+        }
+
+        if (!formData.tipo) {
+            errors.tipo = 'Tipo é obrigatório';
+        }
+
+        if (formData.telefone && !/^\d{10,11}$/.test(formData.telefone.replace(/\D/g, ''))) {
+            errors.telefone = 'Telefone deve ter 10 ou 11 dígitos';
+        }
+
+        if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = 'E-mail inválido';
+        }
+
+        if (formData.cnes && !/^\d{7}$/.test(formData.cnes)) {
+            errors.cnes = 'CNES deve ter 7 dígitos';
+        }
+
+        this.setState({ errors });
+        return Object.keys(errors).length === 0;
+    }
+
+    handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!this.validateForm()) {
+            return;
+        }
+
+        this.setState({ loading: true });
+
+        try {
+            const response = await fetch('/accounts/unidades-saude/criar/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.getCsrfToken()
+                },
+                body: JSON.stringify(this.state.formData)
+            });
+
+            if (response.ok) {
+                window.location.href = '/accounts/unidades-saude/';
+            } else {
+                const errorData = await response.json();
+                this.setState({ errors: errorData.errors || {} });
+            }
+        } catch (error) {
+            console.error('Erro ao salvar:', error);
+        } finally {
+            this.setState({ loading: false });
+        }
+    }
+
+    getCsrfToken = () => {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken'))
+            ?.split('=')[1];
+        return cookieValue || '';
+    }
+
+    formatPhone = (value) => {
+        const digits = value.replace(/\D/g, '');
+        if (digits.length <= 10) {
+            return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+        }
+        return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    }
+
+    getTipoOptions = () => [
+        { value: 'UNIDADE_EXECUTANTE', label: 'Executante', icon: 'fas fa-hospital', description: 'Unidade que executa procedimentos' },
+        { value: 'UNIDADE_SOLICITANTE', label: 'Solicitante', icon: 'fas fa-phone-alt', description: 'Unidade que solicita serviços' },
+        { value: 'EXECUTANTE_SOLICITANTE', label: 'Executante/Solicitante', icon: 'fas fa-hospital-user', description: 'Unidade mista' }
+    ];
+
+    clearForm = () => {
+        this.setState({
+            formData: {
+                nome: '',
+                tipo: 'UNIDADE_EXECUTANTE',
+                municipio: '',
+                endereco: '',
+                telefone: '',
+                cnes: '',
+                responsavel: '',
+                contato_telefonico: '',
+                email: '',
+                horario_funcionamento: '',
+                servicos_emergencia: false
+            },
+            errors: {},
+            touched: {},
+            cnesData: null
+        });
+    }
+
+    render() {
+        const { formData, loading, errors, touched, municipios, searchingMunicipios, cnesData, loadingCnes, showPreenchimento } = this.state;
+
+        return (
+            <div className="criar-unidade-container">
+                {/* Notificação de Pré-preenchimento */}
+                {showPreenchimento && (
+                    <div className="preenchimento-notification">
+                        <div className="notification-content">
+                            <i className="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Dados pré-preenchidos!</strong>
+                                <p>Alguns campos foram preenchidos automaticamente. Verifique e complete os dados necessários.</p>
+                            </div>
+                            <button onClick={() => this.setState({ showPreenchimento: false })}>
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Header */}
+                <div className="create-header-react">
+                    <div className="header-background"></div>
+                    <div className="header-content-react">
+                        <div className="header-info">
+                            <div className="create-icon-react">
+                                <i className="fas fa-plus-circle"></i>
+                            </div>
+                            <div>
+                                <h1 className="create-title-react">Nova Unidade de Saúde</h1>
+                                <p className="create-subtitle-react">Cadastre uma nova unidade no sistema</p>
+                            </div>
+                        </div>
+                        <div className="header-actions">
+                            <button 
+                                type="button"
+                                className="action-btn-react btn-clear"
+                                onClick={this.clearForm}
+                                title="Limpar formulário"
+                            >
+                                <i className="fas fa-eraser"></i>
+                                <span>Limpar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Formulário */}
+                <form onSubmit={this.handleSubmit} className="create-form-react">
+                    {/* CNES e Dados Básicos */}
+                    <div className="form-section-react">
+                        <div className="section-header-react">
+                            <div className="section-icon-react">
+                                <i className="fas fa-id-card"></i>
+                            </div>
+                            <h3 className="section-title-react">Identificação</h3>
+                            <div className="section-subtitle">
+                                Comece pelo CNES para buscar dados automaticamente
+                            </div>
+                        </div>
+                        <div className="section-content-react">
+                            <div className="form-grid-react">
+                                <div className="form-group-react">
+                                    <label className="form-label-react">
+                                        CNES (Código Nacional)
+                                        <span className="help-text">7 dígitos</span>
+                                    </label>
+                                    <div className="cnes-input-wrapper">
+                                        <input
+                                            type="text"
+                                            className={`form-input-react ${errors.cnes ? 'error' : ''} ${cnesData && !cnesData.error ? 'success' : ''}`}
+                                            value={formData.cnes}
+                                            onChange={(e) => this.handleInputChange('cnes', e.target.value.replace(/\D/g, '').substring(0, 7))}
+                                            placeholder="Ex: 1234567"
+                                            maxLength="7"
+                                        />
+                                        {loadingCnes && (
+                                            <div className="input-loading">
+                                                <i className="fas fa-spinner fa-spin"></i>
+                                            </div>
+                                        )}
+                                        {cnesData && !cnesData.error && (
+                                            <div className="input-success">
+                                                <i className="fas fa-check-circle"></i>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {errors.cnes && (
+                                        <span className="error-message-react">
+                                            <i className="fas fa-exclamation-circle"></i>
+                                            {errors.cnes}
+                                        </span>
+                                    )}
+                                    {cnesData && cnesData.error && (
+                                        <span className="warning-message-react">
+                                            <i className="fas fa-exclamation-triangle"></i>
+                                            {cnesData.error}
+                                        </span>
+                                    )}
+                                    {cnesData && !cnesData.error && (
+                                        <div className="cnes-info-react">
+                                            <div className="cnes-success">
+                                                <i className="fas fa-check-circle"></i>
+                                                <span>Dados encontrados no CNES!</span>
+                                            </div>
+                                            <div className="cnes-details">
+                                                <small><strong>Nome:</strong> {cnesData.nome}</small>
+                                                <small><strong>Endereço:</strong> {cnesData.endereco}</small>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="form-group-react">
+                                    <label className="form-label-react">
+                                        Nome da Unidade <span className="required">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className={`form-input-react ${errors.nome ? 'error' : ''}`}
+                                        value={formData.nome}
+                                        onChange={(e) => this.handleInputChange('nome', e.target.value)}
+                                        placeholder="Digite o nome completo da unidade"
+                                    />
+                                    {errors.nome && (
+                                        <span className="error-message-react">
+                                            <i className="fas fa-exclamation-circle"></i>
+                                            {errors.nome}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Tipo */}
+                    <div className="form-section-react">
+                        <div className="section-header-react">
+                            <div className="section-icon-react">
+                                <i className="fas fa-tags"></i>
+                            </div>
+                            <h3 className="section-title-react">Classificação</h3>
+                        </div>
+                        <div className="section-content-react">
+                            <div className="form-group-react">
+                                <label className="form-label-react">
+                                    Tipo da Unidade <span className="required">*</span>
+                                </label>
+                                <div className="radio-grid-react">
+                                    {this.getTipoOptions().map(option => (
+                                        <label key={option.value} className="radio-card-react">
+                                            <input
+                                                type="radio"
+                                                name="tipo"
+                                                value={option.value}
+                                                checked={formData.tipo === option.value}
+                                                onChange={(e) => this.handleInputChange('tipo', e.target.value)}
+                                            />
+                                            <div className="radio-card-content">
+                                                <div className="radio-card-icon">
+                                                    <i className={option.icon}></i>
+                                                </div>
+                                                <div className="radio-card-text">
+                                                    <strong>{option.label}</strong>
+                                                    <small>{option.description}</small>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                                {errors.tipo && (
+                                    <span className="error-message-react">
+                                        <i className="fas fa-exclamation-circle"></i>
+                                        {errors.tipo}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Localização */}
+                    <div className="form-section-react">
+                        <div className="section-header-react">
+                            <div className="section-icon-react">
+                                <i className="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3 className="section-title-react">Localização</h3>
+                        </div>
+                        <div className="section-content-react">
+                            <div className="form-grid-react">
+                                <div className="form-group-react">
+                                    <label className="form-label-react">Município</label>
+                                    <div className="autocomplete-wrapper-react">
+                                        <input
+                                            type="text"
+                                            className="form-input-react"
+                                            value={formData.municipio}
+                                            onChange={(e) => this.handleInputChange('municipio', e.target.value)}
+                                            placeholder="Digite o nome do município"
+                                        />
+                                        {searchingMunicipios && (
+                                            <div className="autocomplete-loading">
+                                                <i className="fas fa-spinner fa-spin"></i>
+                                            </div>
+                                        )}
+                                        {municipios.length > 0 && (
+                                            <div className="autocomplete-results-react">
+                                                {municipios.map(municipio => (
+                                                    <div 
+                                                        key={municipio.id}
+                                                        className="autocomplete-item-react"
+                                                        onClick={() => this.handleInputChange('municipio', municipio.nome)}
+                                                    >
+                                                        <i className="fas fa-map-marker-alt"></i>
+                                                        <span>{municipio.nome}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="form-group-react">
+                                    <label className="form-label-react">Responsável</label>
+                                    <input
+                                        type="text"
+                                        className="form-input-react"
+                                        value={formData.responsavel}
+                                        onChange={(e) => this.handleInputChange('responsavel', e.target.value)}
+                                        placeholder="Nome do responsável"
+                                    />
+                                </div>
+
+                                <div className="form-group-react">
+                                    <label className="form-label-react">Contato Telefônico</label>
+                                    <input
+                                        type="text"
+                                        className="form-input-react"
+                                        value={this.formatPhone(formData.contato_telefonico || '')}
+                                        onChange={(e) => this.handleInputChange('contato_telefonico', e.target.value.replace(/\D/g, ''))}
+                                        placeholder="(67) 99999-9999"
+                                    />
+                                </div>
+
+                                <div className="form-group-react full-width">
+                                    <label className="form-label-react">Endereço</label>
+                                    <textarea
+                                        className="form-textarea-react"
+                                        value={formData.endereco}
+                                        onChange={(e) => this.handleInputChange('endereco', e.target.value)}
+                                        placeholder="Endereço completo da unidade"
+                                        rows="3"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Contato */}
+                    <div className="form-section-react">
+                        <div className="section-header-react">
+                            <div className="section-icon-react">
+                                <i className="fas fa-phone-alt"></i>
+                            </div>
+                            <h3 className="section-title-react">Contato</h3>
+                        </div>
+                        <div className="section-content-react">
+                            <div className="form-grid-react">
+                                <div className="form-group-react">
+                                    <label className="form-label-react">Telefone</label>
+                                    <input
+                                        type="text"
+                                        className={`form-input-react ${errors.telefone ? 'error' : ''}`}
+                                        value={this.formatPhone(formData.telefone)}
+                                        onChange={(e) => this.handleInputChange('telefone', e.target.value.replace(/\D/g, ''))}
+                                        placeholder="(67) 99999-9999"
+                                    />
+                                    {errors.telefone && (
+                                        <span className="error-message-react">
+                                            <i className="fas fa-exclamation-circle"></i>
+                                            {errors.telefone}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <div className="form-group-react">
+                                    <label className="form-label-react">E-mail</label>
+                                    <input
+                                        type="email"
+                                        className={`form-input-react ${errors.email ? 'error' : ''}`}
+                                        value={formData.email}
+                                        onChange={(e) => this.handleInputChange('email', e.target.value)}
+                                        placeholder="email@exemplo.com"
+                                    />
+                                    {errors.email && (
+                                        <span className="error-message-react">
+                                            <i className="fas fa-exclamation-circle"></i>
+                                            {errors.email}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Funcionamento */}
+                    <div className="form-section-react">
+                        <div className="section-header-react">
+                            <div className="section-icon-react">
+                                <i className="fas fa-clock"></i>
+                            </div>
+                            <h3 className="section-title-react">Funcionamento</h3>
+                        </div>
+                        <div className="section-content-react">
+                            <div className="form-grid-react">
+                                <div className="form-group-react full-width">
+                                    <label className="form-label-react">Horário de Funcionamento</label>
+                                    <textarea
+                                        className="form-textarea-react"
+                                        value={formData.horario_funcionamento}
+                                        onChange={(e) => this.handleInputChange('horario_funcionamento', e.target.value)}
+                                        placeholder="Ex: Segunda a Sexta: 7h às 17h"
+                                        rows="2"
+                                    />
+                                </div>
+
+                                <div className="form-group-react full-width">
+                                    <label className="checkbox-label-react">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.servicos_emergencia}
+                                            onChange={(e) => this.handleInputChange('servicos_emergencia', e.target.checked)}
+                                        />
+                                        <div className="checkbox-custom-react">
+                                            <i className="fas fa-check"></i>
+                                        </div>
+                                        <span>Oferece serviços de emergência</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Informações do Cadastrante */}
+                    <div className="form-section-react special-section">
+                        <div className="section-header-react admin-header">
+                            <div className="section-icon-react admin-icon">
+                                <i className="fas fa-user-shield"></i>
+                            </div>
+                            <h3 className="section-title-react">Informações do Cadastrante</h3>
+                        </div>
+                        <div className="section-content-react">
+                            <div className="form-grid-react">
+                                <div className="form-group-react">
+                                    <label className="form-label-react">
+                                        <i className="fas fa-user-check"></i>
+                                        Responsável pelo Cadastro
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-input-react readonly-field"
+                                        value={window.userData?.full_name || window.userData?.username || 'Usuário Logado'}
+                                        readOnly
+                                    />
+                                </div>
+
+                                <div className="form-group-react">
+                                    <label className="form-label-react">
+                                        <i className="fas fa-calendar-plus"></i>
+                                        Data do Cadastro
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-input-react readonly-field"
+                                        value={new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR')}
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Botões de Ação */}
+                    <div className="form-actions-react">
+                        <button
+                            type="button"
+                            className="btn-cancel-react"
+                            onClick={() => window.location.href = '/accounts/unidades-saude/'}
+                            disabled={loading}
+                        >
+                            <i className="fas fa-times"></i>
+                            <span>Cancelar</span>
+                        </button>
+                        <button
+                            type="submit"
+                            className="btn-save-react"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin"></i>
+                                    <span>Salvando...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-plus-circle"></i>
+                                    <span>Criar Unidade</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+}
+
+// Função de renderização
+function renderCriarUnidadeReact() {
+    console.log('➕ Inicializando CriarUnidadeReact');
+    
+    const container = document.getElementById('criar-unidade-react-root');
+    if (!container) {
+        console.error('❌ Container não encontrado: criar-unidade-react-root');
+        return;
+    }
+
+    if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+        console.error('❌ React não encontrado');
+        container.innerHTML = `
+            <div style="padding: 20px; background: #ffeeee; border: 1px solid #ff0000; border-radius: 5px;">
+                <h2>❌ Erro: React não carregado</h2>
+                <p>O React não foi carregado corretamente.</p>
+                <button onclick="window.location.reload()">Recarregar</button>
+            </div>
+        `;
+        return;
+    }
+
+    try {
+        console.log('✅ Renderizando CriarUnidadeReact');
+        
+        const root = ReactDOM.createRoot ? ReactDOM.createRoot(container) : null;
+        
+        if (root) {
+            root.render(React.createElement(CriarUnidadeReact));
+        } else {
+            ReactDOM.render(
+                React.createElement(CriarUnidadeReact),
+                container
+            );
+        }
+    } catch (error) {
+        console.error('❌ Erro ao renderizar CriarUnidadeReact:', error);
+        container.innerHTML = `
+            <div style="padding: 20px; background: #f8d7da; border: 1px solid #721c24; border-radius: 5px;">
+                <h2>❌ Erro de renderização</h2>
+                <p>Erro: ${error.message}</p>
+                <button onclick="window.location.reload()">Recarregar</button>
+            </div>
+        `;
+    }
+}
+
+// Inicializar quando DOM estiver pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderCriarUnidadeReact);
+} else {
+    renderCriarUnidadeReact();
+} 

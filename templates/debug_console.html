@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Debug Console - Diagnóstico de Erros{% endblock %}
+
+{% block content %}
+<div style="padding: 20px; background: #f8f9fa; min-height: 100vh;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h1 style="color: #333; margin-bottom: 30px;">🔍 Diagnóstico de Erros do Console</h1>
+        
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h2 style="color: #007bff; margin-bottom: 15px;">📊 Status dos Componentes</h2>
+            <div id="component-status" style="font-family: monospace; background: #f8f9fa; padding: 15px; border-radius: 4px;">
+                Carregando diagnóstico...
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h2 style="color: #28a745; margin-bottom: 15px;">🧪 Teste de Componente React</h2>
+            <div id="react-test-container" style="padding: 20px; border: 2px dashed #ddd; border-radius: 8px; text-align: center;">
+                <div style="color: #666;">Aguardando carregamento do React...</div>
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h2 style="color: #dc3545; margin-bottom: 15px;">🚨 Log de Erros</h2>
+            <div id="error-log" style="font-family: monospace; background: #f8f9fa; padding: 15px; border-radius: 4px; max-height: 300px; overflow-y: auto;">
+                Nenhum erro registrado ainda...
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- React CDN -->
+<!-- Scripts removidos do CDN, agora React é carregado via include central ou arquivos locais -->
+
+<!-- Capturar erros do console -->
+<script>
+// Capturar erros do console
+const originalConsoleError = console.error;
+const originalConsoleWarn = console.warn;
+const errorLog = document.getElementById('error-log');
+
+function logToPage(type, message) {
+    const timestamp = new Date().toLocaleTimeString();
+    const color = type === 'error' ? '#dc3545' : '#ffc107';
+    const icon = type === 'error' ? '❌' : '⚠️';
+    
+    errorLog.innerHTML += `<div style="color: ${color}; margin-bottom: 5px;">[${timestamp}] ${icon} ${message}</div>`;
+    errorLog.scrollTop = errorLog.scrollHeight;
+}
+
+console.error = function(...args) {
+    logToPage('error', args.join(' '));
+    originalConsoleError.apply(console, args);
+};
+
+console.warn = function(...args) {
+    logToPage('warn', args.join(' '));
+    originalConsoleWarn.apply(console, args);
+};
+
+// Capturar erros JavaScript globais
+window.addEventListener('error', function(e) {
+    logToPage('error', `JavaScript Error: ${e.message} at ${e.filename}:${e.lineno}`);
+});
+
+// Capturar erros de recursos não carregados
+window.addEventListener('error', function(e) {
+    if (e.target !== window) {
+        logToPage('error', `Resource Error: Failed to load ${e.target.src || e.target.href}`);
+    }
+}, true);
+</script>
+
+<!-- Carregar serviços React primeiro -->
+<script src="{% static 'js/dist/react-services.bundle.js' %}" onerror="console.error('Erro ao carregar react-services.bundle.js')"></script>
+
+<!-- Script de diagnóstico -->
+<script src="/debug_console_errors.js" onerror="console.error('Erro ao carregar debug_console_errors.js')"></script>
+
+<!-- Teste de componente simples -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando teste de componente...');
+    
+    // Função para atualizar status
+    function updateStatus() {
+        const statusDiv = document.getElementById('component-status');
+        let status = '';
+        
+        // Verificar React
+        if (typeof React !== 'undefined') {
+            status += '✅ React: ' + React.version + '\n';
+        } else {
+            status += '❌ React: Não carregado\n';
+        }
+        
+        // Verificar ReactDOM
+        if (typeof ReactDOM !== 'undefined') {
+            status += '✅ ReactDOM: Carregado\n';
+        } else {
+            status += '❌ ReactDOM: Não carregado\n';
+        }
+        
+        // Verificar componentes
+        const components = ['HomeReact', 'CriarUnidadeReact', 'RegistroChamadaReact'];
+        components.forEach(comp => {
+            if (window[comp]) {
+                status += `✅ ${comp}: Carregado\n`;
+            } else {
+                status += `❌ ${comp}: Não carregado\n`;
+            }
+        });
+        
+        statusDiv.textContent = status;
+    }
+    
+    // Função para testar React
+    function testReact() {
+        const container = document.getElementById('react-test-container');
+        
+        if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined') {
+            try {
+                // Criar componente de teste simples
+                const TestComponent = React.createElement('div', {
+                    style: { 
+                        padding: '20px', 
+                        background: '#d4edda', 
+                        color: '#155724',
+                        borderRadius: '4px',
+                        border: '1px solid #c3e6cb'
+                    }
+                }, 
+                    React.createElement('h3', null, '🎉 React está funcionando!'),
+                    React.createElement('p', null, 'Componente de teste renderizado com sucesso.'),
+                    React.createElement('small', null, `React versão: ${React.version}`)
+                );
+                
+                // Renderizar
+                if (ReactDOM.createRoot) {
+                    const root = ReactDOM.createRoot(container);
+                    root.render(TestComponent);
+                } else {
+                    ReactDOM.render(TestComponent, container);
+                }
+                
+                console.log('✅ Teste de React bem-sucedido!');
+            } catch (error) {
+                console.error('❌ Erro no teste de React:', error);
+                container.innerHTML = `
+                    <div style="color: #721c24; background: #f8d7da; padding: 15px; border-radius: 4px;">
+                        <strong>❌ Erro no teste de React:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        } else {
+            container.innerHTML = `
+                <div style="color: #856404; background: #fff3cd; padding: 15px; border-radius: 4px;">
+                    <strong>⚠️ React não está disponível</strong><br>
+                    Verifique se os scripts estão carregando corretamente.
+                </div>
+            `;
+        }
+    }
+    
+    // Atualizar status inicial
+    updateStatus();
+    
+    // Tentar teste de React após um delay
+    setTimeout(() => {
+        updateStatus();
+        testReact();
+    }, 2000);
+    
+    // Atualizar status periodicamente
+    setInterval(updateStatus, 5000);
+});
+</script>
+{% endblock %}

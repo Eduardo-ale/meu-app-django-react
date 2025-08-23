@@ -1,0 +1,801 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Background Premium -->
+<div class="lista-telefonica-background">
+    <div class="gradient-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="mesh-gradient"></div>
+    <div class="dark-overlay"></div>
+</div>
+
+<!-- Container Principal -->
+<div class="lista-telefonica-container">
+    <!-- Header -->
+    <header class="lista-telefonica-header-premium">
+        <div class="header-glass">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb-premium">
+                <a href="{% url 'home' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <div class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <span class="breadcrumb-current">
+                    <i class="fas fa-address-book"></i>
+                    <span>Lista Telefônica</span>
+                </span>
+            </nav>
+
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-icon">
+                        <i class="fas fa-address-book"></i>
+                        <div class="icon-pulse"></div>
+                    </div>
+                    <div class="hero-text">
+                        <h1 class="hero-title">Lista Telefônica</h1>
+                        <p class="hero-subtitle">Consulte contatos importantes e números de emergência das unidades de saúde</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content-lista-telefonica">
+        <div class="content-wrapper">
+            <!-- Container do Componente React -->
+            <div id="lista-telefonica-root">
+                <!-- Loading inicial -->
+                <div class="lista-telefonica-form-container">
+                    <div class="form-header-lista-telefonica">
+                        <h2 class="form-title-lista-telefonica">
+                            <i class="fas fa-phone"></i>
+                            Carregando Lista Telefônica
+                        </h2>
+                        <p class="form-subtitle-lista-telefonica">
+                            Aguarde enquanto carregamos os contatos...
+                        </p>
+                    </div>
+                    
+                    <div class="form-body-lista-telefonica" style="text-align: center; padding: 4rem 2rem;">
+                        <div class="loading-spinner-lista-telefonica" style="margin: 0 auto 2rem auto;"></div>
+                        <p style="color: #6b7280; font-size: 1rem;">
+                            Inicializando componente de lista telefônica...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- CSS Premium -->
+<style>
+/* ===== VARIÁVEIS CSS ===== */
+:root {
+    --primary: #6366f1;
+    --secondary: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --info: #3b82f6;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ===== BACKGROUND ===== */
+.lista-telefonica-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 30%, #6366f1 70%, #8b5cf6 100%);
+    overflow: hidden;
+}
+
+.gradient-orbs {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    animation: float 25s infinite ease-in-out;
+}
+
+.orb-1 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(45deg, #10b981, #059669);
+    top: 10%;
+    left: 10%;
+}
+
+.orb-2 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(45deg, #f59e0b, #d97706);
+    top: 60%;
+    right: 20%;
+    animation-delay: 8s;
+}
+
+.orb-3 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #ef4444, #dc2626);
+    bottom: 20%;
+    left: 30%;
+    animation-delay: 15s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+    25% { transform: translateY(-30px) translateX(15px) rotate(90deg); }
+    50% { transform: translateY(0px) translateX(30px) rotate(180deg); }
+    75% { transform: translateY(15px) translateX(-15px) rotate(270deg); }
+}
+
+.mesh-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+}
+
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 58, 138, 0.4);
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.lista-telefonica-container {
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== HEADER ===== */
+.lista-telefonica-header-premium {
+    margin-bottom: 2rem;
+}
+
+.header-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    margin: 2rem;
+    box-shadow: var(--shadow-large);
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-premium {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.breadcrumb-link:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    color: white;
+}
+
+.breadcrumb-separator {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.breadcrumb-current {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    padding: 2rem 0;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.hero-icon {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6366f1;
+    font-size: 3rem;
+    flex-shrink: 0;
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+}
+
+.icon-pulse {
+    position: absolute;
+    inset: -8px;
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.hero-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.hero-title {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 0.75rem 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content-lista-telefonica {
+    padding: 0 2rem;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ===== FORMULÁRIO CONTAINER ===== */
+.lista-telefonica-form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-large);
+    margin-bottom: 2rem;
+}
+
+.form-header-lista-telefonica {
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+    padding: 2rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+    position: relative;
+}
+
+.form-header-lista-telefonica::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #10b981 100%);
+    border-radius: 24px 24px 0 0;
+}
+
+.form-title-lista-telefonica {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.form-subtitle-lista-telefonica {
+    color: #6b7280;
+    margin: 0.5rem 0 0 0;
+    font-size: 1rem;
+}
+
+.form-body-lista-telefonica {
+    padding: 2rem;
+}
+
+/* ===== LOADING STATE ===== */
+.loading-spinner-lista-telefonica {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .header-glass {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+    
+    .form-body-lista-telefonica {
+        padding: 1.5rem;
+    }
+    
+    .form-header-lista-telefonica {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-icon {
+        width: 100px;
+        height: 100px;
+        font-size: 2.5rem;
+    }
+    
+    .hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- React CDN -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<script>
+// Lista Telefônica React Component Simples
+class ListaTelefonica extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            unidades: [],
+            loading: true,
+            error: null,
+            busca: '',
+            tipo: '',
+            municipio: '',
+            municipios: []
+        };
+    }
+
+    componentDidMount() {
+        this.carregarUnidades();
+    }
+
+    carregarUnidades = async () => {
+        try {
+            console.log('🔍 Carregando unidades...');
+            const response = await fetch('/accounts/api/lista-telefonica/');
+            const data = await response.json();
+            
+            const municipiosUnicos = [...new Set(data.unidades.map(u => u.municipio).filter(Boolean))];
+            
+            this.setState({ 
+                unidades: data.unidades,
+                municipios: municipiosUnicos,
+                loading: false 
+            });
+            console.log('✅ Unidades carregadas:', data.unidades.length);
+        } catch (error) {
+            console.error('❌ Erro ao carregar unidades:', error);
+            this.setState({ 
+                error: 'Erro ao carregar dados',
+                loading: false 
+            });
+        }
+    }
+
+    filtrarUnidades = () => {
+        const { unidades, busca, tipo, municipio } = this.state;
+        
+        return unidades.filter(unidade => {
+            const matchBusca = !busca || 
+                unidade.nome.toLowerCase().includes(busca.toLowerCase()) ||
+                unidade.telefone.includes(busca) ||
+                (unidade.responsavel && unidade.responsavel.toLowerCase().includes(busca.toLowerCase()));
+            
+            const matchTipo = !tipo || unidade.tipo === tipo;
+            const matchMunicipio = !municipio || unidade.municipio === municipio;
+            
+            return matchBusca && matchTipo && matchMunicipio;
+        });
+    }
+
+    render() {
+        const { loading, error, busca, tipo, municipio, municipios } = this.state;
+        const unidadesFiltradas = this.filtrarUnidades();
+
+        if (loading) {
+            return React.createElement('div', { 
+                style: { 
+                    textAlign: 'center', 
+                    padding: '2rem'
+                }
+            }, 
+                React.createElement('div', { 
+                    className: 'loading-spinner-lista-telefonica',
+                    style: { margin: '0 auto 1rem' }
+                }),
+                React.createElement('p', { style: { color: '#6b7280' } }, 'Carregando contatos...')
+            );
+        }
+
+        if (error) {
+            return React.createElement('div', {
+                style: {
+                    textAlign: 'center',
+                    padding: '2rem',
+                    color: '#dc2626'
+                }
+            }, 
+                React.createElement('h3', null, '❌ Erro'),
+                React.createElement('p', null, error),
+                React.createElement('button', {
+                    onClick: this.carregarUnidades,
+                    style: {
+                        background: '#6366f1',
+                        color: 'white',
+                        padding: '0.5rem 1rem',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer'
+                    }
+                }, 'Tentar Novamente')
+            );
+        }
+
+        return React.createElement('div', null,
+            // Filtros
+            React.createElement('div', { className: 'lista-telefonica-form-container' },
+                React.createElement('div', { className: 'form-header-lista-telefonica' },
+                    React.createElement('h2', { className: 'form-title-lista-telefonica' },
+                        React.createElement('i', { className: 'fas fa-search' }),
+                        ' Buscar Contatos'
+                    ),
+                    React.createElement('p', { className: 'form-subtitle-lista-telefonica' },
+                        `${unidadesFiltradas.length} contatos encontrados`
+                    )
+                ),
+                React.createElement('div', { className: 'form-body-lista-telefonica' },
+                    React.createElement('div', { 
+                        style: { 
+                            display: 'flex', 
+                            gap: '1rem', 
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            marginBottom: '1rem'
+                        }
+                    },
+                        React.createElement('input', {
+                            type: 'text',
+                            placeholder: 'Buscar por nome, telefone...',
+                            value: busca,
+                            onChange: (e) => this.setState({ busca: e.target.value }),
+                            style: {
+                                padding: '0.75rem',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '8px',
+                                flex: 1,
+                                minWidth: '200px',
+                                fontSize: '0.875rem'
+                            }
+                        }),
+                        React.createElement('select', {
+                            value: tipo,
+                            onChange: (e) => this.setState({ tipo: e.target.value }),
+                            style: {
+                                padding: '0.75rem',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '8px',
+                                minWidth: '150px',
+                                fontSize: '0.875rem'
+                            }
+                        },
+                            React.createElement('option', { value: '' }, 'Todos os tipos'),
+                            React.createElement('option', { value: 'UNIDADE_EXECUTANTE' }, 'Executante'),
+                            React.createElement('option', { value: 'UNIDADE_SOLICITANTE' }, 'Solicitante'),
+                            React.createElement('option', { value: 'EXECUTANTE_SOLICITANTE' }, 'Executante/Solicitante')
+                        ),
+                        React.createElement('select', {
+                            value: municipio,
+                            onChange: (e) => this.setState({ municipio: e.target.value }),
+                            style: {
+                                padding: '0.75rem',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '8px',
+                                minWidth: '150px',
+                                fontSize: '0.875rem'
+                            }
+                        },
+                            React.createElement('option', { value: '' }, 'Todos municípios'),
+                            ...municipios.map(m => 
+                                React.createElement('option', { key: m, value: m }, m)
+                            )
+                        ),
+                        React.createElement('button', {
+                            onClick: () => this.setState({ busca: '', tipo: '', municipio: '' }),
+                            style: {
+                                padding: '0.75rem 1rem',
+                                background: '#f3f4f6',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                fontSize: '0.875rem',
+                                fontWeight: '500'
+                            }
+                        }, 
+                            React.createElement('i', { className: 'fas fa-times', style: { marginRight: '0.5rem' } }),
+                            'Limpar'
+                        )
+                    )
+                )
+            ),
+            
+            // Resultados
+            React.createElement('div', { className: 'lista-telefonica-form-container' },
+                React.createElement('div', { className: 'form-header-lista-telefonica' },
+                    React.createElement('h2', { className: 'form-title-lista-telefonica' },
+                        React.createElement('i', { className: 'fas fa-address-book' }),
+                        ' Resultados'
+                    )
+                ),
+                React.createElement('div', { className: 'form-body-lista-telefonica' },
+                    unidadesFiltradas.length === 0 ? 
+                        React.createElement('div', { 
+                            style: { 
+                                textAlign: 'center', 
+                                padding: '3rem',
+                                color: '#6b7280'
+                            }
+                        },
+                            React.createElement('div', { style: { fontSize: '3rem', marginBottom: '1rem' } }, '📞'),
+                            React.createElement('h3', null, 'Nenhum contato encontrado'),
+                            React.createElement('p', null, 'Tente ajustar os filtros para encontrar mais resultados.')
+                        ) :
+                        React.createElement('div', { 
+                            style: { 
+                                display: 'grid', 
+                                gap: '1.5rem',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))'
+                            }
+                        },
+                            ...unidadesFiltradas.map(unidade => 
+                                React.createElement('div', {
+                                    key: unidade.id,
+                                    style: {
+                                        background: 'white',
+                                        padding: '1.5rem',
+                                        borderRadius: '12px',
+                                        border: '1px solid #e5e7eb',
+                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                        transition: 'all 0.2s ease'
+                                    },
+                                    onMouseEnter: (e) => {
+                                        e.target.style.transform = 'translateY(-2px)';
+                                        e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+                                    },
+                                    onMouseLeave: (e) => {
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                                    }
+                                },
+                                    React.createElement('div', { style: { marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'start' } },
+                                        React.createElement('h3', { 
+                                            style: { 
+                                                color: '#1f2937', 
+                                                fontSize: '1.25rem',
+                                                fontWeight: '600',
+                                                margin: '0',
+                                                lineHeight: '1.4'
+                                            }
+                                        }, unidade.nome),
+                                        React.createElement('span', {
+                                            style: {
+                                                background: unidade.tipo === 'UNIDADE_EXECUTANTE' ? '#dcfce7' : 
+                                                           unidade.tipo === 'UNIDADE_SOLICITANTE' ? '#dbeafe' : '#f3e8ff',
+                                                color: unidade.tipo === 'UNIDADE_EXECUTANTE' ? '#166534' : 
+                                                       unidade.tipo === 'UNIDADE_SOLICITANTE' ? '#1e40af' : '#7c3aed',
+                                                padding: '0.25rem 0.75rem',
+                                                borderRadius: '12px',
+                                                fontSize: '0.75rem',
+                                                fontWeight: '500',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.025em'
+                                            }
+                                        }, 
+                                            unidade.tipo === 'UNIDADE_EXECUTANTE' ? 'Executante' :
+                                            unidade.tipo === 'UNIDADE_SOLICITANTE' ? 'Solicitante' : 'Executante/Solicitante'
+                                        )
+                                    ),
+                                    React.createElement('div', { style: { marginBottom: '0.75rem', display: 'flex', alignItems: 'center' } },
+                                        React.createElement('i', { className: 'fas fa-phone', style: { marginRight: '0.75rem', color: '#10b981', width: '16px' } }),
+                                        React.createElement('a', { 
+                                            href: `tel:${unidade.telefone}`,
+                                            style: { 
+                                                color: '#10b981', 
+                                                textDecoration: 'none', 
+                                                fontWeight: '600',
+                                                fontSize: '1rem'
+                                            }
+                                        }, unidade.telefone)
+                                    ),
+                                    unidade.responsavel && React.createElement('div', { style: { marginBottom: '0.75rem', display: 'flex', alignItems: 'center' } },
+                                        React.createElement('i', { className: 'fas fa-user-tie', style: { marginRight: '0.75rem', color: '#6b7280', width: '16px' } }),
+                                        React.createElement('span', { style: { color: '#374151', fontSize: '0.875rem' } }, unidade.responsavel)
+                                    ),
+                                    unidade.municipio && React.createElement('div', { style: { marginBottom: '0.75rem', display: 'flex', alignItems: 'center' } },
+                                        React.createElement('i', { className: 'fas fa-map-marker-alt', style: { marginRight: '0.75rem', color: '#6b7280', width: '16px' } }),
+                                        React.createElement('span', { style: { color: '#374151', fontSize: '0.875rem' } }, unidade.municipio)
+                                    ),
+                                    unidade.cnes && React.createElement('div', { style: { marginBottom: '1rem', display: 'flex', alignItems: 'center' } },
+                                        React.createElement('i', { className: 'fas fa-id-card', style: { marginRight: '0.75rem', color: '#6b7280', width: '16px' } }),
+                                        React.createElement('span', { style: { color: '#374151', fontSize: '0.875rem' } }, `CNES: ${unidade.cnes}`)
+                                    ),
+                                    React.createElement('div', { style: { display: 'flex', gap: '0.75rem', marginTop: '1rem' } },
+                                        React.createElement('a', {
+                                            href: `tel:${unidade.telefone}`,
+                                            style: {
+                                                background: 'linear-gradient(90deg, #10b981, #059669)',
+                                                color: 'white',
+                                                padding: '0.75rem 1rem',
+                                                borderRadius: '8px',
+                                                textDecoration: 'none',
+                                                fontSize: '0.875rem',
+                                                fontWeight: '500',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem',
+                                                transition: 'all 0.2s ease'
+                                            }
+                                        },
+                                            React.createElement('i', { className: 'fas fa-phone' }),
+                                            'Ligar'
+                                        ),
+                                        React.createElement('a', {
+                                            href: `/accounts/unidades-saude/${unidade.id}/visualizar/`,
+                                            style: {
+                                                background: 'white',
+                                                color: '#374151',
+                                                padding: '0.75rem 1rem',
+                                                borderRadius: '8px',
+                                                textDecoration: 'none',
+                                                fontSize: '0.875rem',
+                                                fontWeight: '500',
+                                                border: '2px solid #d1d5db',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem',
+                                                transition: 'all 0.2s ease'
+                                            }
+                                        },
+                                            React.createElement('i', { className: 'fas fa-eye' }),
+                                            'Detalhes'
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                )
+            )
+        );
+    }
+}
+
+// Renderizar o componente
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Inicializando Lista Telefônica (versão simples)...');
+    
+    const container = document.getElementById('lista-telefonica-root');
+    if (container && React && ReactDOM) {
+        const root = ReactDOM.createRoot(container);
+        root.render(React.createElement(ListaTelefonica));
+        console.log('✅ Lista Telefônica renderizada com sucesso!');
+    } else {
+        console.error('❌ Container ou React não encontrado');
+    }
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

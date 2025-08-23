@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb Moderno -->
+    <nav aria-label="breadcrumb" class="breadcrumb-container">
+        <ol class="breadcrumb-modern">
+            <li class="breadcrumb-item-modern">
+                <a href="{% url 'home' %}" class="breadcrumb-link" title="Ir para página inicial">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+            </li>
+            <li class="breadcrumb-item-modern">
+                <a href="{% url 'unidades_saude' %}" class="breadcrumb-link" title="Voltar para lista de unidades">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Unidades de Saúde</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+            </li>
+            <li class="breadcrumb-item-modern breadcrumb-current">
+                <span class="breadcrumb-current-text">
+                    <i class="fas fa-eye"></i>
+                    <span>{{ unidade.nome|title }}</span>
+                </span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Header da Página -->
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="header-info">
+                <h1 class="page-title">{{ unidade.nome }}</h1>
+                <p class="page-subtitle">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    {{ unidade.municipio|default:"Localização não informada" }}
+                </p>
+            </div>
+            <div class="header-actions">
+                <div class="status-badge">
+                    {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}
+                        <span class="badge badge-success">
+                            <i class="fas fa-hospital"></i>
+                            Executante
+                        </span>
+                    {% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}
+                        <span class="badge badge-info">
+                            <i class="fas fa-phone-alt"></i>
+                            Solicitante
+                        </span>
+                    {% else %}
+                        <span class="badge badge-primary">
+                            <i class="fas fa-hospital-user"></i>
+                            Executante/Solicitante
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Informações -->
+    <div class="row g-4">
+        <!-- Card de Informações Básicas -->
+        <div class="col-lg-8">
+            <div class="info-card">
+                <div class="card-header-custom">
+                    <div class="card-icon bg-blue">
+                        <i class="fas fa-hospital-alt"></i>
+                    </div>
+                    <div class="card-title-section">
+                        <h5>Informações da Unidade</h5>
+                        <p>Dados principais e identificação</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <div class="info-content">
+                                    <label>Nome da Unidade</label>
+                                    <p>{{ unidade.nome }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <div class="info-content">
+                                    <label>CNES</label>
+                                    <p>{{ unidade.cnes|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <label>Município</label>
+                                    <p>{{ unidade.municipio|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}
+                                        <i class="fas fa-hospital"></i>
+                                    {% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}
+                                        <i class="fas fa-phone-alt"></i>
+                                    {% else %}
+                                        <i class="fas fa-hospital-user"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="info-content">
+                                    <label>Tipo de Unidade</label>
+                                    <p>
+                                        {% if unidade.tipo == 'UNIDADE_EXECUTANTE' %}
+                                            Unidade Executante
+                                        {% elif unidade.tipo == 'UNIDADE_SOLICITANTE' %}
+                                            Unidade Solicitante
+                                        {% else %}
+                                            Executante/Solicitante
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card de Status e Ações -->
+        <div class="col-lg-4">
+            <div class="info-card">
+                <div class="card-header-custom">
+                    <div class="card-icon bg-green">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="card-title-section">
+                        <h5>Ações Rápidas</h5>
+                        <p>Operações disponíveis</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="quick-actions">
+                        <a href="{% url 'editar_unidade' unidade.pk %}" class="action-btn action-edit">
+                            <div class="action-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="action-text">
+                                <span>Editar Unidade</span>
+                                <small>Modificar informações</small>
+                            </div>
+                        </a>
+                        
+                        <a href="{% url 'unidades_saude' %}" class="action-btn action-back">
+                            <div class="action-icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                            <div class="action-text">
+                                <span>Voltar à Lista</span>
+                                <small>Ver todas as unidades</small>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Informações do Sistema -->
+                    <div class="system-info">
+                        <h6>Informações do Sistema</h6>
+                        <div class="system-item">
+                            <i class="fas fa-calendar-plus"></i>
+                            <div>
+                                <label>Cadastrado em</label>
+                                <span>{{ unidade.created_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+                        <div class="system-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <label>Última atualização</label>
+                                <span>{{ unidade.updated_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card de Contato e Localização -->
+        <div class="col-12">
+            <div class="info-card">
+                <div class="card-header-custom">
+                    <div class="card-icon bg-orange">
+                        <i class="fas fa-address-book"></i>
+                    </div>
+                    <div class="card-title-section">
+                        <h5>Contato & Localização</h5>
+                        <p>Informações para comunicação e endereço</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <label>Telefone</label>
+                                    <p>{{ unidade.telefone }}</p>
+                                    <a href="tel:{{ unidade.telefone }}" class="contact-action">
+                                        <i class="fas fa-phone me-1"></i>Ligar agora
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <label>Responsável</label>
+                                    <p>{{ unidade.responsavel|default:"Não informado" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <label>Endereço Completo</label>
+                                    <p>{{ unidade.endereco }}</p>
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ unidade.endereco|urlencode }}" target="_blank" class="contact-action">
+                                        <i class="fas fa-map me-1"></i>Ver no mapa
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos completos aqui... */
+</style>
+
+{% endblock %} 

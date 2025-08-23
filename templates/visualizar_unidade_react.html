@@ -1,0 +1,729 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="modern-container-visualizar">
+    <!-- Breadcrumb Moderno -->
+    <nav aria-label="breadcrumb" class="breadcrumb-container-react">
+        <ol class="breadcrumb-react">
+            <li class="breadcrumb-item-react">
+                <a href="{% url 'home' %}" class="breadcrumb-link-react">
+                    <i class="fas fa-home"></i>
+                    <span>Início</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator-react"></i>
+            </li>
+            <li class="breadcrumb-item-react">
+                <a href="{% url 'unidades_saude' %}" class="breadcrumb-link-react">
+                    <i class="fas fa-hospital-alt"></i>
+                    <span>Unidades de Saúde</span>
+                </a>
+                <i class="fas fa-chevron-right breadcrumb-separator-react"></i>
+            </li>
+            <li class="breadcrumb-item-react breadcrumb-current-react">
+                <span class="breadcrumb-current-text-react">
+                    <i class="fas fa-eye"></i>
+                    <span>{{ unidade.nome|title|truncatechars:30 }}</span>
+                </span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Container do Componente React -->
+    <div id="visualizar-unidade-react-root">
+        <!-- Fallback HTML caso React falhe -->
+        <div class="fallback-container" style="padding: 2rem; background: rgba(255,255,255,0.9); border-radius: 15px; margin: 2rem 0;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin-bottom: 1rem;">
+                    <i class="fas fa-hospital-alt"></i>
+                </div>
+                <h1 style="margin: 0; color: #374151;">{{ unidade.nome }}</h1>
+                <p style="color: #6b7280; margin: 0.5rem 0;"><i class="fas fa-map-marker-alt"></i> {{ unidade.municipio|default:"Localização não informada" }}</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;"><i class="fas fa-info-circle"></i> Informações Básicas</h3>
+                    <p><strong>CNES:</strong> {{ unidade.cnes|default:"Não informado" }}</p>
+                    <p><strong>Tipo:</strong> {{ unidade.get_tipo_display }}</p>
+                    <p><strong>Responsável:</strong> {{ unidade.responsavel|default:"Não informado" }}</p>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <h3 style="color: #10b981; margin-bottom: 1rem;"><i class="fas fa-phone-alt"></i> Contato</h3>
+                    <p><strong>Telefone:</strong> {{ unidade.telefone|default:"Não informado" }}</p>
+                    <p><strong>E-mail:</strong> {{ unidade.email|default:"Não informado" }}</p>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <h3 style="color: #f59e0b; margin-bottom: 1rem;"><i class="fas fa-map-marker-alt"></i> Localização</h3>
+                    <p><strong>Endereço:</strong> {{ unidade.endereco|default:"Não informado" }}</p>
+                    <p><strong>Município:</strong> {{ unidade.municipio|default:"Não informado" }}</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="{% url 'unidades_saude' %}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 500;">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Voltar para Lista</span>
+                </a>
+                <a href="{% url 'editar_unidade' unidade.id %}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: #10b981; color: white; text-decoration: none; border-radius: 8px; font-weight: 500; margin-left: 1rem;">
+                    <i class="fas fa-edit"></i>
+                    <span>Editar</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===== CONTAINER PRINCIPAL ===== */
+.modern-container-visualizar {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-attachment: fixed;
+    padding: 2rem;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb-container-react {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-react {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 0.5rem;
+}
+
+.breadcrumb-item-react {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-link-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-link-react:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    text-decoration: none;
+}
+
+.breadcrumb-separator-react {
+    color: #cbd5e1;
+    font-size: 0.7rem;
+    margin: 0 0.5rem;
+}
+
+.breadcrumb-current-text-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* ===== COMPONENTE VISUALIZAR ===== */
+.visualizar-unidade-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== HEADER DA UNIDADE ===== */
+.unidade-header-react {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2.5rem;
+    overflow: hidden;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="0.5" fill="white" opacity="0.1"/><circle cx="80" cy="80" r="0.3" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.header-content-react {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.header-main-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.unidade-avatar-react {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.header-text-info {
+    flex: 1;
+}
+
+.unidade-title-react {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.unidade-subtitle-react {
+    font-size: 1.1rem;
+    margin: 0 0 1rem 0;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.unidade-metadata {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.metadata-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.header-actions-react {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.status-badge-react {
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.badge-success-react {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.badge-info-react {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+}
+
+.badge-warning-react {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.action-buttons-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.action-btn-react {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary-react {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary-react:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.btn-secondary-react {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary-react:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* ===== GRID DE INFORMAÇÕES ===== */
+.info-grid-react {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.info-section-react {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.info-section-react:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.info-card-primary {
+    border-left: 4px solid #667eea;
+}
+
+.info-card-secondary {
+    border-left: 4px solid #10b981;
+}
+
+.info-card-accent {
+    border-left: 4px solid #f59e0b;
+}
+
+.info-card-warning {
+    border-left: 4px solid #8b5cf6;
+}
+
+.section-header-react {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.section-icon-react {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.section-title-react {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.info-list-react {
+    padding: 1.5rem;
+}
+
+.info-row-react {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.info-row-react:last-child {
+    border-bottom: none;
+}
+
+.info-label-react {
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 0.9rem;
+    min-width: 120px;
+}
+
+.info-value-react {
+    flex: 1;
+    text-align: right;
+    color: #111827;
+    font-weight: 500;
+}
+
+.address-row {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.address-row .info-value-react {
+    text-align: left;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.address-text {
+    background: rgba(102, 126, 234, 0.1);
+    padding: 0.75rem;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+}
+
+.contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.contact-link:hover {
+    color: #4f46e5;
+    text-decoration: none;
+    transform: translateX(2px);
+}
+
+.copyable-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copyable-text:hover {
+    color: #667eea;
+}
+
+.copy-icon {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.copyable-text:hover .copy-icon {
+    opacity: 1;
+}
+
+.text-muted {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.badge-inline {
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.status-badge.success {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.status-badge.danger {
+    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* ===== NOTIFICAÇÃO DE CÓPIA ===== */
+.copy-notification-react {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+    z-index: 9999;
+    animation: slideInRight 0.3s ease-out;
+}
+
+/* ===== LOADING ===== */
+.loading-container-react {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    text-align: center;
+    color: #6b7280;
+}
+
+.loading-spinner-react {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #667eea;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes animate-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: animate-slide-up 0.6s ease-out forwards;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .modern-container-visualizar {
+        padding: 1rem;
+    }
+    
+    .header-content-react {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .header-main-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .unidade-title-react {
+        font-size: 1.8rem;
+    }
+    
+    .header-actions-react {
+        align-items: center;
+        width: 100%;
+    }
+    
+    .action-buttons-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .info-grid-react {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    
+    .info-row-react {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .info-value-react {
+        text-align: left;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .unidade-header-react {
+        padding: 1.5rem;
+    }
+    
+    .unidade-avatar-react {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .breadcrumb-link-react span,
+    .breadcrumb-current-text-react span {
+        display: none;
+    }
+}
+
+/* ===== IMPRESSÃO ===== */
+@media print {
+    .modern-container-visualizar {
+        background: white;
+        padding: 0;
+    }
+    
+    .breadcrumb-container-react,
+    .action-buttons-group {
+        display: none;
+    }
+    
+    .unidade-header-react {
+        background: #f8fafc;
+        color: #111827;
+    }
+    
+    .info-section-react {
+        break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+<script>
+// Dados para o componente React
+try {
+    window.unidadeData = {
+        unidade: {
+            id: {{ unidade.id|default:"null" }},
+            nome: "{{ unidade.nome|default:""|escapejs }}",
+            municipio: "{{ unidade.municipio|default:"Não informado"|escapejs }}",
+            cnes: "{{ unidade.cnes|default:""|escapejs }}",
+            tipo: "{{ unidade.tipo|default:"UNIDADE_EXECUTANTE"|escapejs }}",
+            endereco: "{{ unidade.endereco|default:""|escapejs }}",
+            telefone: "{{ unidade.telefone|default:""|escapejs }}",
+            responsavel: "{{ unidade.responsavel|default:"Não informado"|escapejs }}",
+            email: "{{ unidade.email|default:""|escapejs }}",
+            horario_funcionamento: "{{ unidade.horario_funcionamento|default:"Não informado"|escapejs }}",
+            servicos_emergencia: {{ unidade.servicos_emergencia|yesno:"true,false" }},
+            created_at: "{{ unidade.created_at|date:'d/m/Y H:i:s' }}",
+            usuario_cadastrante: "{{ unidade.usuario_cadastrante.username|default:"Sistema"|escapejs }}"
+        }
+    };
+    console.log('✅ Dados da unidade carregados:', window.unidadeData);
+} catch (error) {
+    console.error('❌ Erro ao carregar dados da unidade:', error);
+    window.unidadeData = { unidade: null };
+}
+</script>
+
+<!-- Carregar componente React -->
+<script src="{% static 'js/components/DebugUnidadeReact.js' %}"></script>
+<script src="{% static 'js/components/VisualizarUnidadeReact.js' %}"></script>
+
+<script>
+// Esconder fallback quando React renderizar com sucesso
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('visualizar-unidade-react-root');
+    const fallback = container?.querySelector('.fallback-container');
+    
+    if (fallback) {
+        // Observar mudanças no container
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    // Se React renderizou (adicionou novos elementos), esconder fallback
+                    const hasReactContent = Array.from(container.children).some(child => 
+                        !child.classList.contains('fallback-container')
+                    );
+                    
+                    if (hasReactContent) {
+                        fallback.style.display = 'none';
+                        observer.disconnect();
+                        console.log('✅ React renderizado, fallback ocultado');
+                    }
+                }
+            });
+        });
+        
+        observer.observe(container, { childList: true, subtree: true });
+        
+        // Timeout para mostrar fallback se React não carregar em 3 segundos
+        setTimeout(() => {
+            const hasReactContent = Array.from(container.children).some(child => 
+                !child.classList.contains('fallback-container')
+            );
+            
+            if (!hasReactContent) {
+                console.log('⏰ React não carregou em 3s, mantendo fallback');
+                fallback.style.display = 'block';
+            }
+        }, 3000);
+    }
+});
+</script>
+
+{% endblock %} 

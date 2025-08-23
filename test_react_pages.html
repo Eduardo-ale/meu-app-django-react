@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Componentes React</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .test-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .console-output {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+        .page-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .page-link {
+            display: block;
+            padding: 15px;
+            background-color: #e9ecef;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .page-link:hover {
+            background-color: #dee2e6;
+            text-decoration: none;
+            color: #495057;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-success { background-color: #28a745; }
+        .status-error { background-color: #dc3545; }
+        .status-warning { background-color: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Componentes React</h1>
+        
+        <div class="test-section">
+            <h2>Testes Automatizados</h2>
+            <p>Execute os testes para verificar o carregamento dos componentes React:</p>
+            <button class="test-button" onclick="runAllTests()">🚀 Executar Todos os Testes</button>
+            <button class="test-button" onclick="testBundlesOnly()">📦 Testar Apenas Bundles</button>
+            <button class="test-button" onclick="testComponentsOnly()">🧩 Testar Apenas Componentes</button>
+            <button class="test-button" onclick="clearConsole()">🧹 Limpar Console</button>
+            
+            <div id="console-output" class="console-output">
+                Console de testes aparecerá aqui...
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Páginas React para Teste Manual</h2>
+            <p>Clique nos links abaixo para testar cada página React individualmente:</p>
+            
+            <div class="page-links">
+                <a href="/criar-unidade/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-criar-unidade"></span>
+                    Criar Unidade
+                </a>
+                <a href="/registro-chamada/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-registro-chamada"></span>
+                    Registro de Chamada
+                </a>
+                <a href="/lista-telefonica/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-lista-telefonica"></span>
+                    Lista Telefônica
+                </a>
+                <a href="/configuracoes/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-configuracoes"></span>
+                    Configurações
+                </a>
+                <a href="/notificacoes/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-notificacoes"></span>
+                    Notificações
+                </a>
+                <a href="/perfil/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-perfil"></span>
+                    Perfil
+                </a>
+                <a href="/alterar-senha/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-senha"></span>
+                    Alterar Senha
+                </a>
+                <a href="/editar-unidade/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-editar-unidade"></span>
+                    Editar Unidade
+                </a>
+                <a href="/visualizar-unidade/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-visualizar-unidade"></span>
+                    Visualizar Unidade
+                </a>
+                <a href="/unidades-saude/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-unidades-saude"></span>
+                    Unidades de Saúde
+                </a>
+                <a href="/relatorios/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-relatorios"></span>
+                    Relatórios
+                </a>
+                <a href="/criar-usuario/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-criar-usuario"></span>
+                    Criar Usuário
+                </a>
+                <a href="/home/" class="page-link">
+                    <span class="status-indicator status-warning" id="status-home"></span>
+                    Home
+                </a>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Informações do Sistema</h2>
+            <div id="system-info">
+                <p><strong>React:</strong> <span id="react-version">Verificando...</span></p>
+                <p><strong>React DOM:</strong> <span id="reactdom-version">Verificando...</span></p>
+                <p><strong>React DevTools:</strong> <span id="devtools-status">Verificando...</span></p>
+                <p><strong>Bundles Disponíveis:</strong> <span id="bundles-count">Verificando...</span></p>
+                <p><strong>Componentes Carregados:</strong> <span id="components-count">Verificando...</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Script de teste -->
+    <script src="test_react_components.js"></script>
+    
+    <script>
+        // Capturar console.log para exibir na página
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function appendToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'warn' ? '⚠️' : 'ℹ️';
+            consoleOutput.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            appendToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            appendToConsole(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            appendToConsole(args.join(' '), 'warn');
+        };
+        
+        // Funções de teste
+        async function runAllTests() {
+            clearConsole();
+            console.log('🚀 Iniciando todos os testes...');
+            const results = await window.testReactComponents();
+            updateSystemInfo(results);
+            updatePageStatus(results);
+        }
+        
+        async function testBundlesOnly() {
+            clearConsole();
+            console.log('📦 Testando apenas bundles...');
+            // Implementar teste específico de bundles
+        }
+        
+        async function testComponentsOnly() {
+            clearConsole();
+            console.log('🧩 Testando apenas componentes...');
+            // Implementar teste específico de componentes
+        }
+        
+        function clearConsole() {
+            consoleOutput.textContent = '';
+        }
+        
+        function updateSystemInfo(results) {
+            document.getElementById('react-version').textContent = React.version || 'Não detectado';
+            document.getElementById('reactdom-version').textContent = ReactDOM.version || 'Não detectado';
+            document.getElementById('devtools-status').textContent = results.hasReactDevTools ? 'Disponível' : 'Não detectado';
+            document.getElementById('bundles-count').textContent = results.bundleResults.filter(r => r.loaded).length + '/' + results.bundleResults.length;
+            document.getElementById('components-count').textContent = results.componentResults.filter(r => r.available).length + '/' + results.componentResults.length;
+        }
+        
+        function updatePageStatus(results) {
+            // Mapear componentes para páginas
+            const componentPageMap = {
+                'CriarUnidadeReact': 'criar-unidade',
+                'RegistroChamadaReact': 'registro-chamada',
+                'ListaTelefonicaReact': 'lista-telefonica',
+                'ConfiguracoesReact': 'configuracoes',
+                'NotificacoesReact': 'notificacoes',
+                'PerfilReact': 'perfil',
+                'SenhaReact': 'senha',
+                'EditarUnidadeReact': 'editar-unidade',
+                'VisualizarUnidadeReact': 'visualizar-unidade',
+                'UnidadesSaudeReact': 'unidades-saude',
+                'RelatoriosReact': 'relatorios',
+                'CriarUsuarioReact': 'criar-usuario',
+                'HomeReact': 'home'
+            };
+            
+            results.componentResults.forEach(result => {
+                const pageId = componentPageMap[result.component];
+                if (pageId) {
+                    const statusElement = document.getElementById(`status-${pageId}`);
+                    if (statusElement) {
+                        statusElement.className = `status-indicator ${result.available ? 'status-success' : 'status-error'}`;
+                    }
+                }
+            });
+        }
+        
+        // Executar verificação inicial quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 Página de teste carregada');
+            console.log('🔍 Verificando sistema...');
+            
+            // Verificar React
+            if (typeof React !== 'undefined') {
+                console.log('✅ React carregado:', React.version);
+            } else {
+                console.log('❌ React não encontrado');
+            }
+            
+            // Verificar ReactDOM
+            if (typeof ReactDOM !== 'undefined') {
+                console.log('✅ ReactDOM carregado:', ReactDOM.version);
+            } else {
+                console.log('❌ ReactDOM não encontrado');
+            }
+            
+            // Verificar DevTools
+            if (typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined') {
+                console.log('✅ React DevTools detectado');
+            } else {
+                console.log('❌ React DevTools não detectado');
+            }
+            
+            console.log('ℹ️ Clique em "Executar Todos os Testes" para começar');
+        });
+    </script>
+</body>
+</html>
