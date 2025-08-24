@@ -21,15 +21,16 @@ from accounts.views import HomeView
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('', HomeView.as_view(), name='home'),
-    path('', include('municipios.urls')),
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('images/favicons/favicon.ico'))),
-    path('favicon-32x32.png', RedirectView.as_view(url=staticfiles_storage.url('images/favicons/favicon-32x32.png'))),
-    path('favicon-16x16.png', RedirectView.as_view(url=staticfiles_storage.url('images/favicons/favicon-16x16.png'))),
+    path('api-auth/', include('rest_framework.urls')),
+
+    # Esta rota deve ser a última. Ela redireciona todo o tráfego que não é de API para o index.html do React.
+    re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
 ]
 
 # Servir arquivos de media e estáticos durante o desenvolvimento
