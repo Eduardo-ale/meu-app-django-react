@@ -106,7 +106,7 @@ class CustomLoginView(LoginView):
 
 @method_decorator(login_required, name='dispatch')
 class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = 'home_react.html'
+    template_name = 'index.html'
     login_url = 'login'
     
     def get_context_data(self, **kwargs):
