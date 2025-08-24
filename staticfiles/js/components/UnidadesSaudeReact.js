@@ -888,3 +888,19 @@ function renderUnidadesSaudeReact() {
         // Fallback simples
         if (container) {
             container.innerHTML = `
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">⚠️ Erro de Carregamento</h4>
+                    <p>Não foi possível carregar o componente React. Verifique se todas as dependências estão carregadas.</p>
+                    <hr>
+                    <p class="mb-0">
+                        <strong>Status:</strong><br>
+                        Container: ${container ? '✅ Encontrado' : '❌ Não encontrado'}<br>
+                        Dados: ${window.unidadesSaudeData ? '✅ Disponíveis' : '❌ Não disponíveis'}<br>
+                        React: ${typeof React !== 'undefined' ? '✅ Disponível' : '❌ Não disponível'}<br>
+                        ReactDOM: ${typeof ReactDOM !== 'undefined' ? '✅ Disponível' : '❌ Não disponível'}
+                    </p>
+                </div>
+            `;
+        }
+    }
+}
